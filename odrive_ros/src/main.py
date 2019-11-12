@@ -6,13 +6,16 @@ shutdown_token = Event()
 
 logger = Logger(verbose=False)
 
+
 def did_lose_device(device):
     print("Lost an odrive!")
+
 
 def did_discover_device(device):
     print("Found an odrive!")
     device.__channel__._channel_broken.subscribe(lambda: did_lose_device(device))
     # print(repr(obj))
+
 
 rospy.init_node("odrive")
 
