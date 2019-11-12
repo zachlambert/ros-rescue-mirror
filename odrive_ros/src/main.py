@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import odrive
 from fibre import Logger, Event
 import rospy
