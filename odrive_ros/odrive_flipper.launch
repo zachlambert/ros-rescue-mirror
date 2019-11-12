@@ -1,5 +1,5 @@
 <launch>
   <node name="odrive_flipper" pkg="odrive_ros" type="main.py">
-    <param name="serial_no" value="336631563536">
+    <param name="serial_no" value="336631563536"/>
   </node>
 </launch>
