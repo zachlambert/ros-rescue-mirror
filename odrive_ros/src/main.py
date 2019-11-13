@@ -75,7 +75,7 @@ print("Well I've inited the node, gonna listen now")
 
 serial_no = rospy.get_param("~serial_no")
 
-rospy.Subscriber(rospy.get_name() + "/axis0/vel_setpoint", msg.Int32, lambda: vel_setpoint("axis0", message), queue_size=1)
+rospy.Subscriber(rospy.get_name() + "/axis0/vel_setpoint", msg.Int32, lambda value: vel_setpoint("axis0", value), queue_size=1)
 
 odrive.find_all("usb", serial_no, did_discover_device, shutdown_token, shutdown_token, logger)
 
