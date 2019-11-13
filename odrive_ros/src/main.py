@@ -23,11 +23,11 @@ def diagnostics():
     message.hardware_id = serial_no
     if my_odrive is None:
         message.level = 1
-        message.values = [KeyValue("connected", False)]
+        message.values = [KeyValue("connected", str(False))]
     else:
         message.values = [
-            KeyValue("connected", True),
-            KeyValue("bus-voltage", my_odrive.vbus_voltage),
+            KeyValue("connected", str(True)),
+            KeyValue("bus-voltage", str(my_odrive.vbus_voltage)),
             KeyValue("axis0-error", oenums.errors.axis[my_odrive.axis0.error]),
             KeyValue("axis0-encoder-error", oenums.errors.encoder[my_odrive.axis0.encoder.error]),
             KeyValue("axis0-motor-error", oenums.errors.motor[my_odrive.axis0.motor.error]),
