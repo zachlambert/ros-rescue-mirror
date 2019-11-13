@@ -67,7 +67,10 @@ def did_discover_device(device):
 
 
 def vel_setpoint(axis, value):
-    print("Should've set " + axis + " to " + str(value))
+    print("set " + axis + " to " + str(value))
+    axis = my_odrive.axis0 if axis == "axis0" else my_odrive.axis1
+    axis.controller.config.control_mode = oenums.control_modes["CTRL_MODE_VELOCITY_CONTROL"]
+    axis.controller.vel_setpoint = value
 
 
 rospy.init_node("odrive")
