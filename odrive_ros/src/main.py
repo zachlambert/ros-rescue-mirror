@@ -4,6 +4,7 @@ from fibre import Logger, Event
 import rospy
 import odrive_enums as oenums
 from diagnostic_msgs.msg import DiagnosticStatus, KeyValue
+from std_msgs.msg import int32
 
 shutdown_token = Event()
 
@@ -41,7 +42,7 @@ def diagnostics():
             KeyValue("axis1-state", oenums.axis_states[my_odrive.axis1.current_state]),
         ]
 
-    print(repr(message))
+    # print(repr(message))
     diagnostic_pub.publish(message)
 
 
@@ -65,10 +66,16 @@ def did_discover_device(device):
     my_odrive = device
 
 
+def vel_setpoint(axis, value):
+    print("Should've set " + axis + " to " + str(value))
+
+
 rospy.init_node("odrive")
 print("Well I've inited the node, gonna listen now")
 
 serial_no = rospy.get_param("~serial_no")
+
+rospy.Subscriber(rospy.get_name() + "/axis0/vel_setpoint", int32, lambda: vel_setpoint("axis0", message), queue_size=1)
 
 odrive.find_all("usb", serial_no, did_discover_device, shutdown_token, shutdown_token, logger)
 
