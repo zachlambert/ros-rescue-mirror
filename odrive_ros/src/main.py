@@ -70,7 +70,7 @@ def vel_setpoint(axis, value):
     print("set " + axis + " to " + str(value))
     axis = my_odrive.axis0 if axis == "axis0" else my_odrive.axis1
     axis.controller.config.control_mode = 2
-    axis.controller.vel_setpoint = value
+    axis.controller.vel_setpoint = int(value)
 
 
 rospy.init_node("odrive")
