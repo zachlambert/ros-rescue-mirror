@@ -7,4 +7,5 @@
   </node>
   <node name="webserver" pkg="roswww" type="webserver.py"/>
   <node name="rosbridge" pkg="rosbridge_server" type="rosbridge_websocket"/>
+  <node name="controller_mapper" pkg="controller_mapper" type="main.py" output="screen"/>
 </launch>

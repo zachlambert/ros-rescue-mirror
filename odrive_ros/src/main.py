@@ -68,9 +68,10 @@ def did_discover_device(device):
 
 def vel_setpoint(axis, value):
     print("set " + axis + " to " + str(value))
-    axis = my_odrive.axis0 if axis == "axis0" else my_odrive.axis1
-    axis.controller.config.control_mode = 2
-    axis.controller.vel_setpoint = int(value.data)
+    if my_odrive:
+        axis = my_odrive.axis0 if axis == "axis0" else my_odrive.axis1
+        axis.controller.config.control_mode = 2
+        axis.controller.vel_setpoint = int(value.data)
 
 
 rospy.init_node("odrive")
@@ -78,7 +79,8 @@ print("Well I've inited the node, gonna listen now")
 
 serial_no = rospy.get_param("~serial_no")
 
-rospy.Subscriber(rospy.get_name() + "/axis0/vel_setpoint", msg.Int32, lambda value: vel_setpoint("axis0", value), queue_size=1)
+rospy.Subscriber(rospy.get_name() + "/axis0/vel_setpoint", msg.Int32, lambda value: vel_setpoint("axis0", value), queue_size=1) # Need to use ros param server to give this nice values but default to axis0/axis1
+rospy.Subscriber(rospy.get_name() + "/axis1/vel_setpoint", msg.Int32, lambda value: vel_setpoint("axis1", value), queue_size=1)
 
 odrive.find_all("usb", serial_no, did_discover_device, shutdown_token, shutdown_token, logger)
 
