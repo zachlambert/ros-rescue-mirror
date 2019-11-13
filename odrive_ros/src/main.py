@@ -4,7 +4,7 @@ from fibre import Logger, Event
 import rospy
 import odrive_enums as oenums
 from diagnostic_msgs.msg import DiagnosticStatus, KeyValue
-from std_msgs.msg import int32
+from std_msgs import msg
 
 shutdown_token = Event()
 
@@ -75,7 +75,7 @@ print("Well I've inited the node, gonna listen now")
 
 serial_no = rospy.get_param("~serial_no")
 
-rospy.Subscriber(rospy.get_name() + "/axis0/vel_setpoint", int32, lambda: vel_setpoint("axis0", message), queue_size=1)
+rospy.Subscriber(rospy.get_name() + "/axis0/vel_setpoint", msg.int32, lambda: vel_setpoint("axis0", message), queue_size=1)
 
 odrive.find_all("usb", serial_no, did_discover_device, shutdown_token, shutdown_token, logger)
 
