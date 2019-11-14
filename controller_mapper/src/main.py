@@ -7,8 +7,8 @@ from std_msgs.msg import Int32
 def receive_data(message):
     global odrive_pub
     print(message.axes[1])
-    drive_left.publish(message.axes[1] * 8192 * 8 + message.axes[0] * 4 * 8192)
-    drive_right.publish(-(message.axes[1] * 8192 * 8 - message.axes[0] * 4 * 8192))
+    drive_left.publish(message.axes[1] * 8192 * 16 + message.axes[0] * 16 * 8192)
+    drive_right.publish(-(message.axes[1] * 8192 * 16 - message.axes[0] * 16 * 8192))
 
 
 rospy.init_node("controller_mapper")
