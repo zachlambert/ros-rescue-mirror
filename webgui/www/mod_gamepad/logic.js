@@ -96,4 +96,4 @@ function pollGamepad() {
     gamepad_topic.publish(gamepad_message);
 }
 
-setInterval(pollGamepad, 10);
+setInterval(pollGamepad, 100);
