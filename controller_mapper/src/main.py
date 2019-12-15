@@ -15,9 +15,9 @@ def receive_joy_data(message):
     drive_left.publish(-(message.axes[1] * 8192 * 16 + message.axes[0] * 16 * 8192))
     drive_right.publish(message.axes[1] * 8192 * 16 - message.axes[0] * 16 * 8192)
     if message.buttons[4]:
-        arm_values[0] += 0.1
+        arm_values[0] += 0.5
     elif message.buttons[5]:
-        arm_values[0] -= 0.1
+        arm_values[0] -= 0.5
     arm_msg.data = arm_values
     arm.publish(arm_msg)
 
