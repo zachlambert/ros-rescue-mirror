@@ -5,6 +5,12 @@
   <node name="odrive_drive" pkg="odrive_ros" type="main.py" output="screen">
     <param name="serial_no" value="209137933548" type="str"/>
   </node>
+  <node name="arm" pkg="rosserial_python" type="serial_node.py">
+    <param name="~port" value="/dev/serial/by-id/usb-Teensyduino_USB_Serial_5451780-if00" type="str"/>
+  </node>
+  <node name="power_board" pkg="rosserial_python" type="serial_node.py">
+    <param name="~port" value="/dev/serial/by-id/usb-Teensyduino_USB_Serial_6260580-if00" type="str"/>
+  </node>
   <node name="webserver" pkg="roswww" type="webserver.py"/>
   <node name="rosbridge" pkg="rosbridge_server" type="rosbridge_websocket"/>
   <node name="controller_mapper" pkg="controller_mapper" type="main.py" output="screen"/>
