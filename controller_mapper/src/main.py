@@ -38,6 +38,6 @@ drive_left = rospy.Publisher('/odrive_drive/axis0/vel_setpoint', Int32, queue_si
 drive_right = rospy.Publisher('/odrive_drive/axis1/vel_setpoint', Int32, queue_size=10)
 flipper_left = rospy.Publisher('/odrive_flipper/axis0/vel_setpoint', Int32, queue_size=10)
 flipper_right = rospy.Publisher('/odrive_flipper/axis1/vel_setpoint', Int32, queue_size=10)
-arm = rospy.Publisher('/arm_demand_angles_test', Float32MultiArray, queue_size=10)
+arm = rospy.Publisher('/arm_demand_angles', Float32MultiArray, queue_size=10)
 
 rospy.spin()
