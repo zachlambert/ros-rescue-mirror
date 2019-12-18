@@ -1,44 +1,48 @@
-controllers = {};
+function gamepad_init() {
+    controllers = {};
 
-gamepad_connected_topic = new ROSLIB.Topic({
-    ros : ros,
-    name : '/gamepad/connected',
-    messageType : 'std_msgs/Bool'
-});
+    gamepad_connected_topic = new ROSLIB.Topic({
+        ros: ros,
+        name: '/gamepad/connected',
+        messageType: 'std_msgs/Bool'
+    });
 
-window.addEventListener("gamepadconnected", function (e) {
-    let gp = navigator.getGamepads()[e.gamepad.index];
-    document.getElementById("controller_status").innerText = "Controller: " + gp.id;
-    console.log("Gamepad connected at index %d: %s. ", gp.index, gp.id, gp);
-    controllers[e.gamepad.index] = e.gamepad;
-    if(Object.keys(controllers).length > 0) {
-        gamepad_connected_message = new ROSLIB.Message({
-            data: true
-        })
-    }
+    window.addEventListener("gamepadconnected", function (e) {
+        let gp = navigator.getGamepads()[e.gamepad.index];
+        document.getElementById("controller_status").innerText = "Controller: " + gp.id;
+        console.log("Gamepad connected at index %d: %s. ", gp.index, gp.id, gp);
+        controllers[e.gamepad.index] = e.gamepad;
+        if (Object.keys(controllers).length > 0) {
+            gamepad_connected_message = new ROSLIB.Message({
+                data: true
+            })
+        }
 
-    gamepad_connected_topic.publish(gamepad_connected_message)
-});
+        gamepad_connected_topic.publish(gamepad_connected_message)
+    });
 
-window.addEventListener("gamepaddisconnected", function (e) {
-    document.getElementById("controller_status").innerText = "Controller: None";
-    console.log("Gamepad disconnected from index %d: %s",
-        e.gamepad.index, e.gamepad.id);
-    delete controllers[e.gamepad.index];
-    if(Object.keys(controllers).length === 0) {
-        gamepad_connected_message = new ROSLIB.Message({
-            data: false
-        })
-    }
+    window.addEventListener("gamepaddisconnected", function (e) {
+        document.getElementById("controller_status").innerText = "Controller: None";
+        console.log("Gamepad disconnected from index %d: %s",
+            e.gamepad.index, e.gamepad.id);
+        delete controllers[e.gamepad.index];
+        if (Object.keys(controllers).length === 0) {
+            gamepad_connected_message = new ROSLIB.Message({
+                data: false
+            })
+        }
 
-    gamepad_connected_topic.publish(gamepad_connected_message)
-});
+        gamepad_connected_topic.publish(gamepad_connected_message)
+    });
 
-gamepad_topic = new ROSLIB.Topic({
-    ros : ros,
-    name : '/gamepad/values',
-    messageType : 'sensor_msgs/Joy'
-});
+    gamepad_topic = new ROSLIB.Topic({
+        ros: ros,
+        name: '/gamepad/values',
+        messageType: 'sensor_msgs/Joy'
+    });
+
+    setInterval(pollGamepad, 10);
+}
 
 function reduceDeadzone(x) {
     let deadzone = 0.2;
@@ -95,5 +99,3 @@ function pollGamepad() {
 
     gamepad_topic.publish(gamepad_message);
 }
-
-setInterval(pollGamepad, 100);

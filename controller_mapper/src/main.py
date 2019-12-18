@@ -11,13 +11,23 @@ arm_msg = Float32MultiArray()
 
 def receive_joy_data(message):
     global odrive_pub
-    print(message.axes[1])
     drive_left.publish(-(message.axes[1] * 8192 * 16 + message.axes[0] * 16 * 8192))
     drive_right.publish(message.axes[1] * 8192 * 16 - message.axes[0] * 16 * 8192)
     if message.buttons[4]:
-        arm_values[0] += 0.5
+        arm_values[0] += 0.2
     elif message.buttons[5]:
-        arm_values[0] -= 0.5
+        arm_values[0] -= 0.2
+
+    if message.buttons[0]:
+        arm_values[1] += 0.2
+    elif message.buttons[3]:
+        arm_values[1] -= 0.2
+
+    if message.buttons[1]:
+        arm_values[2] += 0.2
+    elif message.buttons[2]:
+        arm_values[2] -= 0.2
+
     arm_msg.data = arm_values
     arm.publish(arm_msg)
 
@@ -25,8 +35,6 @@ def receive_joy_data(message):
 def receive_arm_data(message):
     global arm_values
     arm_values = message.data
-    print(repr(arm_values))
-
 
 # base button 5 and 4
 rospy.init_node("controller_mapper")

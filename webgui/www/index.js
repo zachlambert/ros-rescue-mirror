@@ -1,7 +1,6 @@
 function loadModule(name) {
     addCSS("mod_" + name + "/style.css");
-    addHTML("mod_" + name + "/content.html", name);
-    addJS("mod_" + name + "/logic.js");
+    addHTML("mod_" + name + "/content.html", name, function() { addJS("mod_" + name + "/logic.js", name); })
 }
 
 function addCSS(path) {
@@ -12,14 +11,15 @@ function addCSS(path) {
     document.getElementsByTagName('head')[0].appendChild(link);
 }
 
-function addJS(path) {
+function addJS(path, name) {
     let script = document.createElement('script');
     script.setAttribute("type", "text/javascript");
     script.setAttribute("src", path);
+    script.onload = function() { eval(name + "_init()")};
     document.getElementsByTagName("head")[0].appendChild(script);
 }
 
-function addHTML(path, name) {
+function addHTML(path, name, after) {
     let xhttp = new XMLHttpRequest();
 
     xhttp.onload = function (e) {
@@ -28,6 +28,7 @@ function addHTML(path, name) {
         div.setAttribute("id", "mod_" + name);
         div.innerHTML = xhttp.response;
         document.getElementById("modules").appendChild(div);
+        after()
     };
 
     xhttp.open("GET", path);
@@ -49,3 +50,6 @@ ros.on('error', function (error) {
 ros.on('close', function () {
     console.log('Connection to websocket server closed.');
 });
+
+loadModule("gamepad");
+loadModule("odrive")

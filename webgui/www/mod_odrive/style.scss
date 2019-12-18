@@ -1,0 +1,19 @@
+#mod_status {
+  padding: 10px;
+
+  #pingpong_container {
+    display: flex;
+  }
+
+  #pingpong_text {
+    flex-grow: 1;
+  }
+
+  #pingpong_status_light {
+    width: 20px;
+    height: 20px;
+    background: #3A3;
+    border-radius: 10px;
+    transition: opacity 0.1s;
+  }
+}

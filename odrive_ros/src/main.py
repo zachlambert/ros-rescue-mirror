@@ -5,6 +5,7 @@ import rospy
 import odrive_enums as oenums
 from diagnostic_msgs.msg import DiagnosticStatus, KeyValue
 from std_msgs import msg
+from std_srvs.srv import Trigger, TriggerResponse
 
 shutdown_token = Event()
 
@@ -13,6 +14,20 @@ logger = Logger(verbose=False)
 my_odrive = None
 
 diagnostic_pub = rospy.Publisher('odrivediag', DiagnosticStatus, queue_size=10)
+
+
+def calibrate(axis, request):
+    if my_odrive:
+        axis = my_odrive.axis0 if axis == "axis0" else my_odrive.axis1
+        axis.requested_state = 3
+        while axis.current_state != 1:  # Wait for calibration to be done
+            rospy.sleep(0.1)
+        axis.requested_state = 8
+        if axis.current_state == 8:
+            return TriggerResponse(success=True, message="Calibrated")
+        else:
+            return TriggerResponse(success=False, message="Unable to go into closed loop control")
+    return TriggerResponse(success=False, message="Could not find odrive")
 
 
 def diagnostics():
@@ -69,7 +84,6 @@ def did_discover_device(device):
 
 
 def vel_setpoint(axis, value):
-    print("set " + axis + " to " + str(value))
     if my_odrive:
         axis = my_odrive.axis0 if axis == "axis0" else my_odrive.axis1
         axis.controller.config.control_mode = 2
@@ -77,12 +91,14 @@ def vel_setpoint(axis, value):
 
 
 rospy.init_node("odrive")
-print("Well I've inited the node, gonna listen now")
 
 serial_no = rospy.get_param("~serial_no")
 
 rospy.Subscriber(rospy.get_name() + "/axis0/vel_setpoint", msg.Int32, lambda value: vel_setpoint("axis0", value), queue_size=1) # Need to use ros param server to give this nice values but default to axis0/axis1
 rospy.Subscriber(rospy.get_name() + "/axis1/vel_setpoint", msg.Int32, lambda value: vel_setpoint("axis1", value), queue_size=1)
+
+rospy.Service(rospy.get_name() + "/axis0/calibrate", Trigger, lambda value: calibrate("axis0", value))
+rospy.Service(rospy.get_name() + "/axis1/calibrate", Trigger, lambda value: calibrate("axis1", value))
 
 odrive.find_all("usb", serial_no, did_discover_device, shutdown_token, shutdown_token, logger)
 
