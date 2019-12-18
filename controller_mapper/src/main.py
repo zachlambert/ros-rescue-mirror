@@ -13,6 +13,8 @@ def receive_joy_data(message):
     global odrive_pub
     drive_left.publish(-(message.axes[1] * 8192 * 16 + message.axes[0] * 16 * 8192))
     drive_right.publish(message.axes[1] * 8192 * 16 - message.axes[0] * 16 * 8192)
+    flipper_front.publish((message.buttons[12] - message.buttons[13]) * 8192 * 85 / 4)
+    flipper_rear.publish((message.buttons[15] - message.buttons[14]) * 8192 * 85 / 4)
     if message.buttons[4]:
         arm_values[0] += 0.2
     elif message.buttons[5]:
@@ -44,8 +46,8 @@ rospy.Subscriber("/gamepad/values", Joy, receive_joy_data)
 
 drive_left = rospy.Publisher('/odrive_drive/axis0/vel_setpoint', Int32, queue_size=10)
 drive_right = rospy.Publisher('/odrive_drive/axis1/vel_setpoint', Int32, queue_size=10)
-flipper_left = rospy.Publisher('/odrive_flipper/axis0/vel_setpoint', Int32, queue_size=10)
-flipper_right = rospy.Publisher('/odrive_flipper/axis1/vel_setpoint', Int32, queue_size=10)
+flipper_front = rospy.Publisher('/odrive_flipper/axis0/vel_setpoint', Int32, queue_size=10)
+flipper_rear = rospy.Publisher('/odrive_flipper/axis1/vel_setpoint', Int32, queue_size=10)
 arm = rospy.Publisher('/arm_demand_angles', Float32MultiArray, queue_size=10)
 
 rospy.spin()
