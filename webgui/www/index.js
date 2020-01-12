@@ -52,4 +52,5 @@ ros.on('close', function () {
 });
 
 loadModule("gamepad");
-loadModule("odrive")
+loadModule("odrive");
+loadModule("power");

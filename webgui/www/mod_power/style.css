@@ -1,0 +1,125 @@
+.gauge-container {
+  display: inline-block;
+  height: 250px;
+  padding: 0 0 0 24px;
+  margin: 10px; }
+
+.bar-container {
+  height: 100%;
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px;
+  background: gainsboro; }
+
+.gauge-bar {
+  position: absolute;
+  background: #ff3232;
+  bottom: 0;
+  width: 100%;
+  height: 20%; }
+
+.gauge-label {
+  position: relative;
+  color: rgba(0, 0, 0, 0.5);
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  z-index: 100;
+  padding: 10px 10px 80px 10px; }
+
+.tick-container {
+  vertical-align: top;
+  display: inline-block;
+  position: relative;
+  height: 100%; }
+
+.tick {
+  position: absolute;
+  border-top: 1px solid rgba(0, 0, 0, 0.2);
+  width: 24px;
+  height: 0; }
+
+.tick:nth-child(5n+1) {
+  border-top: 2px solid rgba(0, 0, 0, 0.3);
+  width: 32px; }
+
+.tick:last-child {
+  bottom: calc(100% - 2px) !important; }
+
+.tick > span {
+  position: relative;
+  width: 10px;
+  right: 22px;
+  top: -9px;
+  font: 1em Arial, Helvetica, sans-serif; }
+
+.tick:nth-child(1) {
+  bottom: 0%; }
+
+.tick:nth-child(2) {
+  bottom: 6.66667%; }
+
+.tick:nth-child(3) {
+  bottom: 13.33333%; }
+
+.tick:nth-child(4) {
+  bottom: 20%; }
+
+.tick:nth-child(5) {
+  bottom: 26.66667%; }
+
+.tick:nth-child(6) {
+  bottom: 33.33333%; }
+
+.tick:nth-child(7) {
+  bottom: 40%; }
+
+.tick:nth-child(8) {
+  bottom: 46.66667%; }
+
+.tick:nth-child(9) {
+  bottom: 53.33333%; }
+
+.tick:nth-child(10) {
+  bottom: 60%; }
+
+.tick:nth-child(11) {
+  bottom: 66.66667%; }
+
+.tick:nth-child(12) {
+  bottom: 73.33333%; }
+
+.tick:nth-child(13) {
+  bottom: 80%; }
+
+.tick:nth-child(14) {
+  bottom: 86.66667%; }
+
+.tick:nth-child(15) {
+  bottom: 93.33333%; }
+
+.tick:nth-child(16) {
+  bottom: 100%; }
+
+.voltage-container {
+  display: inline-block;
+  vertical-align: top; }
+
+h2 {
+  margin: 12px 0; }
+
+#cells {
+  list-style: none;
+  padding: 0;
+  margin: 0; }
+
+#cells > li > div {
+  vertical-align: middle;
+  display: inline-block;
+  height: 20px;
+  width: 20px;
+  background: red;
+  border-radius: 100%;
+  margin: 4px 6px 5px 0; }
+
+/*# sourceMappingURL=style.css.map */

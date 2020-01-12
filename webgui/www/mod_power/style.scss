@@ -1,0 +1,95 @@
+.gauge-container {
+  display: inline-block;
+  height: 250px;
+  padding: 0 0 0 24px;
+  margin: 10px;
+}
+
+.bar-container {
+  height: 100%;
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px;
+  background: rgb(220, 220, 220);
+}
+
+.gauge-bar {
+  position: absolute;
+  background: rgb(255, 50, 50);
+  bottom: 0;
+  width: 100%;
+  height: 20%;
+}
+
+.gauge-label {
+  position: relative;
+  color: rgba(0, 0, 0, 0.5);
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  z-index: 100;
+  padding: 10px 10px 80px 10px;
+}
+
+.tick-container {
+  vertical-align: top;
+  display: inline-block;
+  position: relative;
+  height: 100%;
+}
+
+.tick {
+  position: absolute;
+  border-top: 1px solid rgba(0, 0, 0, 0.2);
+  width: 24px;
+  height: 0;
+}
+
+.tick:nth-child(5n+1) {
+  border-top: 2px solid rgba(0, 0, 0, 0.3);
+  width: 32px;
+}
+
+.tick:last-child {
+  bottom: calc(100% - 2px)!important;
+}
+
+
+.tick > span {
+  position: relative;
+  width: 10px;
+  right: 22px;
+  top: -9px;
+  font: 1em Arial, Helvetica, sans-serif;
+}
+
+@for $i from 0 through 15 {
+  .tick:nth-child(#{$i+1}) {
+    bottom: #{percentage($i/15)};
+  }
+}
+
+.voltage-container {
+  display: inline-block;
+  vertical-align: top;
+}
+
+h2 {
+  margin: 12px 0;
+}
+
+#cells {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#cells > li > div {
+  vertical-align: middle;
+  display: inline-block;
+  height: 20px;
+  width: 20px;
+  background: red;
+  border-radius: 100%;
+  margin: 4px 6px 5px 0;
+}
