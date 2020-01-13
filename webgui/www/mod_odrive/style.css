@@ -1,18 +1,22 @@
-#mod_status {
-  padding: 10px;
-}
-#mod_status #pingpong_container {
-  display: flex;
-}
-#mod_status #pingpong_text {
-  flex-grow: 1;
-}
-#mod_status #pingpong_status_light {
-  width: 20px;
-  height: 20px;
-  background: #3A3;
-  border-radius: 10px;
-  transition: opacity 0.1s;
-}
+#mod_odrive {
+  padding: 10px; }
+  #mod_odrive button {
+    border: 0;
+    color: white;
+    font-size: 14px;
+    padding: 6px;
+    border-radius: 4px;
+    background: #282828;
+    outline: none; }
+  #mod_odrive #odrives_table {
+    border: 2px solid rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    border-spacing: 0;
+    width: 100%; }
+  #mod_odrive #odrives_table th, #mod_odrive #odrives_table td {
+    padding: 5px;
+    text-align: center; }
+  #mod_odrive #odrives_table td {
+    border-top: 1px solid rgba(0, 0, 0, 0.1); }
 
 /*# sourceMappingURL=style.css.map */

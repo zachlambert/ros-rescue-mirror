@@ -35,12 +35,24 @@ function addHTML(path, name, after) {
     xhttp.send();
 }
 
+window.addEventListener("keypress", function (e) {
+    if(e.key === "#") {
+        if(document.getElementById("settings").style.opacity === "0") {
+            document.getElementById("settings").style.opacity = "1";
+            document.getElementById("settings").style.pointerEvents = "initial"
+        } else {
+            document.getElementById("settings").style.opacity = "0";
+            document.getElementById("settings").style.pointerEvents = "none"
+        }
+    }
+});
+
 ros = new ROSLIB.Ros({
     url: 'ws://' + window.location.hostname + ':9090'
 });
 
 ros.on('connection', function () {
-    console.log('Connected to websocket server.');
+    console.log('Connected to websocket servier.');
 });
 
 ros.on('error', function (error) {

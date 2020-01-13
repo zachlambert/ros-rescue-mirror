@@ -9,6 +9,16 @@ function power_init() {
         let total_voltage = 0;
         for(let i in message.data) {
             document.getElementById("cell-" + String(i)).innerHTML = message.data[i].toFixed(2) + "v";
+            let indicator_color = "green";
+
+            if(message.data[i] < 3) {
+                indicator_color = "red";
+            } else if(message.data[i] < 3.7) {
+                indicator_color = "orange";
+            }
+
+            document.getElementById("cell-" + i + "-indicator").style.background = indicator_color;
+
             total_voltage += message.data[i];
         }
 

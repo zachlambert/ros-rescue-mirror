@@ -10,14 +10,14 @@ function odrive_init() {
                 name: '/odrive_' + names[i] + '/axis' + j + '/calibrate',
                 serviceType: 'std_srvs/Trigger'
             });
-            document.getElementById("odrives_table").innerHTML += "<tr id='odrive_" + i + "_" + j + "'><td>ODrive " + i + " axis " + j + "</td><td><button onclick='start_calibration(" + i + ", " + j + ")'>Calibrate</button></td><td></td></tr>"
+            document.getElementById("odrives_table").innerHTML += "<tr id='odrive_" + i + "_" + j + "'><td>D" + i + "A" + j + "</td><td></td><td><button onclick='start_calibration(" + i + ", " + j + ")'>Calibrate</button></td></tr>"
         }
     }
 }
 
 function start_calibration(i, j) {
-    document.getElementById("odrive_" + i + "_" + j).children[2].innerHTML = "Calibrating...";
+    document.getElementById("odrive_" + i + "_" + j).children[1].innerHTML = "Calibrating...";
     calibrate_odrive[i][j].callService(null, function(response) {
-        document.getElementById("odrive_" + i + "_" + j).children[2].innerHTML = response.message;
+        document.getElementById("odrive_" + i + "_" + j).children[1].innerHTML = response.message;
     })
 }
