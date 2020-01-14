@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+
+  <script src="http://static.robotwebtools.org/threejs/current/three.min.js"></script>
+  <script src="http://static.robotwebtools.org/threejs/current/ColladaLoader.min.js"></script>
+  <script src="http://static.robotwebtools.org/ColladaAnimationCompress/current/ColladaLoader2.min.js"></script>
+  <script src="http://static.robotwebtools.org/threejs/current/STLLoader.min.js"></script>
+  <script src="http://static.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
+  <script src="http://static.robotwebtools.org/roslibjs/current/roslib.min.js"></script>
+  <script src="http://static.robotwebtools.org/ros3djs/current/ros3d.min.js"></script>
+
+  <script src="load_viewers.js" type="text/javascript"></script>
+
+  <link rel="stylesheet" href="style.css" type="text/css"/>
+</head>
+
+<body onload="init()">
+
+  <h1>Robot Viewer</h1>
+
+  <div class="viewer">
+    <div class="viewer_header">
+      <span> Global View </span>
+    </div>
+    <div id="global_viewer"></div>
+  </div>
+
+  <div class="viewer">
+    <div class="viewer_header">
+      <span> Local View </span>
+    </div>
+    <div id="local_viewer"></div>
+  </div>
+  
+</body>
+</html>
