@@ -1,6 +1,11 @@
+function rand_id() {
+    return Math.random().toString(36).replace('0.', '')
+}
+
 function loadModule(name) {
+    let id = rand_id();
     addCSS("mod_" + name + "/style.css");
-    addHTML("mod_" + name + "/content.html", name, function() { addJS("mod_" + name + "/logic.js", name); })
+    addHTML("mod_" + name + "/content.html", name, id)
 }
 
 function addCSS(path) {
@@ -11,24 +16,24 @@ function addCSS(path) {
     document.getElementsByTagName('head')[0].appendChild(link);
 }
 
-function addJS(path, name) {
+function addJS(path, name, id) {
     let script = document.createElement('script');
     script.setAttribute("type", "text/javascript");
     script.setAttribute("src", path);
-    script.onload = function() { eval(name + "_init()")};
+    script.onload = function() { eval(name + "_init('" + id + "')")};
     document.getElementsByTagName("head")[0].appendChild(script);
 }
 
-function addHTML(path, name, after) {
+function addHTML(path, name, id) {
     let xhttp = new XMLHttpRequest();
 
     xhttp.onload = function (e) {
-        console.log(e);
         let div = document.createElement("div");
-        div.setAttribute("id", "mod_" + name);
+        div.className = "mod_" + name;
+        div.setAttribute("id", "mod_" + name + "_" + id);
         div.innerHTML = xhttp.response;
         document.getElementById("modules").appendChild(div);
-        after()
+        addJS("mod_" + name + "/logic.js", name, id)
     };
 
     xhttp.open("GET", path);

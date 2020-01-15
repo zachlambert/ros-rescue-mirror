@@ -79,8 +79,8 @@ def did_discover_device(device):
     print(rospy.get_name() + ": Found an odrive!")
     device.__channel__._channel_broken.subscribe(lambda: did_lose_device(device))
     my_odrive = device
-    my_odrive.axis0.controller.config.vel_limit = 8192 * 20
-    my_odrive.axis1.controller.config.vel_limit = 8192 * 20
+    my_odrive.axis0.controller.config.vel_limit = 8192 * 40
+    my_odrive.axis1.controller.config.vel_limit = 8192 * 40
 
 
 def vel_setpoint(axis, value):

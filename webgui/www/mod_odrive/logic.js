@@ -1,4 +1,4 @@
-function odrive_init() {
+function odrive_init(id) {
     calibrate_odrive = [];
     names = ["drive", "flipper"];
 
@@ -10,14 +10,14 @@ function odrive_init() {
                 name: '/odrive_' + names[i] + '/axis' + j + '/calibrate',
                 serviceType: 'std_srvs/Trigger'
             });
-            document.getElementById("odrives_table").innerHTML += "<tr id='odrive_" + i + "_" + j + "'><td>D" + i + "A" + j + "</td><td></td><td><button onclick='start_calibration(" + i + ", " + j + ")'>Calibrate</button></td></tr>"
+            document.getElementById("mod_odrive_" + id).getElementsByClassName("odrives_table")[0].innerHTML += "<tr class='odrive_" + i + "_" + j + "'><td>D" + i + "A" + j + "</td><td></td><td><button onclick='start_calibration(" + i + ", " + j + ", \"" + id + "\")'>Calibrate</button></td></tr>"
         }
     }
 }
 
-function start_calibration(i, j) {
-    document.getElementById("odrive_" + i + "_" + j).children[1].innerHTML = "Calibrating...";
+function start_calibration(i, j, id) {
+    document.getElementById("mod_odrive_" + id).getElementsByClassName("odrive_" + i + "_" + j)[0].children[1].innerHTML = "Calibrating...";
     calibrate_odrive[i][j].callService(null, function(response) {
-        document.getElementById("odrive_" + i + "_" + j).children[1].innerHTML = response.message;
+        document.getElementById("mod_odrive_" + id).getElementsByClassName("odrive_" + i + "_" + j)[0].children[1].innerHTML = response.message;
     })
 }
