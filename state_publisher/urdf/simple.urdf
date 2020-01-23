@@ -1,0 +1,373 @@
+<?xml version="1.0" ?>
+<robot name="Simple">
+
+<material name="body">
+    <color rgba="0 0 1 1"/>
+</material>
+<material name="flipper">
+    <color rgba="1 0 0 1"/>
+</material>
+<material name="arm">
+    <color rgba="0 1 0 1"/>
+</material>
+
+<link name="base_link">
+    <visual>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+    </visual>
+</link>
+<joint name="body_offset" type="fixed">
+    <parent link="base_link"/>
+    <child link="main_body"/>
+    <origin rpy="1.57075 0 0" xyz="-0.105 -0.17 0.15"/>
+</joint>
+
+<link name="main_body">
+  <inertial>
+    <origin rpy="0 0 0" xyz="0.11199839460974459 -0.01955490136888162 -0.16875858897451476"/>
+    <mass value="125.39802798594614"/>
+    <inertia ixx="0.710702" ixy="0.02898" ixz="-0.000172" iyy="3.591341" iyz="0.000124" izz="3.324467"/>
+  </inertial>
+  <visual>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <geometry>
+        <mesh filename="package://state_publisher/meshes/base_link_m-binary.stl"/>
+    </geometry>
+    <material name="body"/>
+  </visual>
+  <collision>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <geometry>
+        <mesh filename="package://state_publisher/meshes/base_link_m-binary.stl"/>
+    </geometry>
+  </collision>
+</link>
+<link name="Right_belt_1">
+  <inertial>
+    <origin rpy="0 0 0" xyz="0.22743900015692065 -0.0023273153405295073 0.025603908757169926"/>
+    <mass value="50.63722379743233"/>
+    <inertia ixx="0.196333" ixy="-0.0" ixz="0.0" iyy="1.451152" iyz="-7.1e-05" izz="1.62557"/>
+  </inertial>
+  <visual>
+    <origin rpy="0 0 0" xyz="0.11305 0.03065 0.06"/>
+    <geometry>
+        <mesh filename="package://state_publisher/meshes/Right_belt_1_m-binary.stl"/>
+    </geometry>
+    <material name="body"/>
+  </visual>
+  <collision>
+    <origin rpy="0 0 0" xyz="0.11305 0.03065 0.06"/>
+    <geometry>
+        <mesh filename="package://state_publisher/meshes/Right_belt_1_m-binary.stl"/>
+    </geometry>
+  </collision>
+</link>
+<link name="Left_belt_1">
+  <inertial>
+    <origin rpy="0 0 0" xyz="0.22743900015700835 -0.0023273153405294726 -0.025603908757169946"/>
+    <mass value="50.637223797432235"/>
+    <inertia ixx="0.196333" ixy="-0.0" ixz="-0.0" iyy="1.451152" iyz="7.1e-05" izz="1.62557"/>
+  </inertial>
+  <visual>
+    <origin rpy="0 0 0" xyz="0.11305 0.03065 0.277501"/>
+    <geometry>
+        <mesh filename="package://state_publisher/meshes/Left_belt_1_m-binary.stl"/>
+    </geometry>
+    <material name="body"/>
+  </visual>
+  <collision>
+    <origin rpy="0 0 0" xyz="0.11305 0.03065 0.277501"/>
+    <geometry>
+        <mesh filename="package://state_publisher/meshes/Left_belt_1_m-binary.stl"/>
+    </geometry>
+  </collision>
+</link>
+<link name="Flipper_rear_right_1">
+  <inertial>
+    <origin rpy="0 0 0" xyz="-1.6542323066914832e-14 0.06327858343170548 0.017692476218874258"/>
+    <mass value="11.639210054919547"/>
+    <inertia ixx="0.081135" ixy="0.0" ixz="0.0" iyy="0.020636" iyz="3.3e-05" izz="0.099255"/>
+  </inertial>
+  <visual>
+    <origin rpy="0 0 0" xyz="0.11305 0.03065 0.005"/>
+    <geometry>
+        <mesh filename="package://state_publisher/meshes/Flipper_rear_right_1_m-binary.stl"/>
+    </geometry>
+    <material name="flipper"/>
+  </visual>
+  <collision>
+    <origin rpy="0 0 0" xyz="0.11305 0.03065 0.005"/>
+    <geometry>
+        <mesh filename="package://state_publisher/meshes/Flipper_rear_right_1_m-binary.stl"/>
+    </geometry>
+  </collision>
+</link>
+<link name="Flipper_front_right_1">
+  <inertial>
+    <origin rpy="0 0 0" xyz="2.7755575615628914e-16 0.06327858343170467 0.017692476218874233"/>
+    <mass value="11.639210054919547"/>
+    <inertia ixx="0.081135" ixy="0.0" ixz="0.0" iyy="0.020636" iyz="3.3e-05" izz="0.099255"/>
+  </inertial>
+  <visual>
+    <origin rpy="0 0 0" xyz="-0.341828 0.03065 0.005"/>
+    <geometry>
+        <mesh filename="package://state_publisher/meshes/Flipper_front_right_1_m-binary.stl"/>
+    </geometry>
+    <material name="flipper"/>
+  </visual>
+  <collision>
+    <origin rpy="0 0 0" xyz="-0.341828 0.03065 0.005"/>
+    <geometry>
+        <mesh filename="package://state_publisher/meshes/Flipper_front_right_1_m-binary.stl"/>
+    </geometry>
+  </collision>
+</link>
+<link name="Flipper_rear_left_1">
+  <inertial>
+    <origin rpy="0 0 0" xyz="-1.559863349598345e-14 0.06327858343170549 -0.017692476218873876"/>
+    <mass value="11.639210054919547"/>
+    <inertia ixx="0.081135" ixy="-0.0" ixz="0.0" iyy="0.020636" iyz="-3.3e-05" izz="0.099255"/>
+  </inertial>
+  <visual>
+    <origin rpy="0 0 0" xyz="0.11305 0.03065 0.332501"/>
+    <geometry>
+        <mesh filename="package://state_publisher/meshes/Flipper_rear_left_1_m-binary.stl"/>
+    </geometry>
+    <material name="flipper"/>
+  </visual>
+  <collision>
+    <origin rpy="0 0 0" xyz="0.11305 0.03065 0.332501"/>
+    <geometry>
+        <mesh filename="package://state_publisher/meshes/Flipper_rear_left_1_m-binary.stl"/>
+    </geometry>
+  </collision>
+</link>
+<link name="Flipper_front_left_1">
+  <inertial>
+    <origin rpy="0 0 0" xyz="1.5543122344752192e-15 0.06327858343170478 -0.01769247621887393"/>
+    <mass value="11.639210054919547"/>
+    <inertia ixx="0.081135" ixy="-0.0" ixz="-0.0" iyy="0.020636" iyz="-3.3e-05" izz="0.099255"/>
+  </inertial>
+  <visual>
+    <origin rpy="0 0 0" xyz="-0.341828 0.03065 0.332501"/>
+    <geometry>
+        <mesh filename="package://state_publisher/meshes/Flipper_front_left_1_m-binary.stl"/>
+    </geometry>
+    <material name="flipper"/>
+  </visual>
+  <collision>
+    <origin rpy="0 0 0" xyz="-0.341828 0.03065 0.332501"/>
+    <geometry>
+        <mesh filename="package://state_publisher/meshes/Flipper_front_left_1_m-binary.stl"/>
+    </geometry>
+  </collision>
+</link>
+<link name="Arm_base_1">
+  <inertial>
+    <origin rpy="0 0 0" xyz="0.001524895113262148 0.03697186783060223 -0.009122992520075368"/>
+    <mass value="9.318674950833845"/>
+    <inertia ixx="0.020384" ixy="-0.000132" ixz="-0.000105" iyy="0.026478" iyz="-4.7e-05" izz="0.017031"/>
+  </inertial>
+  <visual>
+    <origin rpy="0 0 0" xyz="-0.321828 -0.04685 0.168751"/>
+    <geometry>
+        <mesh filename="package://state_publisher/meshes/Arm_base_1_m-binary.stl"/>
+    </geometry>
+    <material name="arm"/>
+  </visual>
+  <collision>
+    <origin rpy="0 0 0" xyz="-0.321828 -0.04685 0.168751"/>
+    <geometry>
+        <mesh filename="package://state_publisher/meshes/Arm_base_1_m-binary.stl"/>
+    </geometry>
+  </collision>
+</link>
+<link name="Link_1__1">
+  <inertial>
+    <origin rpy="0 0 0" xyz="-0.3351492225757842 0.004913130019986417 0.012840107707914328"/>
+    <mass value="3.211993258458033"/>
+    <inertia ixx="0.004374" ixy="0.00084" ixz="0.000477" iyy="0.029637" iyz="0.000198" izz="0.026449"/>
+  </inertial>
+  <visual>
+    <origin rpy="0 0 0" xyz="-0.307396 -0.135043 0.174751"/>
+    <geometry>
+        <mesh filename="package://state_publisher/meshes/Link_1__1_m-binary.stl"/>
+    </geometry>
+    <material name="arm"/>
+  </visual>
+  <collision>
+    <origin rpy="0 0 0" xyz="-0.307396 -0.135043 0.174751"/>
+    <geometry>
+        <mesh filename="package://state_publisher/meshes/Link_1__1_m-binary.stl"/>
+    </geometry>
+  </collision>
+</link>
+<link name="Link_2_1">
+  <inertial>
+    <origin rpy="0 0 0" xyz="0.3594817395366136 0.00016723067381943513 0.006000499566023415"/>
+    <mass value="1.9297937107544132"/>
+    <inertia ixx="0.000311" ixy="-1.5e-05" ixz="-0.0" iyy="0.03378" iyz="-0.0" izz="0.033784"/>
+  </inertial>
+  <visual>
+    <origin rpy="0 0 0" xyz="0.090627 -0.174866 0.174751"/>
+    <geometry>
+        <mesh filename="package://state_publisher/meshes/Link_2_1_m-binary.stl"/>
+    </geometry>
+    <material name="arm"/>
+  </visual>
+  <collision>
+    <origin rpy="0 0 0" xyz="0.090627 -0.174866 0.174751"/>
+    <geometry>
+        <mesh filename="package://state_publisher/meshes/Link_2_1_m-binary.stl"/>
+    </geometry>
+  </collision>
+</link>
+<joint name="Rigid1" type="fixed">
+  <origin rpy="0 0 0" xyz="-0.11305 -0.03065 -0.06"/>
+  <parent link="main_body"/>
+  <child link="Right_belt_1"/>
+</joint>
+<transmission name="Rigid1_tran">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="Rigid1">
+    <hardwareInterface>PositionJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="Rigid1_actr">
+    <hardwareInterface>PositionJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+<joint name="Rigid2" type="fixed">
+  <origin rpy="0 0 0" xyz="-0.11305 -0.03065 -0.277501"/>
+  <parent link="main_body"/>
+  <child link="Left_belt_1"/>
+</joint>
+<transmission name="Rigid2_tran">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="Rigid2">
+    <hardwareInterface>PositionJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="Rigid2_actr">
+    <hardwareInterface>PositionJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+<joint name="Rev3" type="revolute">
+  <origin rpy="0 0 0" xyz="0.0 0.0 0.055"/>
+  <parent link="Right_belt_1"/>
+  <child link="Flipper_rear_right_1"/>
+  <axis xyz="0.0 0.0 0.01"/>
+  <limit effort="100" lower="-1.570796" upper="3.316126" velocity="100"/>
+</joint>
+<transmission name="Rev3_tran">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="Rev3">
+    <hardwareInterface>PositionJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="Rev3_actr">
+    <hardwareInterface>PositionJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+<joint name="Rev4" type="revolute">
+  <origin rpy="0 0 0" xyz="0.454878 0.0 0.055"/>
+  <parent link="Right_belt_1"/>
+  <child link="Flipper_front_right_1"/>
+  <axis xyz="0.0 0.0 0.01"/>
+  <limit effort="100" lower="-3.316126" upper="1.570796" velocity="100"/>
+</joint>
+<transmission name="Rev4_tran">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="Rev4">
+    <hardwareInterface>PositionJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="Rev4_actr">
+    <hardwareInterface>PositionJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+<joint name="Rigid5" type="fixed">
+  <origin rpy="0 0 0" xyz="0.0 0.0 -0.327501"/>
+  <parent link="Flipper_rear_right_1"/>
+  <child link="Flipper_rear_left_1"/>
+</joint>
+<transmission name="Rigid5_tran">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="Rigid5">
+    <hardwareInterface>PositionJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="Rigid5_actr">
+    <hardwareInterface>PositionJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+<joint name="Rigid6" type="fixed">
+  <origin rpy="0 0 0" xyz="0.0 0.0 -0.327501"/>
+  <parent link="Flipper_front_right_1"/>
+  <child link="Flipper_front_left_1"/>
+</joint>
+<transmission name="Rigid6_tran">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="Rigid6">
+    <hardwareInterface>PositionJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="Rigid6_actr">
+    <hardwareInterface>PositionJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+<joint name="Rev7" type="revolute">
+  <origin rpy="0 0 0" xyz="0.321828 0.04685 -0.168751"/>
+  <parent link="main_body"/>
+  <child link="Arm_base_1"/>
+  <axis xyz="0.0 -0.01 0.0"/>
+  <limit effort="100" lower="-2.356194" upper="2.356194" velocity="100"/>
+</joint>
+<transmission name="Rev7_tran">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="Rev7">
+    <hardwareInterface>PositionJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="Rev7_actr">
+    <hardwareInterface>PositionJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+<joint name="Rev8" type="revolute">
+  <origin rpy="0 0 0" xyz="-0.014432 0.088193 -0.006"/>
+  <parent link="Arm_base_1"/>
+  <child link="Link_1__1"/>
+  <axis xyz="0.0 0.0 0.01"/>
+  <limit effort="100" lower="-3.141593" upper="0.0" velocity="100"/>
+</joint>
+<transmission name="Rev8_tran">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="Rev8">
+    <hardwareInterface>PositionJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="Rev8_actr">
+    <hardwareInterface>PositionJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+<joint name="Rev9" type="revolute">
+  <origin rpy="0 0 0" xyz="-0.398023 0.039823 0.0"/>
+  <parent link="Link_1__1"/>
+  <child link="Link_2_1"/>
+  <axis xyz="0.0 -0.0 0.01"/>
+  <limit effort="100" lower="0.0" upper="3.141593" velocity="100"/>
+</joint>
+<transmission name="Rev9_tran">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="Rev9">
+    <hardwareInterface>PositionJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="Rev9_actr">
+    <hardwareInterface>PositionJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+<gazebo>
+  <plugin filename="libgazebo_ros_control.so" name="control"/>
+</gazebo>
+</robot>
