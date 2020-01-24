@@ -10,5 +10,16 @@
 <body>
     <div id="modules">
     </div>
+    <div id="settings" style="opacity: 0">
+        <div>
+            <h1>Settings</h1>
+            <hr>
+            <div class="settings-contents">
+                <h3 style="margin-top: 0;">Grid settings</h3>
+                <label>Grid size</label>
+                <input type="number" value="3" maxlength="1" min="0" max="9" oninput="this.value=this.value.slice(0,this.maxLength)"> x <input type="number" value="3" maxlength="1" min="0" max="9" oninput="this.value=this.value.slice(0,this.maxLength)">
+            </div>
+        </div>
+    </div>
 </body>
 </html>

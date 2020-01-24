@@ -1,0 +1,30 @@
+.mod_odrive {
+  padding: 10px;
+
+  button {
+    border: 0;
+    color: white;
+    font-size: 14px;
+    padding: 6px;
+    border-radius: 4px;
+    background: rgb(40, 40, 40);
+    outline: none;
+  }
+
+  .odrives_table {
+    border: 2px solid rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    border-spacing: 0;
+    width: 100%;
+  }
+
+  .odrives_table th, .odrives_table td {
+    padding: 5px;
+    text-align: center;
+    border-left: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .odrives_table td {
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+  }
+}
