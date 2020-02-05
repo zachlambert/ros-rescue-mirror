@@ -54,7 +54,7 @@ function init() {
     var urdfClient = new ROS3D.UrdfClient({
         ros : ros,
         tfClient : global_tf_client,
-        path : 'http://localhost:8085/',
+        path : 'http://localhost:8000/',
         rootObject : global_viewer.scene,
         loader : ROS3D.COLLADA_LOADER_2
     });
@@ -63,7 +63,7 @@ function init() {
     var urdfClient = new ROS3D.UrdfClient({
         ros : ros,
         tfClient : local_tf_client,
-        path : 'http://localhost:8085/',
+        path : 'http://localhost:8000/',
         rootObject : local_viewer.scene,
         loader : ROS3D.COLLADA_LOADER_2
     });
