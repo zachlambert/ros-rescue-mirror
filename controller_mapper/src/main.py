@@ -24,21 +24,23 @@ def receive_joy_data(message):
     flipper_front.publish((message.buttons[12] - message.buttons[13]) * 8192 * 85 / 8)
     flipper_rear.publish((message.buttons[15] - message.buttons[14]) * 8192 * 85 / 8)
     if message.buttons[4]:
-        arm_values["theta"] += 0.2
+        arm_values["theta"] += 0.002
     elif message.buttons[5]:
-        arm_values["theta"] -= 0.2
+        arm_values["theta"] -= 0.002
 
     if message.buttons[0]:
-        arm_values["r"] += 0.2
+        arm_values["r"] += 0.02
     elif message.buttons[3]:
-        arm_values["r"] -= 0.2
+        arm_values["r"] -= 0.02
 
     if message.buttons[1]:
-        arm_values["z"] += 0.2
+        arm_values["z"] += 0.02
     elif message.buttons[2]:
-        arm_values["z"] -= 0.2
+        arm_values["z"] -= 0.02
 
-    set_pose_cylindrical(group, arm_values["r"], arm_values["theta"], arm_values["z"], 0, 0, 0)
+    # print(repr(arm_values))
+
+    set_pose_cylindrical(group, arm_values["r"], arm_values["theta"], arm_values["z"], pi / 2, 0, 0)
 
 
 def receive_arm_data(message):
@@ -58,8 +60,10 @@ def set_pose_cartesian(group, x, y, z, roll, pitch, yaw):
     pose_goal.orientation.z = quaternion[2]
     pose_goal.orientation.w = quaternion[3]
 
-    group.go(pose_goal, wait=True)
-    group.stop()
+    # print(x, ":", y, ":", z)
+
+    group.go(pose_goal, wait=False)
+    # group.stop()
 
 
 def set_pose_cylindrical(group, r, theta, z, roll, pitch, yaw):
