@@ -1,5 +1,0 @@
-<launch>
-    <param name='robot_description' command='cat $(find state_publisher)/urdf/simple.urdf'/>
-    <node pkg='robot_state_publisher' type='robot_state_publisher' name='robot_state_publisher'/>
-    <node pkg='state_publisher' type='main.py' name='state_publisher' output='screen'/>
-</launch>
