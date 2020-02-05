@@ -12,6 +12,6 @@
     <param name="~port" value="/dev/serial/by-id/usb-Teensyduino_USB_Serial_6260580-if00" type="str"/>
   </node>
   <node name="webserver" pkg="roswww" type="webserver.py" respawn="true"/>
-  <node name="rosbridge" pkg="rosbridge_server" type="rosbridge_websocket" respawn="true"/>
+  <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
   <node name="controller_mapper" pkg="controller_mapper" type="main.py" output="screen" respawn="true"/>
 </launch>

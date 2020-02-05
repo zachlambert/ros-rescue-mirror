@@ -67,7 +67,3 @@ ros.on('error', function (error) {
 ros.on('close', function () {
     console.log('Connection to websocket server closed.');
 });
-
-loadModule("gamepad");
-loadModule("odrive");
-loadModule("power");

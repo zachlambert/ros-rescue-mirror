@@ -3,8 +3,16 @@ import rospy
 from sensor_msgs.msg import Joy
 from std_msgs.msg import Int32
 from std_msgs.msg import Float32MultiArray
+import sys
+import moveit_commander
+import moveit_msgs.msg
+import geometry_msgs.msg
+from math import pi
+from std_msgs.msg import String
+import tf
+import math
 
-arm_values = [0, 0, 0]
+arm_values = {"r": 0.1, "theta": 0, "z": 0.1}
 
 arm_msg = Float32MultiArray()
 
@@ -16,27 +24,55 @@ def receive_joy_data(message):
     flipper_front.publish((message.buttons[12] - message.buttons[13]) * 8192 * 85 / 8)
     flipper_rear.publish((message.buttons[15] - message.buttons[14]) * 8192 * 85 / 8)
     if message.buttons[4]:
-        arm_values[0] += 0.2
+        arm_values["theta"] += 0.2
     elif message.buttons[5]:
-        arm_values[0] -= 0.2
+        arm_values["theta"] -= 0.2
 
     if message.buttons[0]:
-        arm_values[1] += 0.2
+        arm_values["r"] += 0.2
     elif message.buttons[3]:
-        arm_values[1] -= 0.2
+        arm_values["r"] -= 0.2
 
     if message.buttons[1]:
-        arm_values[2] += 0.2
+        arm_values["z"] += 0.2
     elif message.buttons[2]:
-        arm_values[2] -= 0.2
+        arm_values["z"] -= 0.2
 
-    arm_msg.data = arm_values
-    arm.publish(arm_msg)
+    set_pose_cylindrical(group, arm_values["r"], arm_values["theta"], arm_values["z"], 0, 0, 0)
 
 
 def receive_arm_data(message):
     global arm_values
     arm_values = message.data
+
+
+def set_pose_cartesian(group, x, y, z, roll, pitch, yaw):
+    pose_goal = geometry_msgs.msg.Pose()
+    pose_goal.position.x = x
+    pose_goal.position.y = y
+    pose_goal.position.z = z
+
+    quaternion = tf.transformations.quaternion_from_euler(roll, pitch, yaw)
+    pose_goal.orientation.x = quaternion[0]
+    pose_goal.orientation.y = quaternion[1]
+    pose_goal.orientation.z = quaternion[2]
+    pose_goal.orientation.w = quaternion[3]
+
+    group.go(pose_goal, wait=True)
+    group.stop()
+
+
+def set_pose_cylindrical(group, r, theta, z, roll, pitch, yaw):
+    x = r * math.cos(theta)
+    y = r * math.sin(theta)
+
+    set_pose_cartesian(group, x, y, z, roll, pitch, yaw)
+
+
+moveit_commander.roscpp_initialize(sys.argv)
+
+group_name = 'arm'
+group = moveit_commander.MoveGroupCommander(group_name)
 
 # base button 5 and 4
 rospy.init_node("controller_mapper")

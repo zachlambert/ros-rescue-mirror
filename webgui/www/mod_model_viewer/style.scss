@@ -1,0 +1,7 @@
+.mod_model_viewer {
+  #global_viewer > canvas {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover;
+  }
+}
