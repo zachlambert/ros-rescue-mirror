@@ -49,7 +49,7 @@ def move_pose(group, x, y, z, roll, pitch, yaw):
     pose_goal.orientation.w = quaternion[3]
 
     group.go(pose_goal, wait=True)
-    #group.stop()
+    group.stop()
 
 def move_to_random_pose(group):
     pose_goal = group.get_random_pose('gripper_1')
@@ -68,18 +68,27 @@ def main():
     group = moveit_commander.MoveGroupCommander(group_name)
     group.set_planning_time(0.1)
 
-    set_pose(group, 0.4, 0, 0.6, pi/2, 0, 0)
+    group.set_named_target('home')
+    group.go(wait=True)
+
 
     user_input = raw_input('>')
     while user_input != 'exit':
-        inputs = user_input.split(' ')
-        outputs = [0, 0, 0, 0, 0, 0]
-        for i in range(0, len(inputs)):
-            try:
-                outputs[i] = float(inputs[i])
-            except:
-                pass
-        move_pose(group, *outputs)
+        if user_input=='home':
+            group.set_named_target('home')
+            group.go(wait=True)
+        elif user_input=='ready':
+            group.set_named_target('ready')
+            group.go(wait=True)
+        else:
+            inputs = user_input.split(' ')
+            outputs = [0, 0, 0, 0, 0, 0]
+            for i in range(0, len(inputs)):
+                try:
+                    outputs[i] = float(inputs[i])
+                except:
+                    pass
+            move_pose(group, *outputs)
         user_input = raw_input('>')
 
 if __name__ == '__main__':

@@ -1,0 +1,6 @@
+<launch>
+    <param name='robot_description' command='cat $(find state_publisher)/urdf/rescue.urdf'/>
+    <node pkg='robot_state_publisher' type='robot_state_publisher' name='robot_state_publisher'/>
+    <node pkg='robot_interface' type='robot_pose_publisher.py' name='robot_pose_publisher' output='screen'/>
+    <node pkg="tf2_web_republisher" type="tf2_web_republisher" name="tf2_web_republisher"/>
+</launch>

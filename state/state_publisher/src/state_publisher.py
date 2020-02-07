@@ -63,7 +63,7 @@ def publish():
     joint_state.header.stamp = rospy.Time.now()
     joint_state.name = joints.keys()
     joint_state.position = joints.values()
-    joint_pub.publish(joint_state)
+    #joint_pub.publish(joint_state)
 
     base_transform.header.stamp = rospy.Time.now()
     base_transform.transform.translation = robot_pose.position
