@@ -46,15 +46,19 @@ def receive_joy_data(message):
                      "pitch": message.buttons[12] - message.buttons[13]
                      }
 
+            nonzero = False
             for key, value in moves.items():
                 if key in angles:
                     moves[key] *= ang
                 else:
                     moves[key] *= dist
+                if value != 0:
+                    nonzero = True
 
-            print(message)
-            print(moves)
-            move_pose(group, moves["x"], moves["y"], moves["z"], moves["yaw"], moves["roll"], moves["pitch"])
+            if nonzero:
+                print(message)
+                print(moves)
+                move_pose(group, moves["x"], moves["y"], moves["z"], moves["yaw"], moves["roll"], moves["pitch"])
     else:
         drive_left.publish(-(3 * message.axes[1] * 8192 * 16 + message.axes[0] * 16 * 8192))
         drive_right.publish(3 * message.axes[1] * 8192 * 16 - message.axes[0] * 16 * 8192)
