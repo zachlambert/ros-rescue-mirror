@@ -16,7 +16,7 @@ public:
             const double* flipper_actual);
   // Write to arm_demand, wrist_demand. Read from cmd[6]
   void write(double* arm_demand,
-             double* wrist_demand)const;
+             double* wrist_demand);
 
 protected:
 

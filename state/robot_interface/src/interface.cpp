@@ -67,7 +67,7 @@ void RobotInterface::read(const double* arm_actual, const double* wrist_actual, 
    }
 }
 
-void RobotInterface::write(double* arm_demand, double* wrist_demand)const
+void RobotInterface::write(double* arm_demand, double* wrist_demand)
 {
    for(int i=0; i<3; i++){
        arm_demand[i] = cmd[i];

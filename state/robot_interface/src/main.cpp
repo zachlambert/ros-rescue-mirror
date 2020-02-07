@@ -56,7 +56,7 @@ RobotHandler::RobotHandler(ros::NodeHandle& n):
     arm_demand_pub = n.advertise<std_msgs::Float32MultiArray>(
         "/arm_demand_angles", 1);
     arm_actual_sub = n.subscribe(
-        "/arm_current_angles", 1000, &RobotHandler::arm_callback, this); 
+        "/arm_demand_angles", 1000, &RobotHandler::arm_callback, this); 
 
     arm_demand_msg.layout.dim.push_back(std_msgs::MultiArrayDimension());
     arm_demand_msg.layout.dim[0].label = "joint";
@@ -66,7 +66,7 @@ RobotHandler::RobotHandler(ros::NodeHandle& n):
     wrist_demand_pub = n.advertise<std_msgs::Float32MultiArray>(
         "/wrist_demand_angles", 1);
     wrist_actual_sub = n.subscribe(
-        "/wrist_current_angles", 1000, &RobotHandler::wrist_callback, this); 
+        "/wrist_demand_angles", 1000, &RobotHandler::wrist_callback, this); 
 
     wrist_demand_msg.layout.dim.push_back(std_msgs::MultiArrayDimension());
     wrist_demand_msg.layout.dim[0].label = "joint";
