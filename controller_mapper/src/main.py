@@ -46,11 +46,12 @@ def receive_joy_data(message):
                      "pitch": message.buttons[12] - message.buttons[13]
                      }
 
-            # for key, value in moves.items():
-            #     if key in angles:
-            #         moves[key] *= ang
-            #     else:
-            #         moves[key] *= dist
+            for key, value in moves.items():
+                if key in angles:
+                    moves[key] *= ang
+                else:
+                    moves[key] *= dist
+
             print(message)
             print(moves)
             move_pose(group, moves["x"], moves["y"], moves["z"], moves["yaw"], moves["roll"], moves["pitch"])
