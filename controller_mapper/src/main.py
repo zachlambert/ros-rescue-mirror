@@ -16,61 +16,74 @@ arm_values = {"r": 0.1, "theta": 0, "z": 0.1}
 
 arm_msg = Float32MultiArray()
 
+arm_control_mode = True
+last_message = None
+
 
 def receive_joy_data(message):
-    global odrive_pub
-    drive_left.publish(-(3 * message.axes[1] * 8192 * 16 + message.axes[0] * 16 * 8192))
-    drive_right.publish(3 * message.axes[1] * 8192 * 16 - message.axes[0] * 16 * 8192)
-    flipper_front.publish((message.buttons[12] - message.buttons[13]) * 8192 * 85 / 8)
-    flipper_rear.publish((message.buttons[15] - message.buttons[14]) * 8192 * 85 / 8)
-    if message.buttons[4]:
-        arm_values["theta"] += 0.002
-    elif message.buttons[5]:
-        arm_values["theta"] -= 0.002
+    global arm_control_mode, last_message
 
-    if message.buttons[0]:
-        arm_values["r"] += 0.02
-    elif message.buttons[3]:
-        arm_values["r"] -= 0.02
+    if message.buttons[16] == 1 and last_message == 0:
+        arm_control_mode = not arm_control_mode
+    last_message = message.buttons[16]
 
-    if message.buttons[1]:
-        arm_values["z"] += 0.02
-    elif message.buttons[2]:
-        arm_values["z"] -= 0.02
+    if arm_control_mode:
+        if message.buttons[8]:
+            pass  # home
+        elif message.buttons[9]:
+            pass  # ready
+        else:
+            dist = 0.01
+            ang = 0.01
 
-    # print(repr(arm_values))
+            angles = ["yaw", "pitch", "roll"]
 
-    set_pose_cylindrical(group, arm_values["r"], arm_values["theta"], arm_values["z"], pi / 2, 0, 0)
+            moves = {"x": -message.axes[1],
+                     "y": message.axes[0],
+                     "z": message.axes[5] - message.axes[4],
+                     "yaw": message.buttons[4] - message.buttons[5],
+                     "roll": message.buttons[14] - message.buttons[15],
+                     "pitch": message.buttons[12] - message.buttons[13]
+                     }
+
+            # for key, value in moves.items():
+            #     if key in angles:
+            #         moves[key] *= ang
+            #     else:
+            #         moves[key] *= dist
+            print(message)
+            print(moves)
+            move_pose(group, moves["x"], moves["y"], moves["z"], moves["yaw"], moves["roll"], moves["pitch"])
+    else:
+        drive_left.publish(-(3 * message.axes[1] * 8192 * 16 + message.axes[0] * 16 * 8192))
+        drive_right.publish(3 * message.axes[1] * 8192 * 16 - message.axes[0] * 16 * 8192)
+        flipper_front.publish((message.buttons[12] - message.buttons[13]) * 8192 * 85 / 8)
+        flipper_rear.publish((message.buttons[15] - message.buttons[14]) * 8192 * 85 / 8)
 
 
-def receive_arm_data(message):
-    global arm_values
-    arm_values = message.data
+def move_pose(group, x, y, z, roll, pitch, yaw):
+    pose = group.get_current_pose().pose
+    quaternion = (pose.orientation.x,
+                  pose.orientation.y,
+                  pose.orientation.z,
+                  pose.orientation.w)
+    euler = tf.transformations.euler_from_quaternion(quaternion)
+    euler = (euler[0] + roll,
+             euler[1] + pitch,
+             euler[2] + yaw)
+    quaternion = tf.transformations.quaternion_from_euler(euler[0], euler[1], euler[2])
 
-
-def set_pose_cartesian(group, x, y, z, roll, pitch, yaw):
     pose_goal = geometry_msgs.msg.Pose()
-    pose_goal.position.x = x
-    pose_goal.position.y = y
-    pose_goal.position.z = z
-
-    quaternion = tf.transformations.quaternion_from_euler(roll, pitch, yaw)
+    pose_goal.position.x = pose.position.x + x
+    pose_goal.position.y = pose.position.y + y
+    pose_goal.position.z = pose.position.z + z
+    #pose_goal.orientation.w = 1
     pose_goal.orientation.x = quaternion[0]
     pose_goal.orientation.y = quaternion[1]
     pose_goal.orientation.z = quaternion[2]
     pose_goal.orientation.w = quaternion[3]
 
-    # print(x, ":", y, ":", z)
-
     group.go(pose_goal, wait=False)
-    # group.stop()
-
-
-def set_pose_cylindrical(group, r, theta, z, roll, pitch, yaw):
-    x = r * math.cos(theta)
-    y = r * math.sin(theta)
-
-    set_pose_cartesian(group, x, y, z, roll, pitch, yaw)
 
 
 moveit_commander.roscpp_initialize(sys.argv)
@@ -88,6 +101,5 @@ drive_left = rospy.Publisher('/odrive_drive/axis0/vel_setpoint', Int32, queue_si
 drive_right = rospy.Publisher('/odrive_drive/axis1/vel_setpoint', Int32, queue_size=10)
 flipper_front = rospy.Publisher('/odrive_flipper/axis0/vel_setpoint', Int32, queue_size=10)
 flipper_rear = rospy.Publisher('/odrive_flipper/axis1/vel_setpoint', Int32, queue_size=10)
-arm = rospy.Publisher('/arm_demand_angles', Float32MultiArray, queue_size=10)
 
 rospy.spin()

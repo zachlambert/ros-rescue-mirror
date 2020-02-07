@@ -41,7 +41,7 @@ function gamepad_init() {
         messageType: 'sensor_msgs/Joy'
     });
 
-    setInterval(pollGamepad, 10);
+    setInterval(pollGamepad, 100);
 }
 
 function reduceDeadzone(x) {
