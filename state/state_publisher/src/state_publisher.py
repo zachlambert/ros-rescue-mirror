@@ -26,13 +26,15 @@ def set_flipper_positions(front_angle, rear_angle):
     joints['flippers_front'] = front_angle
     joints['flippers_rear'] = rear_angle
 
-def set_arm_angles(angle1, angle2, angle3, angle4, angle5, angle6):
+def set_arm_angles(angle1, angle2, angle3):
     joints['arm1'] = angle1
     joints['arm2'] = angle2
     joints['arm3'] = angle3
-    joints['wrist1'] = angle4
-    joints['wrist2'] = angle5
-    joints['wrist3'] = angle6
+
+def set_wrist_angles(angle1, angle2, angle3):
+    joints['wrist1'] = angle1
+    joints['wrist2'] = angle2
+    joints['wrist3'] = angle3
 
 def get_initial_robot_pose():
     pose = Pose()
@@ -63,7 +65,7 @@ def publish():
     joint_state.header.stamp = rospy.Time.now()
     joint_state.name = joints.keys()
     joint_state.position = joints.values()
-    #joint_pub.publish(joint_state)
+    joint_pub.publish(joint_state)
 
     base_transform.header.stamp = rospy.Time.now()
     base_transform.transform.translation = robot_pose.position

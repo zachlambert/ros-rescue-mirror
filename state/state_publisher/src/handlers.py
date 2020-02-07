@@ -18,12 +18,15 @@ def _flippers_position_cb(positions):
     state_publisher.set_flipper_positions(positions.data[0], positions.data[1])
 
 def _arm_angles_cb(angles):
-    state_publisher.set_arm_angles(angles.data[0], angles.data[1], angles.data[2],
-                                   angles.data[3], angles.data[4], angles.data[5])
+    state_publisher.set_arm_angles(angles.data[0], angles.data[1], angles.data[2])
+
+def _wrist_angles_cb(angles):
+    state_publisher.set_wrist_angles(angles.data[0], angles.data[1], angles.data[2])
 
 def init():
 
-    rospy.Subscriber("pose", Pose, _pose_cb)
-    rospy.Subscriber("flippers/position", Float32MultiArray, _flippers_position_cb)
-    rospy.Subscriber("arm/angles", Float32MultiArray, _arm_angles_cb)
+    rospy.Subscriber("/robot_pose", Pose, _pose_cb)
+    rospy.Subscriber("/flippers/position", Float32MultiArray, _flippers_position_cb)
+    rospy.Subscriber("/arm_demand_angles", Float32MultiArray, _arm_angles_cb)
+    rospy.Subscriber("/wrist_demand_angles", Float32MultiArray, _wrist_angles_cb)
 

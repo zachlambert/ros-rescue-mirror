@@ -4,8 +4,8 @@
 #include "std_msgs/Float32MultiArray.h"
 #include "std_msgs/MultiArrayDimension.h"
 #include <controller_manager/controller_manager.h>
-#include <ros/console.h>
 #include <ros/callback_queue.h>
+#include <stdio.h>
 
 
 // What does this node do?

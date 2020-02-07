@@ -1,5 +1,5 @@
 <launch>
-    <include file="$(find robot_interface)/launch/state_publisher.launch"/>
+    <include file="$(find state_publisher)/launch/state_publisher.launch"/>
     <include file="$(find robot_interface)/launch/control.launch"/>
     <include file="$(find robot_config)/launch/move_group.launch"/>
 </launch>
