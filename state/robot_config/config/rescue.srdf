@@ -36,10 +36,12 @@
     <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
     <disable_collisions link1="arm_base_1" link2="arm_lower_1" reason="Adjacent" />
     <disable_collisions link1="arm_base_1" link2="flipper_front_left_1" reason="Never" />
+    <disable_collisions link1="arm_base_1" link2="flipper_front_right_1" reason="Never" />
     <disable_collisions link1="arm_base_1" link2="flipper_rear_left_1" reason="Never" />
     <disable_collisions link1="arm_base_1" link2="flipper_rear_right_1" reason="Never" />
     <disable_collisions link1="arm_base_1" link2="left_belt_1" reason="Never" />
     <disable_collisions link1="arm_base_1" link2="main_body" reason="Adjacent" />
+    <disable_collisions link1="arm_base_1" link2="right_belt_1" reason="Never" />
     <disable_collisions link1="arm_lower_1" link2="arm_upper_1" reason="Adjacent" />
     <disable_collisions link1="arm_lower_1" link2="left_belt_1" reason="Never" />
     <disable_collisions link1="arm_lower_1" link2="main_body" reason="Never" />
@@ -59,7 +61,7 @@
     <disable_collisions link1="flipper_rear_left_1" link2="left_belt_1" reason="Default" />
     <disable_collisions link1="flipper_rear_left_1" link2="main_body" reason="Never" />
     <disable_collisions link1="flipper_rear_left_1" link2="right_belt_1" reason="Never" />
-    <disable_collisions link1="flipper_rear_left_1" link2="wrist_pitch_1" reason="Never" />
+    <disable_collisions link1="flipper_rear_left_1" link2="wrist_yaw_1" reason="Never" />
     <disable_collisions link1="flipper_rear_right_1" link2="left_belt_1" reason="Never" />
     <disable_collisions link1="flipper_rear_right_1" link2="main_body" reason="Never" />
     <disable_collisions link1="flipper_rear_right_1" link2="right_belt_1" reason="Adjacent" />

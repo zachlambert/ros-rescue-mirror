@@ -9,8 +9,8 @@ generic_hw_control_loop:
 # Settings for ros_control hardware interface
 hardware_interface:
   joints:
-    - flipper_front
-    - flipper_rear
+    - flippers_front
+    - flippers_rear
     - arm1
     - arm2
     - arm3

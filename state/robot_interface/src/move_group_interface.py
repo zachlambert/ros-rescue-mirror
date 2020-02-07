@@ -66,27 +66,10 @@ def main():
 
     group_name = 'arm'
     group = moveit_commander.MoveGroupCommander(group_name)
+    group.set_planning_time(0.1)
 
-    planning_frame = group.get_planning_frame()
-    print 'Reference Frame: %s' % planning_frame
-    eef_link = group.get_end_effector_link()
-    print 'End Effector Link: %s' % eef_link
-    group_names = robot.get_group_names()
-    print 'Robot Groups: ', group_names
+    set_pose(group, 0.4, 0, 0.6, pi/2, 0, 0)
 
-    set_pose(group, 0.4, 0, 0.4, pi/2, 0, 0)
-
-    freq = 4
-    rate = rospy.Rate(freq)
-    count = 0
-    vx = 0.2
-    time = 2
-    while not rospy.is_shutdown() and count<time*freq:
-        move_pose(group, vx/freq, 0, 0, 0, 0, 0)
-        count += 1
-        rate.sleep()
-
-    """ 
     user_input = raw_input('>')
     while user_input != 'exit':
         inputs = user_input.split(' ')
@@ -97,7 +80,7 @@ def main():
             except:
                 pass
         move_pose(group, *outputs)
-    """
+        user_input = raw_input('>')
 
 if __name__ == '__main__':
     main()

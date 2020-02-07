@@ -27,14 +27,14 @@
 
 <link name="main_body">
   <inertial>
-    <origin rpy="0 0 0" xyz="0.10362958128296546 -0.018518589851868602 -0.11928098661532627"/>
+    <origin rpy="0 0 0" xyz="0.1369947223925939 -0.021581774511420574 -0.14958294306540101"/>
     <mass value="125.39802798594614"/>
     <inertia ixx="0.710702" ixy="0.02898" ixz="-0.000172" iyy="3.591341" iyz="0.000124" izz="3.324467"/>
   </inertial>
   <visual>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <geometry>
-      <mesh filename="package://state_publisher/meshes/base_link_m-binary.stl"/>
+        <mesh filename="package://state_publisher/meshes/base_link_m-binary.stl"/>
     </geometry>
     <material name="body"/>
   </visual>
@@ -47,19 +47,19 @@
 </link>
 <link name="right_belt_1">
   <inertial>
-    <origin rpy="0 0 0" xyz="0.22743918683014153 -0.0023270038235164714 0.025603511116359286"/>
+    <origin rpy="0 0 0" xyz="0.2274393279397699 -0.0023271884830684056 0.02560355466628348"/>
     <mass value="50.63722379743233"/>
     <inertia ixx="0.196333" ixy="-0.0" ixz="0.0" iyy="1.451152" iyz="-7.1e-05" izz="1.62557"/>
   </inertial>
   <visual>
-    <origin rpy="0 0 0" xyz="0.121419 0.029614 0.010522"/>
+    <origin rpy="0 0 0" xyz="0.088054 0.032677 0.040824"/>
     <geometry>
         <mesh filename="package://state_publisher/meshes/right_belt_1_m-binary.stl"/>
     </geometry>
     <material name="body"/>
   </visual>
   <collision>
-    <origin rpy="0 0 0" xyz="0.121419 0.029614 0.010522"/>
+    <origin rpy="0 0 0" xyz="0.088054 0.032677 0.040824"/>
     <geometry>
         <mesh filename="package://state_publisher/meshes/right_belt_1_m-binary.stl"/>
     </geometry>
@@ -67,19 +67,19 @@
 </link>
 <link name="left_belt_1">
   <inertial>
-    <origin rpy="0 0 0" xyz="0.22743918683022915 -0.002327003823516492 -0.025604306397982307"/>
+    <origin rpy="0 0 0" xyz="0.22743932793985763 -0.0023271884830684333 -0.025604262848056003"/>
     <mass value="50.637223797432235"/>
     <inertia ixx="0.196333" ixy="-0.0" ixz="-0.0" iyy="1.451152" iyz="7.1e-05" izz="1.62557"/>
   </inertial>
   <visual>
-    <origin rpy="0 0 0" xyz="0.121419 0.029614 0.228023"/>
+    <origin rpy="0 0 0" xyz="0.088054 0.032677 0.258325"/>
     <geometry>
         <mesh filename="package://state_publisher/meshes/left_belt_1_m-binary.stl"/>
     </geometry>
     <material name="body"/>
   </visual>
   <collision>
-    <origin rpy="0 0 0" xyz="0.121419 0.029614 0.228023"/>
+    <origin rpy="0 0 0" xyz="0.088054 0.032677 0.258325"/>
     <geometry>
         <mesh filename="package://state_publisher/meshes/left_belt_1_m-binary.stl"/>
     </geometry>
@@ -87,19 +87,19 @@
 </link>
 <link name="flipper_rear_right_1">
   <inertial>
-    <origin rpy="0 0 0" xyz="1.8667320490772799e-07 0.06327889494871872 0.017692078578064464"/>
+    <origin rpy="0 0 0" xyz="3.2778283322321133e-07 0.06327871028916665 0.01769212212798793"/>
     <mass value="11.639210054919547"/>
     <inertia ixx="0.081135" ixy="-0.0" ixz="-0.0" iyy="0.020636" iyz="3.3e-05" izz="0.099255"/>
   </inertial>
   <visual>
-    <origin rpy="0 0 0" xyz="0.121419 0.029614 -0.044478"/>
+    <origin rpy="0 0 0" xyz="0.088054 0.032677 -0.014176"/>
     <geometry>
         <mesh filename="package://state_publisher/meshes/flipper_rear_right_1_m-binary.stl"/>
     </geometry>
     <material name="flipper"/>
   </visual>
   <collision>
-    <origin rpy="0 0 0" xyz="0.121419 0.029614 -0.044478"/>
+    <origin rpy="0 0 0" xyz="0.088054 0.032677 -0.014176"/>
     <geometry>
         <mesh filename="package://state_publisher/meshes/flipper_rear_right_1_m-binary.stl"/>
     </geometry>
@@ -107,19 +107,19 @@
 </link>
 <link name="flipper_front_right_1">
   <inertial>
-    <origin rpy="0 0 0" xyz="1.86673220603506e-07 0.06327889494871752 0.017692078578063312"/>
+    <origin rpy="0 0 0" xyz="3.2778284914103395e-07 0.06327871028916543 0.017692122127987514"/>
     <mass value="11.639210054919547"/>
-    <inertia ixx="0.081135" ixy="0.0" ixz="-0.0" iyy="0.020636" iyz="3.3e-05" izz="0.099255"/>
+    <inertia ixx="0.081135" ixy="-0.0" ixz="-0.0" iyy="0.020636" iyz="3.3e-05" izz="0.099255"/>
   </inertial>
   <visual>
-    <origin rpy="0 0 0" xyz="-0.333459 0.029614 -0.044478"/>
+    <origin rpy="0 0 0" xyz="-0.366824 0.032677 -0.014176"/>
     <geometry>
         <mesh filename="package://state_publisher/meshes/flipper_front_right_1_m-binary.stl"/>
     </geometry>
     <material name="flipper"/>
   </visual>
   <collision>
-    <origin rpy="0 0 0" xyz="-0.333459 0.029614 -0.044478"/>
+    <origin rpy="0 0 0" xyz="-0.366824 0.032677 -0.014176"/>
     <geometry>
         <mesh filename="package://state_publisher/meshes/flipper_front_right_1_m-binary.stl"/>
     </geometry>
@@ -127,19 +127,19 @@
 </link>
 <link name="flipper_rear_left_1">
   <inertial>
-    <origin rpy="0 0 0" xyz="1.866732055877396e-07 0.06327889494871869 -0.017692873859686542"/>
+    <origin rpy="0 0 0" xyz="3.2778283412526754e-07 0.0632787102891666 -0.017692830309759933"/>
     <mass value="11.639210054919547"/>
-    <inertia ixx="0.081135" ixy="-0.0" ixz="-0.0" iyy="0.020636" iyz="-3.3e-05" izz="0.099255"/>
+    <inertia ixx="0.081135" ixy="-0.0" ixz="0.0" iyy="0.020636" iyz="-3.3e-05" izz="0.099255"/>
   </inertial>
   <visual>
-    <origin rpy="0 0 0" xyz="0.121419 0.029614 0.283023"/>
+    <origin rpy="0 0 0" xyz="0.088054 0.032677 0.313325"/>
     <geometry>
         <mesh filename="package://state_publisher/meshes/flipper_rear_left_1_m-binary.stl"/>
     </geometry>
     <material name="flipper"/>
   </visual>
   <collision>
-    <origin rpy="0 0 0" xyz="0.121419 0.029614 0.283023"/>
+    <origin rpy="0 0 0" xyz="0.088054 0.032677 0.313325"/>
     <geometry>
         <mesh filename="package://state_publisher/meshes/flipper_rear_left_1_m-binary.stl"/>
     </geometry>
@@ -147,19 +147,19 @@
 </link>
 <link name="flipper_front_left_1">
   <inertial>
-    <origin rpy="0 0 0" xyz="1.8667322182475132e-07 0.06327889494871758 -0.01769287385968804"/>
+    <origin rpy="0 0 0" xyz="3.277828503622793e-07 0.06327871028916549 -0.017692830309760266"/>
     <mass value="11.639210054919547"/>
     <inertia ixx="0.081135" ixy="-0.0" ixz="-0.0" iyy="0.020636" iyz="-3.3e-05" izz="0.099255"/>
   </inertial>
   <visual>
-    <origin rpy="0 0 0" xyz="-0.333459 0.029614 0.283023"/>
+    <origin rpy="0 0 0" xyz="-0.366824 0.032677 0.313325"/>
     <geometry>
         <mesh filename="package://state_publisher/meshes/flipper_front_left_1_m-binary.stl"/>
     </geometry>
     <material name="flipper"/>
   </visual>
   <collision>
-    <origin rpy="0 0 0" xyz="-0.333459 0.029614 0.283023"/>
+    <origin rpy="0 0 0" xyz="-0.366824 0.032677 0.313325"/>
     <geometry>
         <mesh filename="package://state_publisher/meshes/flipper_front_left_1_m-binary.stl"/>
     </geometry>
@@ -167,19 +167,19 @@
 </link>
 <link name="arm_base_1">
   <inertial>
-    <origin rpy="0 0 0" xyz="0.0015250817864826405 0.036972179347615125 -0.009123390160887465"/>
+    <origin rpy="0 0 0" xyz="0.001525222896111067 0.03697199468806295 -0.009123346610961841"/>
     <mass value="9.318674950833845"/>
     <inertia ixx="0.020384" ixy="-0.000132" ixz="-0.000105" iyy="0.026478" iyz="-4.7e-05" izz="0.017031"/>
   </inertial>
   <visual>
-    <origin rpy="0 0 0" xyz="-0.313459 -0.047886 0.119273"/>
+    <origin rpy="0 0 0" xyz="-0.346824 -0.044823 0.149575"/>
     <geometry>
         <mesh filename="package://state_publisher/meshes/arm_base_1_m-binary.stl"/>
     </geometry>
     <material name="arm"/>
   </visual>
   <collision>
-    <origin rpy="0 0 0" xyz="-0.313459 -0.047886 0.119273"/>
+    <origin rpy="0 0 0" xyz="-0.346824 -0.044823 0.149575"/>
     <geometry>
         <mesh filename="package://state_publisher/meshes/arm_base_1_m-binary.stl"/>
     </geometry>
@@ -187,19 +187,19 @@
 </link>
 <link name="arm_lower_1">
   <inertial>
-    <origin rpy="0 0 0" xyz="-0.33514903590256295 0.004913441536999602 0.012839710067103355"/>
+    <origin rpy="0 0 0" xyz="-0.3351498947929346 0.004913256877447342 0.012839753617028188"/>
     <mass value="3.211993258458033"/>
     <inertia ixx="0.004374" ixy="0.00084" ixz="0.000477" iyy="0.029637" iyz="0.000198" izz="0.026449"/>
   </inertial>
   <visual>
-    <origin rpy="0 0 0" xyz="-0.299027 -0.136079 0.125273"/>
+    <origin rpy="0 0 0" xyz="-0.332393 -0.133016 0.155575"/>
     <geometry>
         <mesh filename="package://state_publisher/meshes/arm_lower_1_m-binary.stl"/>
     </geometry>
     <material name="arm"/>
   </visual>
   <collision>
-    <origin rpy="0 0 0" xyz="-0.299027 -0.136079 0.125273"/>
+    <origin rpy="0 0 0" xyz="-0.332393 -0.133016 0.155575"/>
     <geometry>
         <mesh filename="package://state_publisher/meshes/arm_lower_1_m-binary.stl"/>
     </geometry>
@@ -207,19 +207,19 @@
 </link>
 <link name="arm_upper_1">
   <inertial>
-    <origin rpy="0 0 0" xyz="0.22451215756009318 1.3010842617455776e-05 0.006000101925213053"/>
+    <origin rpy="0 0 0" xyz="0.22451229866972153 1.2826183065084429e-05 0.006000145475138247"/>
     <mass value="1.1170241298535344"/>
     <inertia ixx="0.000146" ixy="0.0" ixz="-0.0" iyy="0.010141" iyz="0.0" izz="0.01012"/>
   </inertial>
   <visual>
-    <origin rpy="0 0 0" xyz="0.098995 -0.175902 0.125273"/>
+    <origin rpy="0 0 0" xyz="0.06563 -0.172839 0.155575"/>
     <geometry>
         <mesh filename="package://state_publisher/meshes/arm_upper_1_m-binary.stl"/>
     </geometry>
     <material name="arm"/>
   </visual>
   <collision>
-    <origin rpy="0 0 0" xyz="0.098995 -0.175902 0.125273"/>
+    <origin rpy="0 0 0" xyz="0.06563 -0.172839 0.155575"/>
     <geometry>
         <mesh filename="package://state_publisher/meshes/arm_upper_1_m-binary.stl"/>
     </geometry>
@@ -227,19 +227,19 @@
 </link>
 <link name="wrist_yaw_1">
   <inertial>
-    <origin rpy="0 0 0" xyz="0.04441576596725069 4.622440790394422e-05 0.019000101925213286"/>
+    <origin rpy="0 0 0" xyz="0.044415907076879035 4.603974835148961e-05 0.019000145475138813"/>
     <mass value="0.5097860192503678"/>
     <inertia ixx="0.000112" ixy="-0.0" ixz="-0.0" iyy="0.000264" iyz="0.0" izz="0.000208"/>
   </inertial>
   <visual>
-    <origin rpy="0 0 0" xyz="-0.216685 -0.175944 0.138273"/>
+    <origin rpy="0 0 0" xyz="-0.25005 -0.172881 0.168575"/>
     <geometry>
         <mesh filename="package://state_publisher/meshes/wrist_yaw_1_m-binary.stl"/>
     </geometry>
     <material name="wrist"/>
   </visual>
   <collision>
-    <origin rpy="0 0 0" xyz="-0.216685 -0.175944 0.138273"/>
+    <origin rpy="0 0 0" xyz="-0.25005 -0.172881 0.168575"/>
     <geometry>
         <mesh filename="package://state_publisher/meshes/wrist_yaw_1_m-binary.stl"/>
     </geometry>
@@ -247,19 +247,19 @@
 </link>
 <link name="wrist_pitch_1">
   <inertial>
-    <origin rpy="0 0 0" xyz="0.037373819563222666 -0.0061108662348390574 1.0192522521823566e-07"/>
+    <origin rpy="0 0 0" xyz="0.03737396067285109 -0.00611105089439154 1.454751508700447e-07"/>
     <mass value="0.39341698942281567"/>
     <inertia ixx="0.000118" ixy="-1.1e-05" ixz="-0.0" iyy="9.8e-05" iyz="0.0" izz="0.000176"/>
   </inertial>
   <visual>
-    <origin rpy="0 0 0" xyz="-0.27322 -0.190503 0.119273"/>
+    <origin rpy="0 0 0" xyz="-0.306585 -0.18744 0.149575"/>
     <geometry>
         <mesh filename="package://state_publisher/meshes/wrist_pitch_1_m-binary.stl"/>
     </geometry>
     <material name="wrist"/>
   </visual>
   <collision>
-    <origin rpy="0 0 0" xyz="-0.27322 -0.190503 0.119273"/>
+    <origin rpy="0 0 0" xyz="-0.306585 -0.18744 0.149575"/>
     <geometry>
         <mesh filename="package://state_publisher/meshes/wrist_pitch_1_m-binary.stl"/>
     </geometry>
@@ -267,26 +267,26 @@
 </link>
 <link name="gripper_1">
   <inertial>
-    <origin rpy="0 0 0" xyz="0.02583338452773354 2.6768630369794488e-05 4.48856803267339e-07"/>
+    <origin rpy="0 0 0" xyz="0.02583352563736202 2.6583970817339875e-05 4.924067290301704e-07"/>
     <mass value="1.7001261051527197"/>
     <inertia ixx="0.004444" ixy="-0.0" ixz="-0.0" iyy="0.004742" iyz="-0.0" izz="0.001496"/>
   </inertial>
   <visual>
-    <origin rpy="0 0 0" xyz="-0.332235 -0.176065 0.119273"/>
+    <origin rpy="0 0 0" xyz="-0.3656 -0.173002 0.149575"/>
     <geometry>
         <mesh filename="package://state_publisher/meshes/gripper_1_m-binary.stl"/>
     </geometry>
     <material name="gripper"/>
   </visual>
   <collision>
-    <origin rpy="0 0 0" xyz="-0.332235 -0.176065 0.119273"/>
+    <origin rpy="0 0 0" xyz="-0.3656 -0.173002 0.149575"/>
     <geometry>
         <mesh filename="package://state_publisher/meshes/gripper_1_m-binary.stl"/>
     </geometry>
   </collision>
 </link>
 <joint name="Rigid1" type="fixed">
-  <origin rpy="0 0 0" xyz="-0.121419 -0.029614 -0.010522"/>
+  <origin rpy="0 0 0" xyz="-0.088054 -0.032677 -0.040824"/>
   <parent link="main_body"/>
   <child link="right_belt_1"/>
 </joint>
@@ -301,7 +301,7 @@
   </actuator>
 </transmission>
 <joint name="Rigid2" type="fixed">
-  <origin rpy="0 0 0" xyz="-0.121419 -0.029614 -0.228023"/>
+  <origin rpy="0 0 0" xyz="-0.088054 -0.032677 -0.258325"/>
   <parent link="main_body"/>
   <child link="left_belt_1"/>
 </joint>
@@ -315,36 +315,36 @@
     <mechanicalReduction>1</mechanicalReduction>
   </actuator>
 </transmission>
-<joint name="flipper_rear" type="revolute">
+<joint name="flippers_rear" type="revolute">
   <origin rpy="0 0 0" xyz="0.0 0.0 0.055"/>
   <parent link="right_belt_1"/>
   <child link="flipper_rear_right_1"/>
   <axis xyz="0.0 0.0 0.01"/>
   <limit effort="100" lower="-1.570796" upper="3.316126" velocity="100"/>
 </joint>
-<transmission name="flipper_rear_tran">
+<transmission name="flippers_rear_tran">
   <type>transmission_interface/SimpleTransmission</type>
-  <joint name="flipper_rear">
+  <joint name="flippers_rear">
     <hardwareInterface>PositionJointInterface</hardwareInterface>
   </joint>
-  <actuator name="flipper_rear_actr">
+  <actuator name="flippers_rear_actr">
     <hardwareInterface>PositionJointInterface</hardwareInterface>
     <mechanicalReduction>1</mechanicalReduction>
   </actuator>
 </transmission>
-<joint name="flipper_front" type="revolute">
+<joint name="flippers_front" type="revolute">
   <origin rpy="0 0 0" xyz="0.454878 0.0 0.055"/>
   <parent link="right_belt_1"/>
   <child link="flipper_front_right_1"/>
   <axis xyz="0.0 0.0 0.01"/>
   <limit effort="100" lower="-3.316126" upper="1.570796" velocity="100"/>
 </joint>
-<transmission name="flipper_front_tran">
+<transmission name="flippers_front_tran">
   <type>transmission_interface/SimpleTransmission</type>
-  <joint name="flipper_rear">
+  <joint name="flippers_front">
     <hardwareInterface>PositionJointInterface</hardwareInterface>
   </joint>
-  <actuator name="flipper_front_actr">
+  <actuator name="flippers_front_actr">
     <hardwareInterface>PositionJointInterface</hardwareInterface>
     <mechanicalReduction>1</mechanicalReduction>
   </actuator>
@@ -380,7 +380,7 @@
   </actuator>
 </transmission>
 <joint name="arm1" type="revolute">
-  <origin rpy="0 0 0" xyz="0.313459 0.047886 -0.119273"/>
+  <origin rpy="0 0 0" xyz="0.346824 0.044823 -0.149575"/>
   <parent link="main_body"/>
   <child link="arm_base_1"/>
   <axis xyz="-0.0 -0.01 -0.0"/>
@@ -397,7 +397,7 @@
   </actuator>
 </transmission>
 <joint name="arm2" type="revolute">
-  <origin rpy="0 0 0" xyz="-0.014432 0.088193 -0.006"/>
+  <origin rpy="0 0 0" xyz="-0.014431 0.088193 -0.006"/>
   <parent link="arm_base_1"/>
   <child link="arm_lower_1"/>
   <axis xyz="0.0 0.0 0.01"/>
@@ -414,7 +414,7 @@
   </actuator>
 </transmission>
 <joint name="arm3" type="revolute">
-  <origin rpy="0 0 0" xyz="-0.398022 0.039823 0.0"/>
+  <origin rpy="0 0 0" xyz="-0.398023 0.039823 0.0"/>
   <parent link="arm_lower_1"/>
   <child link="arm_upper_1"/>
   <axis xyz="0.0 -0.0 0.01"/>
@@ -436,7 +436,7 @@
   <child link="wrist_yaw_1"/>
   <axis xyz="0.0 0.0 0.01"/>
 </joint>
-<transmission name="writst1_tran">
+<transmission name="wrist1_tran">
   <type>transmission_interface/SimpleTransmission</type>
   <joint name="wrist1">
     <hardwareInterface>PositionJointInterface</hardwareInterface>

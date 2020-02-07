@@ -8,8 +8,8 @@ from sensor_msgs.msg import JointState
 
 
 joints = {
-    'flipper_front': 0,
-    'flipper_rear': 0,
+    'flippers_front': 0,
+    'flippers_rear': 0,
     'arm1': 0,
     'arm2': 0,
     'arm3': 0,
@@ -23,8 +23,8 @@ def set_pose(pose):
     robot_pose = pose
 
 def set_flipper_positions(front_angle, rear_angle):
-    joints['flipper_front'] = front_angle
-    joints['flipper_rear'] = rear_angle
+    joints['flippers_front'] = front_angle
+    joints['flippers_rear'] = rear_angle
 
 def set_arm_angles(angle1, angle2, angle3, angle4, angle5, angle6):
     joints['arm1'] = angle1
