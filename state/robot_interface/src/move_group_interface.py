@@ -9,6 +9,8 @@ import geometry_msgs.msg
 from math import pi
 from std_msgs.msg import String
 import tf
+import time
+from controller_mapper.srv import GetTargetPose, SetTargetPose
 
 
 def set_pose(group, x, y, z, roll, pitch, yaw):
@@ -51,11 +53,31 @@ def move_pose(group, x, y, z, roll, pitch, yaw):
     group.go(pose_goal, wait=True)
     group.stop()
 
-def move_to_random_pose(group):
-    pose_goal = group.get_random_pose('gripper_1')
-    group.go(pose_goal, wait=True)
-    group.stop()
+def get_target_pose():
+    rospy.wait_for_service('get_target_pose')
+    try:
+        return rospy.ServiceProxy('get_target_pose', GetTargetPose)().target_pose
+    except:
+        return None
 
+def set_target_pose(target):
+    rospy.wait_for_service('set_target_pose')
+    try:
+        rospy.ServiceProxy('set_target_pose', SetTargetPose)(target)
+    except:
+        return
+
+def pose_different(pose1, pose2):
+    pos_threshold = 0.005
+    orient_threshold = 10e-3
+    result = abs(pose1.position.x - pose2.position.x) > pos_threshold or \
+             abs(pose1.position.y - pose2.position.y) > pos_threshold or \
+             abs(pose1.position.z - pose2.position.y) > pos_threshold or \
+             abs(pose1.orientation.x - pose2.orientation.x) > orient_threshold or \
+             abs(pose1.orientation.y - pose2.orientation.y) > orient_threshold or \
+             abs(pose1.orientation.z - pose2.orientation.z) > orient_threshold or \
+             abs(pose1.orientation.w - pose2.orientation.w) > orient_threshold
+    return result
 
 def main():
     moveit_commander.roscpp_initialize(sys.argv)
@@ -68,28 +90,22 @@ def main():
     group = moveit_commander.MoveGroupCommander(group_name)
     group.set_planning_time(0.1)
 
-    group.set_named_target('home')
+    group.set_named_target('ready')
     group.go(wait=True)
 
+    set_target_pose(group.get_current_pose().pose)
 
-    user_input = raw_input('>')
-    while user_input != 'exit':
-        if user_input=='home':
-            group.set_named_target('home')
-            group.go(wait=True)
-        elif user_input=='ready':
-            group.set_named_target('ready')
-            group.go(wait=True)
+    while not rospy.is_shutdown():
+        target = get_target_pose()
+        if target is not None and pose_different(group.get_current_pose().pose, target):
+            success = group.go(target, wait=True)
+            group.stop()
+            if not success:
+                set_target_pose(group.get_current_pose().pose)
+                time.sleep(0.01)
         else:
-            inputs = user_input.split(' ')
-            outputs = [0, 0, 0, 0, 0, 0]
-            for i in range(0, len(inputs)):
-                try:
-                    outputs[i] = float(inputs[i])
-                except:
-                    pass
-            move_pose(group, *outputs)
-        user_input = raw_input('>')
+            time.sleep(0.01)
+
 
 if __name__ == '__main__':
     main()

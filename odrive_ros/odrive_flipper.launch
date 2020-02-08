@@ -13,6 +13,6 @@
   </node>
   <node name="webserver" pkg="roswww" type="webserver.py" respawn="true"/>
   <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
-  <include file="$(find robot_interface)/launch/run_all_testing.launch"/>
+  <include file="$(find robot_interface)/launch/run_all.launch"/>
   <node name="controller_mapper" pkg="controller_mapper" type="main.py" output="screen" respawn="true"/>
 </launch>
