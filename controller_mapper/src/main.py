@@ -10,8 +10,6 @@ from geometry_msgs.msg import Pose
 import tf
 import math
 import time
-from controller_mapper.srv import GetTargetPose, GetTargetPoseResponse, \
-                                  SetTargetPose, SetTargetPoseResponse
 
 arm_msg = Float32MultiArray()
 
@@ -63,17 +61,17 @@ def receive_joy_data(message):
         elif message.buttons[9]:
             pass  # ready
         else:
-            dist = 0.5
-            ang = 8
+            dist = 0.3
+            ang = 2
 
             angles = ["yaw", "pitch", "roll"]
 
             moves = {"x": -message.axes[1],
-                     "y": message.axes[0],
+                     "y": -message.axes[0],
                      "z": message.axes[5] - message.axes[4],
                      "yaw": message.buttons[4] - message.buttons[5],
-                     "roll": message.buttons[14] - message.buttons[15],
-                     "pitch": message.buttons[12] - message.buttons[13]
+                     "roll": message.buttons[15] - message.buttons[14],
+                     "pitch": message.buttons[13] - message.buttons[12]
                      }
 
             for key, value in moves.items():
@@ -90,23 +88,13 @@ def receive_joy_data(message):
                 moves['roll'],
                 moves['pitch'],
                 moves['yaw'])
+            target_pose_pub.publish(target_pose)
             print(target_pose)
-
     else:
         drive_left.publish(-(3 * message.axes[1] * 8192 * 16 + message.axes[0] * 16 * 8192))
         drive_right.publish(3 * message.axes[1] * 8192 * 16 - message.axes[0] * 16 * 8192)
         flipper_front.publish((message.buttons[12] - message.buttons[13]) * 8192 * 85 / 8)
         flipper_rear.publish((message.buttons[15] - message.buttons[14]) * 8192 * 85 / 8)
-
-
-def handle_set_target_pose(req):
-    global target_pose
-    target_pose = req.target_pose
-    return SetTargetPoseResponse()
-
-def handle_get_target_pose(req):
-    global target_pose
-    return GetTargetPoseResponse(target_pose)
 
 # base button 5 and 4
 rospy.init_node("controller_mapper")
@@ -119,7 +107,6 @@ drive_right = rospy.Publisher('/odrive_drive/axis1/vel_setpoint', Int32, queue_s
 flipper_front = rospy.Publisher('/odrive_flipper/axis0/vel_setpoint', Int32, queue_size=10)
 flipper_rear = rospy.Publisher('/odrive_flipper/axis1/vel_setpoint', Int32, queue_size=10)
 
-service1 = rospy.Service('get_target_pose', GetTargetPose, handle_get_target_pose)
-service2 = rospy.Service('set_target_pose', SetTargetPose, handle_set_target_pose)
+target_pose_pub = rospy.Publisher('/target_pose', Pose, queue_size=10)
 
 rospy.spin()
