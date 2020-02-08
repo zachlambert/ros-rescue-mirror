@@ -3,5 +3,8 @@
 
     <rosparam file="$(find robot_interface)/config/controllers.yaml" command="load"/>
 
-    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="/arm_controller /joint_state_controller"/>
+    <!-- <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="/arm_controller /joint_state_controller"/> -->
+
+    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="/arm_controller"/>
+
 </launch>

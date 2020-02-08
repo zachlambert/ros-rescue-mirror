@@ -6,7 +6,6 @@
 RobotInterface::RobotInterface(ros::NodeHandle& n)
 { 
     // Register state interface: interface for reading angles
-    // Also use this to read flipper angles
     
     hardware_interface::JointStateHandle state_handle_1("arm1", &pos[0], &vel[0], &eff[0]);
     hardware_interface::JointStateHandle state_handle_2("arm2", &pos[1], &vel[1], &eff[1]);
@@ -14,8 +13,6 @@ RobotInterface::RobotInterface(ros::NodeHandle& n)
     hardware_interface::JointStateHandle state_handle_4("wrist1", &pos[3], &vel[3], &eff[3]);
     hardware_interface::JointStateHandle state_handle_5("wrist2", &pos[4], &vel[4], &eff[4]);
     hardware_interface::JointStateHandle state_handle_6("wrist3", &pos[5], &vel[5], &eff[5]);
-    hardware_interface::JointStateHandle state_handle_7("flippers_front", &pos[6], &vel[6], &eff[6]);
-    hardware_interface::JointStateHandle state_handle_8("flippers_rear", &pos[7], &vel[7], &eff[7]);
 
     jnt_state_interface.registerHandle(state_handle_1);
     jnt_state_interface.registerHandle(state_handle_2);
@@ -23,13 +20,10 @@ RobotInterface::RobotInterface(ros::NodeHandle& n)
     jnt_state_interface.registerHandle(state_handle_4);
     jnt_state_interface.registerHandle(state_handle_5);
     jnt_state_interface.registerHandle(state_handle_6);
-    jnt_state_interface.registerHandle(state_handle_7);
-    jnt_state_interface.registerHandle(state_handle_8);
 
     registerInterface(&jnt_state_interface);
 
     // Register pos interface: interface for setting arm angles
-    // Don't use this to set flipper angles
     
     hardware_interface::JointHandle pos_handle_1(
         jnt_state_interface.getHandle("arm1"), &cmd[0]);
@@ -52,27 +46,14 @@ RobotInterface::RobotInterface(ros::NodeHandle& n)
     jnt_pos_interface.registerHandle(pos_handle_6);
 
     registerInterface(&jnt_pos_interface);
+
+    for(int i=0; i<6; i++){
+        cmd[i] = 0;
+    }
 }
 
-void RobotInterface::read(const double* arm_actual, const double* wrist_actual, const double* flipper_actual)
-{
-   for(int i=0; i<3; i++){
-       pos[i] = arm_actual[i];
-   }
-   for(int i=0; i<3; i++){
-       pos[i+3] = wrist_actual[i];
-   }
-   for(int i=0; i<2; i++){
-       pos[i+6] = flipper_actual[i];
-   }
-}
-
-void RobotInterface::write(double* arm_demand, double* wrist_demand)
-{
-   for(int i=0; i<3; i++){
-       arm_demand[i] = cmd[i];
-   }
-   for(int i=0; i<3; i++){
-       wrist_demand[i] = cmd[i+3];
-   }
+void RobotInterface::update(){
+    for(int i=0; i<6; i++){
+        pos[i] = cmd[i];
+    }
 }
