@@ -17,6 +17,9 @@ arm_control_mode = True
 last_message = None
 
 target_pose = Pose()
+target_pose.position.x = 0.6
+target_pose.position.z = 0.5
+
 prev_time = time.time()
 
 def move_pose(pose, v_x, v_y, v_z, v_roll, v_pitch, v_yaw):
