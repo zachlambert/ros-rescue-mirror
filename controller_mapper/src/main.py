@@ -94,8 +94,8 @@ def receive_joy_data(message):
             target_pose_pub.publish(target_pose)
             print(target_pose)
     else:
-        drive_left.publish(-(3 * message.axes[1] * 8192 * 16 + message.axes[0] * 16 * 8192))
-        drive_right.publish(3 * message.axes[1] * 8192 * 16 - message.axes[0] * 16 * 8192)
+        drive_left.publish(-(message.axes[1] * 8192 * 16 + message.axes[0] * 16 * 8192))
+        drive_right.publish(message.axes[1] * 8192 * 16 - message.axes[0] * 16 * 8192)
         flipper_front.publish((message.buttons[12] - message.buttons[13]) * 8192 * 85 / 8)
         flipper_rear.publish((message.buttons[15] - message.buttons[14]) * 8192 * 85 / 8)
 
