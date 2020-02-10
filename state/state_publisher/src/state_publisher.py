@@ -3,8 +3,19 @@ import tf
 
 from geometry_msgs.msg import Pose, TransformStamped
 from sensor_msgs.msg import JointState
+import numpy as np
 
-# Callback functions
+def arm_actual_to_ros(actual1, actual2, actual3):
+    ros1 = np.radians(actual1)
+    ros2 = -np.radians(actual2)
+    ros3 = np.radians(actual3)
+    return ros1, ros2, ros3
+
+def wrist_actual_to_ros(actual1, actual2, actual3):
+    ros1 = np.radians(actual1)
+    ros2 = np.radians(actual2)
+    ros3 = np.radians(actual3)
+    return ros1, ros2, ros3
 
 
 joints = {
@@ -27,11 +38,13 @@ def set_flipper_positions(front_angle, rear_angle):
     joints['flippers_rear'] = rear_angle
 
 def set_arm_angles(angle1, angle2, angle3):
+    angle1, angle2, angle3 = arm_actual_to_ros(angle1, angle2, angle3)
     joints['arm1'] = angle1
     joints['arm2'] = angle2
     joints['arm3'] = angle3
 
 def set_wrist_angles(angle1, angle2, angle3):
+    angle1, angle2, angle3 = wrist_actual_to_ros(angle1, angle2, angle3)
     joints['wrist1'] = angle1
     joints['wrist2'] = angle2
     joints['wrist3'] = angle3

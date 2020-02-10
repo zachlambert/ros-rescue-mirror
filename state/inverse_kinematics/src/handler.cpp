@@ -28,6 +28,17 @@ void poseMsgToEigen(const geometry_msgs::Pose &m, Eigen::Isometry3d& e){
                            m.orientation.z);
 }
 
+std::vector<double> convertAnglesToActual(const std::vector<double>& ros_angles){
+    std::vector<double> actual_angles(6);
+    actual_angles[0] = (180/M_PI)*ros_angles[0];
+    actual_angles[1] = -(180/M_PI)*ros_angles[1];
+    actual_angles[2] = (180/M_PI)*ros_angles[2];
+    actual_angles[3] = (180/M_PI)*ros_angles[3];
+    actual_angles[4] = (180/M_PI)*ros_angles[4];
+    actual_angles[5] = (180/M_PI)*ros_angles[5];
+    return actual_angles;
+}
+
 UpdateHandler::UpdateHandler(ros::NodeHandle& n):
         robot_model_loader("robot_description"),
         kinematic_model(robot_model_loader.getModel()),
@@ -128,11 +139,14 @@ bool UpdateHandler::checkCollision(){
 }
 
 void UpdateHandler::publishAngles(const std::vector<double>& joint_values){
+    // Need to convert angles from ros angles to actual angles
+    std::vector<double> actual_angles = convertAnglesToActual(joint_values);
+
     for(int i=0; i<3; i++){
-        arm_demand_msg.data[i] = joint_values[i];
+        arm_demand_msg.data[i] = actual_angles[i];
     }
     for(int i=0; i<3; i++){
-        wrist_demand_msg.data[i] = joint_values[i+3];
+        wrist_demand_msg.data[i] = actual_angles[i+3];
     }
     arm_demand_pub.publish(arm_demand_msg);
     wrist_demand_pub.publish(wrist_demand_msg);
