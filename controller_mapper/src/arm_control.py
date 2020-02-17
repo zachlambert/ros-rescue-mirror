@@ -6,28 +6,103 @@ import tf
 from geometry_msgs.msg import Pose, Point
 from std_msgs.msg import Float32MultiArray, MultiArrayDimension
 
+""" Global variables declared early """
+
 target_pose = Pose()
 direct_joint_control = True
 BASE_SNAP_DIST = 0.1
 
-def get_base_position():
+
+""" Functions for directly controlling the joints """
+
+def angles_step_to_target(angles, targets, velocities, dt):
+    finished = True
+    for i in range(len(angles)):
+        delta = velocities[i] * dt
+        if abs(angles[i]-targets[i]) < delta:
+            angles[i] = targets[i]
+            continue
+        elif angles[i]<targets[i]:
+            angles[i] += delta
+        else:
+            angles[i] -= delta
+        finished = False
+    return angles, finished
+
+def move_to_joint_target(targets, velocities):
+    global arm_joints_msg, wrist_joints_msg
+    angles = list(arm_joints_msg.data) + list(wrist_joints_msg.data)
+    dt = 0.05
+    finished = False
+    while not finished:
+        angles, finished = angles_step_to_target(angles, targets, velocities, dt)
+        arm_joints_msg.data = angles[:3]
+        wrist_joints_msg.data = angles[3:]
+        arm_demand_pub.publish(arm_joints_msg)
+        wrist_demand_pub.publish(wrist_joints_msg)
+        time.sleep(dt)
+
+def calibrate_target_pose():
+    global target_pose
+    # Reset target pose
+    pos, rot = get_gripper_position()
+    target_pose.position.x = pos[0] - base_position.x
+    target_pose.position.y = pos[1] - base_position.y
+    target_pose.position.z = pos[2] - base_position.z
+    target_pose.orientation.x = rot[0]
+    target_pose.orientation.y = rot[1]
+    target_pose.orientation.z = rot[2]
+    target_pose.orientation.w = rot[3]
+
+def transition_to_constrained():
+    arm_length = 0.42
+    angle = math.degrees(math.asin(target_pose.position.z))
+    if angle<0:
+        angle = 0
+
+    move_to_joint_target([0, angle, 2*angle, 0, 0, 0],
+                         [80, 80, 80, 80, 80, 80])
+
+def transition_to_free():
+    global arm_joints_msg, wrist_joints_msg
+    move_to_joint_target([arm_joints_msg.data[0], 60, 60] + list(wrist_joints_msg.data),
+                         [80, 80, 80, 80, 80, 80])
+    calibrate_target_pose()
+
+def reset_gripper_orientation():
+    global arm_joints_msg, wrist_joints_msg
+    move_to_joint_target(list(arm_joints_msg.data) + [0, 0, 0],
+                         [80, 80, 80, 80, 80, 80])
+    calibrate_target_pose()
+
+
+""" TF information """
+
+def get_gripper_position():
     global tf_listener
-    # Use TF transformer to get the initial gripper pose, to use as a base
-    # position
-    base_trans = None
-    try_count = 10
-    while base_trans is None:
+    while True:
         try:
-            (base_trans, _) = tf_listener.lookupTransform(
-                '/world', '/gripper_1', rospy.Time(0))
+            (trans, rot) = tf_listener.lookupTransform('/world', '/gripper_1', rospy.Time(0))
+            break
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-            try_count += 1
             time.sleep(0.1)
-    base_position = Point()
-    base_position.x = base_trans[0]
-    base_position.y = base_trans[1]
-    base_position.z = base_trans[2]
-    return base_position
+    return trans, rot
+
+
+""" Callback functions """
+
+def arm_demand_callback(msg):
+    global arm_joints_msg
+    if not direct_joint_control:
+        arm_joints_msg.data = msg.data
+
+def wrist_demand_callback(msg):
+    global wrist_joint_msg
+    if not direct_joint_control:
+        wrist_joints_msg.data = msg.data
+
+
+""" Initialisation """
 
 def init_messages():
     global arm_joints_msg, wrist_joints_msg
@@ -44,16 +119,6 @@ def init_messages():
     wrist_joints_msg.layout.dim[0].stride = 1
     wrist_joints_msg.data = [0, 0, 0]
 
-def arm_demand_callback(msg):
-    global arm_joints_msg
-    if not direct_joint_control:
-        arm_joints_msg.data = msg.data
-
-def wrist_demand_callback(msg):
-    global wrist_joint_msg
-    if not direct_joint_control:
-        wrist_joints_msg.data = msg.data
-
 def init_handlers():
     global target_pose_pub, arm_demand_pub, wrist_demand_pub
     global arm_demand_sub, wrist_demand_sub, tf_listener
@@ -69,12 +134,8 @@ def init_handlers():
         '/wrist_demand_angles', Float32MultiArray, wrist_demand_callback)
     tf_listener = tf.TransformListener()
 
-def init():
-    """ Must be called after init_node"""
-    global base_position
-    init_messages()
-    init_handlers()
-    base_position = get_base_position()
+
+""" For measuring elapsed time since the last function call """
 
 prev_time = time.time()
 def elapsed_time():
@@ -86,16 +147,23 @@ def elapsed_time():
         dt=0.1
     return dt
 
+
+""" Functions for helping with movement """
+
 def get_velocities(message):
     dist_scale = 0.3 # 0.3 m/s
     angle_scale = 2 # 2 rad/s
     return [-message.axes[1] * dist_scale,
             -message.axes[0] * dist_scale,
             (message.axes[5] - message.axes[4]) * dist_scale,
-            (message.buttons[15] - message.buttons[14]) * angle_scale,
-            (message.buttons[13] - message.buttons[12]) * angle_scale,
+            message.axes[2] * angle_scale,
+            -message.axes[3] * angle_scale,
+            #(message.buttons[15] - message.buttons[14]) * angle_scale,
+            #(message.buttons[13] - message.buttons[12]) * angle_scale,
             (message.buttons[4] - message.buttons[5]) * angle_scale]
 
+control_mode = 2
+#0: Cartesian, 1: Polar, 2: Relative to gripper orientation
 def move_pose(pose, velocities, dt):
     quaternion = (pose.orientation.x,
                   pose.orientation.y,
@@ -104,19 +172,33 @@ def move_pose(pose, velocities, dt):
     euler = list(tf.transformations.euler_from_quaternion(quaternion))
     for i in range(3):
         euler[i] += velocities[i+3]*dt
-    quaternion = tf.transformations.quaternion_from_euler(*euler)
 
-    pose.position.x = pose.position.x + velocities[0]*dt
-    pose.position.y = pose.position.y + velocities[1]*dt
+    if control_mode == 0:
+        pose.position.x = pose.position.x + velocities[0]*dt
+        pose.position.y = pose.position.y + velocities[1]*dt
+    else:
+        if control_mode == 1:
+            euler[2] = math.atan2(pose.position.y, pose.position.x)
+        yaw = -euler[2]
+        pose.position.x = pose.position.x + velocities[0]*dt*math.cos(yaw) \
+                                          + velocities[1]*dt*math.sin(yaw)
+        pose.position.y = pose.position.y - velocities[0]*dt*math.sin(yaw) \
+                                          + velocities[1]*dt*math.cos(yaw)
+
     pose.position.z = pose.position.z + velocities[2]*dt
+
+    quaternion = tf.transformations.quaternion_from_euler(*euler)
     pose.orientation.x = quaternion[0]
     pose.orientation.y = quaternion[1]
     pose.orientation.z = quaternion[2]
     pose.orientation.w = quaternion[3]
     return pose
 
-def close_to_base():
+def is_close_to_base():
     return math.hypot(target_pose.position.x, target_pose.position.y) < BASE_SNAP_DIST
+
+
+""" Movement control functions: constrained or free """
 
 def free_movement(velocities, dt):
     global target_pose, direct_joint_control
@@ -127,22 +209,12 @@ def free_movement(velocities, dt):
     absolute_pose.position.z = target_pose.position.z + base_position.z
     absolute_pose.orientation = target_pose.orientation
 
-    if close_to_base():
+    if is_close_to_base():
         transition_to_constrained()
         direct_joint_control = True
         return
 
     target_pose_pub.publish(absolute_pose)
-
-def angle_to_target(angle, target, velocity, dt):
-    delta = velocity*dt
-    if abs(angle-target)<delta:
-        angle = target
-    elif angle<target:
-        angle += delta
-    else:
-        angle -= delta
-    return angle
 
 def constrained_movement(velocities, dt):
     global arm_joints_msg, wrist_joints_msg, target_pose, direct_joint_control
@@ -165,77 +237,40 @@ def constrained_movement(velocities, dt):
     ]
     arm_demand_pub.publish(arm_joints_msg)
 
-def transition_to_constrained():
-    global arm_joints_msg, wrist_joints_msg
+button_status = [False, False]
+def handle_buttons(message):
+    global button_status, control_mode
+    # 0 -> A
+    if message.buttons[0] == 1 and not button_status[0]:
+        button_status[0] = True
+        reset_gripper_orientation()
+    elif message.buttons[0] == 0 and button_status[0]:
+        button_status[0] = False
+    # 2 -> X
+    if message.buttons[2] == 1 and not button_status[1]:
+        button_status[1] = True
+        control_mode = (control_mode+1)%3
+    elif message.buttons[2] == 0 and button_status[1]:
+        button_status[1] = False
 
-    arm_length = 0.42
-    angle = math.degrees(math.asin(target_pose.position.z))
-    if angle<0:
-        angle = 0
+""" "Public" Functions """
 
-    dt = 0.05
-    at_target = False
-    while not at_target:
-        arm_joints_msg.data = [
-            angle_to_target(arm_joints_msg.data[0], 0, 80, dt),
-            angle_to_target(arm_joints_msg.data[1], angle, 80, dt),
-            angle_to_target(arm_joints_msg.data[2], 2*angle, 80, dt),
-        ]
-        wrist_joints_msg.data = [
-            angle_to_target(wrist_joints_msg.data[0], 0, 80, dt),
-            angle_to_target(wrist_joints_msg.data[1], 0, 80, dt),
-            angle_to_target(wrist_joints_msg.data[2], 0, 80, dt)
-        ]
-        arm_demand_pub.publish(arm_joints_msg)
-        wrist_demand_pub.publish(wrist_joints_msg)
-        at_target = arm_joints_msg.data[0] == 0 and \
-                    abs(arm_joints_msg.data[1] - angle) < 1.0 and \
-                    abs(arm_joints_msg.data[2] - 2*angle) < 1.0 and \
-                    wrist_joints_msg.data[0] == 0 and \
-                    wrist_joints_msg.data[1] == 0 and \
-                    wrist_joints_msg.data[2] == 0
-        time.sleep(dt)
+def init():
+    global base_position
+    init_messages()
+    init_handlers()
 
-def transition_to_free():
-    global arm_joints_msg, wrist_joints_msg
-    dt = 0.05
-    at_target = False
-    while not at_target:
-        arm_joints_msg.data = [
-            arm_joints_msg.data[0],
-            angle_to_target(arm_joints_msg.data[1], 60, 80, dt),
-            angle_to_target(arm_joints_msg.data[2], 60, 80, dt),
-        ]
-        arm_demand_pub.publish(arm_joints_msg)
-        at_target = abs(arm_joints_msg.data[1] - 60) < 1.0 and \
-                    abs(arm_joints_msg.data[2] - 60) < 1.0
-        time.sleep(dt)
-    # Reset target pose
-    success = False
-    try_count = 0
-    while try_count < 10 and not success:
-        try:
-            (trans , rot) = tf_listener.lookupTransform(
-                '/world', '/gripper_1', rospy.Time(0))
-            success = True
-        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-            time.sleep(0.1)
-            try_count += 1
-    if not success:
-        print("TF lookup failed")
-    target_pose.position.x = trans[0] - base_position.x
-    target_pose.position.y = trans[1] - base_position.y
-    target_pose.position.z = trans[2] - base_position.z
-    target_pose.orientation.x = rot[0]
-    target_pose.orientation.y = rot[1]
-    target_pose.orientation.z = rot[2]
-    target_pose.orientation.w = rot[3]
-
+    base_trans, _ = get_gripper_position()
+    base_position = Point()
+    base_position.x = base_trans[0]
+    base_position.y = base_trans[1]
+    base_position.z = base_trans[2]
 
 def update(message):
     global target_pose, direct_joint_control, arm_joints_msg
     dt = elapsed_time()
     velocities = get_velocities(message)
+    handle_buttons(message)
     if direct_joint_control:
         constrained_movement(velocities, dt)
     else:
