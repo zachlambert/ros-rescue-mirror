@@ -82,6 +82,7 @@ UpdateHandler::UpdateHandler(ros::NodeHandle& n):
 
     g_planning_scene = new planning_scene::PlanningScene(kinematic_model);
 
+    /**
     geometry_msgs::Pose initial_pose;
     initial_pose.position.x = 0.6;
     initial_pose.position.z = 0.5;
@@ -95,6 +96,7 @@ UpdateHandler::UpdateHandler(ros::NodeHandle& n):
         kinematic_state->copyJointGroupPositions(joint_model_group, joint_values);
         publishAngles(joint_values);
     }
+    **/
 }
 
 
@@ -120,9 +122,9 @@ void UpdateHandler::targetPoseCallback(const geometry_msgs::Pose::ConstPtr& msg)
         }else if(checkCollision()){
             ROS_INFO("IK found but in collision state");
             kinematic_state->setVariablePositions(prev_joint_values); 
-        }else if(largeAngleChange(prev_joint_values, joint_values)){
-            ROS_INFO("IK found but angle changes are too large");
-            kinematic_state->setVariablePositions(prev_joint_values); 
+        //}else if(largeAngleChange(prev_joint_values, joint_values)){
+        //    ROS_INFO("IK found but angle changes are too large");
+        //    kinematic_state->setVariablePositions(prev_joint_values); 
         }else{
             publishAngles(joint_values);
         }
