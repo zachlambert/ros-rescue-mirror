@@ -4,7 +4,7 @@ import math
 import rospy
 import tf
 from geometry_msgs.msg import Pose, Point
-from std_msgs.msg import Float32MultiArray, MultiArrayDimension
+from std_msgs.msg import Float32MultiArray, MultiArrayDimension, Bool
 
 """ Global variables declared early """
 
@@ -105,13 +105,15 @@ def wrist_demand_callback(msg):
 """ Initialisation """
 
 def init_messages():
-    global arm_joints_msg, wrist_joints_msg
+    global arm_joints_msg, wrist_joints_msg, zero_arm_msg
+
     arm_joints_msg = Float32MultiArray()
     arm_joints_msg.layout.dim = [MultiArrayDimension()]
     arm_joints_msg.layout.dim[0].label = "joints"
     arm_joints_msg.layout.dim[0].size = 3
     arm_joints_msg.layout.dim[0].stride = 1
     arm_joints_msg.data = [0, 0, 0]
+
     wrist_joints_msg = Float32MultiArray()
     wrist_joints_msg.layout.dim = [MultiArrayDimension()]
     wrist_joints_msg.layout.dim[0].label = "joints"
@@ -119,9 +121,13 @@ def init_messages():
     wrist_joints_msg.layout.dim[0].stride = 1
     wrist_joints_msg.data = [0, 0, 0]
 
+    zero_arm_msg = Bool()
+    zero_arm_msg.data = True
+
 def init_handlers():
     global target_pose_pub, arm_demand_pub, wrist_demand_pub
-    global arm_demand_sub, wrist_demand_sub, tf_listener
+    global arm_demand_sub, wrist_demand_sub
+    global tf_listener, zero_arm_pub
     target_pose_pub = rospy.Publisher(
         '/target_pose', Pose, queue_size=10)
     arm_demand_pub = rospy.Publisher(
@@ -133,6 +139,8 @@ def init_handlers():
     wrist_demand_sub = rospy.Subscriber(
         '/wrist_demand_angles', Float32MultiArray, wrist_demand_callback)
     tf_listener = tf.TransformListener()
+    zero_arm_pub = rospy.Publisher(
+        '/zero_arm_request', Bool, queue_size=1)
 
 
 """ For measuring elapsed time since the last function call """
@@ -197,6 +205,15 @@ def move_pose(pose, velocities, dt):
 def is_close_to_base():
     return math.hypot(target_pose.position.x, target_pose.position.y) < BASE_SNAP_DIST
 
+def zero_arm():
+    global direct_joint_control, target_pose, arm_joints_msg
+    zero_arm_pub.publish(zero_arm_msg)
+    direct_joint_control = True
+    target_pose.position.x = 0
+    target_pose.position.y = 0
+    target_pose.position.z = 0
+    arm_joints_msg.data = [0, 0, 0]
+    time.sleep(1) # Wait some time before allowing any input
 
 """ Movement control functions: constrained or free """
 
@@ -237,9 +254,11 @@ def constrained_movement(velocities, dt):
     ]
     arm_demand_pub.publish(arm_joints_msg)
 
-button_status = [False, False]
+""" Handle buttons """
+
+button_status = [False, False, False]
 def handle_buttons(message):
-    global button_status, control_mode
+    global button_status, control_mode, zero_arm_pub, zero_arm_msg
     # 0 -> A
     if message.buttons[0] == 1 and not button_status[0]:
         button_status[0] = True
@@ -252,6 +271,12 @@ def handle_buttons(message):
         control_mode = (control_mode+1)%3
     elif message.buttons[2] == 0 and button_status[1]:
         button_status[1] = False
+    # 3 -> Y
+    if message.buttons[3] == 1 and not button_status[2]:
+        button_status[2] = True
+        zero_arm()
+    elif message.buttons[3] == 0 and button_status[2]:
+        button_status[2] = False
 
 """ "Public" Functions """
 
