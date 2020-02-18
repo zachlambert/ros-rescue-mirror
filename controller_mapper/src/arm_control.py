@@ -213,7 +213,6 @@ def zero_arm():
     target_pose.position.y = 0
     target_pose.position.z = 0
     arm_joints_msg.data = [0, 0, 0]
-    time.sleep(1) # Wait some time before allowing any input
 
 """ Movement control functions: constrained or free """
 
