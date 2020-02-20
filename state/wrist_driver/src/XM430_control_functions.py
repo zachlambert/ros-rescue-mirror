@@ -1,6 +1,7 @@
 import os
-from dynamixel_sdk import *                 # Uses Dynamixel SDK library
-
+from dynamixel_sdk.port_handler import *
+from dynamixel_sdk.packet_handler import *
+from dynamixel_sdk.robotis_def import *
 
 if os.name == 'nt':
     import msvcrt

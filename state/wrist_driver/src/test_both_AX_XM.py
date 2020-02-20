@@ -1,10 +1,11 @@
+#!/usr/bin/env python
 # example code for using the XM430 and AX12 motors simoultaneously
 
 from XM430_control_functions import XM430controller
 from AX12_control_functions import AX12controller
 import time
 
-deviceName = '/dev/tty.usbserial-FT3M4HIL'
+deviceName = '/dev/ttyUSB0'
 XMid = 2
 AXid = 3
 waitTime = 3

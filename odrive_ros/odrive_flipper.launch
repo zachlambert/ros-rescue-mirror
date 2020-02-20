@@ -17,6 +17,7 @@
   <include file="$(find state_publisher)/launch/state_publisher.launch"/>
   <include file="$(find robot_config)/launch/planning_context.launch"/>
   <node name="inverse_kinematics" pkg="inverse_kinematics" type="inverse_kinematics" output="screen" respawn="true"/>
+  <node name="wrist_driver" pkg="wrist_driver" type="main.py" output="screen" respawn="true"/>
 
   <node name="controller_mapper" pkg="controller_mapper" type="main.py" output="screen" respawn="true"/>
 </launch>
