@@ -42,18 +42,18 @@ def convert_angles(angle1, angle2, angle3):
         angle1 = -90
     if angle1>90:
         angle1 = 90
-    pos1 = 2342 + (4096/360)*angle1
+    pos1 = 2342 - (4096/360)*angle1
     # Angle 2
     if angle2<-90:
         angle2 = -90
     if angle2>90:
         angle2 = 90
-    pos2 = 512 + (1024/300)*angle2
+    pos2 = 512 - (1024/300)*angle2
     # Angle 3
-    if angle3<-90:
-        angle3 = -90
-    if angle3>90:
-        angle3 = 90
+    if angle3<-150:
+        angle3 = -150
+    if angle3>150:
+        angle3 = 150
     pos3 = 512 + (1024/300)*angle3
     return int(pos1), int(pos2), int(pos3)
 
