@@ -28,18 +28,7 @@ void poseMsgToEigen(const geometry_msgs::Pose &m, Eigen::Isometry3d& e){
                            m.orientation.z);
 }
 
-std::vector<double> convertAnglesToActual(const std::vector<double>& ros_angles){
-    std::vector<double> actual_angles(6);
-    actual_angles[0] = (180/M_PI)*ros_angles[0];
-    actual_angles[1] = -(180/M_PI)*ros_angles[1];
-    actual_angles[2] = (180/M_PI)*ros_angles[2];
-    actual_angles[3] = (180/M_PI)*ros_angles[3];
-    actual_angles[4] = (180/M_PI)*ros_angles[4];
-    actual_angles[5] = (180/M_PI)*ros_angles[5];
-    return actual_angles;
-}
-
-UpdateHandler::UpdateHandler(ros::NodeHandle& n):
+KinematicsHandler::KinematicsHandler(ros::NodeHandle& n):
         robot_model_loader("robot_description"),
         kinematic_model(robot_model_loader.getModel()),
         kinematic_state(new robot_state::RobotState(kinematic_model)),
@@ -47,32 +36,6 @@ UpdateHandler::UpdateHandler(ros::NodeHandle& n):
         c_req(), c_res(), g_planning_scene(0){
 
     kinematic_state->setToDefaultValues();
-
-    arm_demand_pub = n.advertise<std_msgs::Float32MultiArray>(
-        "/arm_demand_angles", 1);
-    wrist_demand_pub = n.advertise<std_msgs::Float32MultiArray>(
-        "/wrist_demand_angles", 1);
-
-    arm_demand_msg.layout.dim.push_back(std_msgs::MultiArrayDimension());
-    arm_demand_msg.layout.dim[0].label = "joint";
-    arm_demand_msg.layout.dim[0].size = 3;
-    arm_demand_msg.layout.dim[0].stride = 1;
-    arm_demand_msg.data.clear();
-    for(int i=0; i<3; i++){
-        arm_demand_msg.data.push_back(0);
-    }
-
-    wrist_demand_msg.layout.dim.push_back(std_msgs::MultiArrayDimension());
-    wrist_demand_msg.layout.dim[0].label = "joint";
-    wrist_demand_msg.layout.dim[0].size = 3;
-    wrist_demand_msg.layout.dim[0].stride = 1;
-    wrist_demand_msg.data.clear();
-    for(int i=0; i<3; i++){
-        wrist_demand_msg.data.push_back(0);
-    }
-
-    target_pose_sub = n.subscribe(
-        "/target_pose", 1000, &UpdateHandler::targetPoseCallback, this);
 
     c_req.group_name = "arm";
     c_req.contacts = true;
@@ -82,74 +45,75 @@ UpdateHandler::UpdateHandler(ros::NodeHandle& n):
 
     g_planning_scene = new planning_scene::PlanningScene(kinematic_model);
 
-    /**
-    geometry_msgs::Pose initial_pose;
-    initial_pose.position.x = 0.6;
-    initial_pose.position.z = 0.5;
-    Eigen::Isometry3d end_effector_state;
-    poseMsgToEigen(initial_pose, end_effector_state);
-    bool found_ik = kinematic_state->setFromIK(joint_model_group, end_effector_state, 0.1);
-    if(!found_ik){
-        ROS_INFO("Failed to go to initial pose.");
-    }else{
-        std::vector<double> joint_values;
-        kinematic_state->copyJointGroupPositions(joint_model_group, joint_values);
-        publishAngles(joint_values);
+    angles_msg.layout.dim.push_back(std_msgs::MultiArrayDimension());
+    angles_msg.layout.dim[0].label = "joint";
+    angles_msg.layout.dim[0].size = 6;
+    angles_msg.layout.dim[0].stride = 1;
+    angles_msg.data.clear();
+    for(int i=0; i<6; i++){
+        angles_msg.data.push_back(0);
     }
-    **/
 }
 
 
-void UpdateHandler::targetPoseCallback(const geometry_msgs::Pose::ConstPtr& msg){
+bool KinematicsHandler::poseToAngles(
+        inverse_kinematics::PoseToAngles::Request& req,
+        inverse_kinematics::PoseToAngles::Response& res){
     Eigen::Isometry3d end_effector_state;
-
-    const geometry_msgs::Pose pose(*msg);
+    const geometry_msgs::Pose pose(req.pose);
     poseMsgToEigen(pose, end_effector_state);
-
-    std::vector<double> prev_joint_values;
-    kinematic_state->copyJointGroupPositions(joint_model_group, prev_joint_values);
-
-    std::vector<double> joint_values;
     
     float timeout=0.1;
     bool found_ik = kinematic_state->setFromIK(joint_model_group, end_effector_state, timeout);
 
     if(found_ik){
-        kinematic_state->copyJointGroupPositions(joint_model_group, joint_values);
-        if(!kinematic_state->satisfiesBounds()){
-            ROS_INFO("IK found but exceeds joint limits");
-            kinematic_state->setVariablePositions(prev_joint_values); 
-        }else if(checkCollision()){
-            ROS_INFO("IK found but in collision state");
-            kinematic_state->setVariablePositions(prev_joint_values); 
-        //}else if(largeAngleChange(prev_joint_values, joint_values)){
-        //    ROS_INFO("IK found but angle changes are too large");
-        //    kinematic_state->setVariablePositions(prev_joint_values); 
-        }else{
-            publishAngles(joint_values);
+        res.valid = validateState();
+        if(res.valid){
+            loadAnglesMsg();
+            res.angles = angles_msg;
         }
     }else{
-        ROS_INFO("No IK found");
+        ROS_INFO("IK not found.");
+        res.valid = false;
+    }
+    return true;
+}
+
+bool KinematicsHandler::checkAngles(
+        inverse_kinematics::CheckAngles::Request& req,
+        inverse_kinematics::CheckAngles::Response& res){
+    std::vector<double> joint_values(6);
+    for(int i=0; i<6; i++){
+        joint_values[i] = req.angles.data[i];
+    }
+    kinematic_state->setVariablePositions(joint_values);
+    res.valid = validateState();
+    return true;
+}
+
+void KinematicsHandler::loadAnglesMsg(){
+    std::vector<double> joint_values;
+    kinematic_state->copyJointGroupPositions(joint_model_group, joint_values);
+    angles_msg.data.clear();
+    for(int i=0; i<6; i++){
+        angles_msg.data.push_back(joint_values[i]);
     }
 }
 
-bool UpdateHandler::checkCollision(){
+bool KinematicsHandler::validateState(){
+    if(!kinematic_state->satisfiesBounds()){
+        ROS_INFO("IK found but exceeds joint limits");
+        return false;
+    }else if(checkCollision()){
+        ROS_INFO("IK found but in collision state");
+        return false;
+    }
+    return true;
+}
+
+bool KinematicsHandler::checkCollision(){
     g_planning_scene->checkCollision(c_req, c_res, *kinematic_state);
     bool result = c_res.collision;
     c_res.clear();
     return result;
-}
-
-void UpdateHandler::publishAngles(const std::vector<double>& joint_values){
-    // Need to convert angles from ros angles to actual angles
-    std::vector<double> actual_angles = convertAnglesToActual(joint_values);
-
-    for(int i=0; i<3; i++){
-        arm_demand_msg.data[i] = actual_angles[i];
-    }
-    for(int i=0; i<3; i++){
-        wrist_demand_msg.data[i] = actual_angles[i+3];
-    }
-    arm_demand_pub.publish(arm_demand_msg);
-    wrist_demand_pub.publish(wrist_demand_msg);
 }

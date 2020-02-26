@@ -18,6 +18,7 @@ find_package(catkin REQUIRED COMPONENTS
   tf2_ros
   tf2_eigen
   tf2_geometry_msgs
+  message_generation
 )
 
 find_package(Eigen3 REQUIRED)
@@ -63,12 +64,12 @@ find_package(Boost REQUIRED system filesystem date_time thread)
 #   Message2.msg
 # )
 
-## Generate services in the 'srv' folder
-# add_service_files(
-#   FILES
-#   Service1.srv
-#   Service2.srv
-# )
+# Generate services in the 'srv' folder
+add_service_files(
+  FILES
+  PoseToAngles.srv
+  CheckAngles.srv
+)
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -77,11 +78,12 @@ find_package(Boost REQUIRED system filesystem date_time thread)
 #   Action2.action
 # )
 
-## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   geometry_msgs#   std_msgs
-# )
+# Generate added messages and services with any dependencies listed here
+generate_messages(
+  DEPENDENCIES
+  std_msgs
+  geometry_msgs
+)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -121,6 +123,7 @@ catkin_package(
     tf
     tf2_geometry_msgs
     tf2_eigen
+    message_runtime
    DEPENDS
     EIGEN3
 )

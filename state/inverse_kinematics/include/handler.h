@@ -10,23 +10,26 @@
 #include "tf2_eigen/tf2_eigen.h"
 #include <Eigen/Geometry>
 
-class UpdateHandler{
+#include "inverse_kinematics/PoseToAngles.h"
+#include "inverse_kinematics/CheckAngles.h"
+
+class KinematicsHandler{
 public:
-    UpdateHandler(ros::NodeHandle& n);
-    ~UpdateHandler(){}
-    void targetPoseCallback(const geometry_msgs::Pose::ConstPtr& target_pose);
+    KinematicsHandler(ros::NodeHandle& n);
+    ~KinematicsHandler(){}
+    
+    bool poseToAngles(inverse_kinematics::PoseToAngles::Request&,
+                      inverse_kinematics::PoseToAngles::Response&);
+    bool checkAngles(inverse_kinematics::CheckAngles::Request&,
+                     inverse_kinematics::CheckAngles::Response&);
 
 private:
 
+    void loadAnglesMsg();
+    bool validateState();
     bool checkCollision();
-    void publishAngles(const std::vector<double>& joint_values);
 
-    ros::Publisher arm_demand_pub;
-    ros::Publisher wrist_demand_pub;
-    ros::Subscriber target_pose_sub;
-
-    std_msgs::Float32MultiArray arm_demand_msg;
-    std_msgs::Float32MultiArray wrist_demand_msg;
+    std_msgs::Float32MultiArray angles_msg;
 
     robot_model_loader::RobotModelLoader robot_model_loader;
     robot_model::RobotModelPtr kinematic_model;
