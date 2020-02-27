@@ -4,7 +4,7 @@ import math
 import rospy
 import tf
 from geometry_msgs.msg import Pose, Point
-from std_msgs.msg import Float32MultiArray, MultiArrayDimension, Bool
+from std_msgs.msg import Float32MultiArray, MultiArrayDimension, Bool, Float32
 
 """ Global variables declared early """
 
@@ -14,6 +14,7 @@ BASE_SNAP_DIST = 0.1
 
 
 """ Functions for directly controlling the joints """
+
 
 def angles_step_to_target(angles, targets, velocities, dt):
     finished = True
@@ -29,6 +30,7 @@ def angles_step_to_target(angles, targets, velocities, dt):
         finished = False
     return angles, finished
 
+
 def move_to_joint_target(targets, velocities):
     global arm_joints_msg, wrist_joints_msg
     angles = list(arm_joints_msg.data) + list(wrist_joints_msg.data)
@@ -42,6 +44,7 @@ def move_to_joint_target(targets, velocities):
         wrist_demand_pub.publish(wrist_joints_msg)
         time.sleep(dt)
 
+
 def calibrate_target_pose():
     global target_pose
     # Reset target pose
@@ -54,6 +57,7 @@ def calibrate_target_pose():
     target_pose.orientation.z = rot[2]
     target_pose.orientation.w = rot[3]
 
+
 def transition_to_constrained():
     arm_length = 0.42
     angle = math.degrees(math.asin(target_pose.position.z))
@@ -63,11 +67,13 @@ def transition_to_constrained():
     move_to_joint_target([0, angle, 2*angle, 0, 0, 0],
                          [80, 80, 80, 80, 80, 80])
 
+
 def transition_to_free():
     global arm_joints_msg, wrist_joints_msg
     move_to_joint_target([arm_joints_msg.data[0], 60, 60] + list(wrist_joints_msg.data),
                          [80, 80, 80, 80, 80, 80])
     calibrate_target_pose()
+
 
 def reset_gripper_orientation():
     global arm_joints_msg, wrist_joints_msg
@@ -77,6 +83,7 @@ def reset_gripper_orientation():
 
 
 """ TF information """
+
 
 def get_gripper_position():
     global tf_listener
@@ -91,10 +98,12 @@ def get_gripper_position():
 
 """ Callback functions """
 
+
 def arm_demand_callback(msg):
     global arm_joints_msg
     if not direct_joint_control:
         arm_joints_msg.data = msg.data
+
 
 def wrist_demand_callback(msg):
     global wrist_joint_msg
@@ -103,6 +112,7 @@ def wrist_demand_callback(msg):
 
 
 """ Initialisation """
+
 
 def init_messages():
     global arm_joints_msg, wrist_joints_msg, zero_arm_msg
@@ -124,6 +134,7 @@ def init_messages():
     zero_arm_msg = Bool()
     zero_arm_msg.data = True
 
+
 def init_handlers():
     global target_pose_pub, arm_demand_pub, wrist_demand_pub
     global arm_demand_sub, wrist_demand_sub
@@ -134,6 +145,8 @@ def init_handlers():
         '/arm_demand_angles', Float32MultiArray, queue_size=10)
     wrist_demand_pub = rospy.Publisher(
         '/wrist_demand_angles', Float32MultiArray, queue_size=10)
+    gripper_velocity_pub = rospy.Publisher(
+        '/gripper/velocity', Float32, queue_size=10)
     arm_demand_sub = rospy.Subscriber(
         '/arm_demand_angles', Float32MultiArray, arm_demand_callback)
     wrist_demand_sub = rospy.Subscriber(
@@ -158,6 +171,7 @@ def elapsed_time():
 
 """ Functions for helping with movement """
 
+
 def get_velocities(message):
     dist_scale = 0.3 # 0.3 m/s
     angle_scale = 2 # 2 rad/s
@@ -170,8 +184,11 @@ def get_velocities(message):
             #(message.buttons[13] - message.buttons[12]) * angle_scale,
             (message.buttons[4] - message.buttons[5]) * angle_scale]
 
+
 control_mode = 2
-#0: Cartesian, 1: Polar, 2: Relative to gripper orientation
+
+
+# 0: Cartesian, 1: Polar, 2: Relative to gripper orientation
 def move_pose(pose, velocities, dt):
     quaternion = (pose.orientation.x,
                   pose.orientation.y,
@@ -202,8 +219,10 @@ def move_pose(pose, velocities, dt):
     pose.orientation.w = quaternion[3]
     return pose
 
+
 def is_close_to_base():
     return math.hypot(target_pose.position.x, target_pose.position.y) < BASE_SNAP_DIST
+
 
 def zero_arm():
     global direct_joint_control, target_pose, arm_joints_msg
@@ -214,7 +233,9 @@ def zero_arm():
     target_pose.position.z = 0
     arm_joints_msg.data = [0, 0, 0]
 
+
 """ Movement control functions: constrained or free """
+
 
 def free_movement(velocities, dt):
     global target_pose, direct_joint_control
@@ -231,6 +252,7 @@ def free_movement(velocities, dt):
         return
 
     target_pose_pub.publish(absolute_pose)
+
 
 def constrained_movement(velocities, dt):
     global arm_joints_msg, wrist_joints_msg, target_pose, direct_joint_control
@@ -253,9 +275,11 @@ def constrained_movement(velocities, dt):
     ]
     arm_demand_pub.publish(arm_joints_msg)
 
-""" Handle buttons """
 
+""" Handle buttons """
 button_status = [False, False, False]
+
+
 def handle_buttons(message):
     global button_status, control_mode, zero_arm_pub, zero_arm_msg
     # 0 -> A
@@ -277,7 +301,9 @@ def handle_buttons(message):
     elif message.buttons[3] == 0 and button_status[2]:
         button_status[2] = False
 
+
 """ "Public" Functions """
+
 
 def init():
     global base_position
@@ -289,6 +315,7 @@ def init():
     base_position.x = base_trans[0]
     base_position.y = base_trans[1]
     base_position.z = base_trans[2]
+
 
 def update(message):
     global target_pose, direct_joint_control, arm_joints_msg

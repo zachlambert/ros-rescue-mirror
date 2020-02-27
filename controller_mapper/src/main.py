@@ -23,8 +23,8 @@ def receive_joy_data(message):
     if arm_control_mode:
         arm_control.update(message)
     else:
-        drive_left.publish(-(message.axes[1] * 8192 * 16 + message.axes[0] * 16 * 8192))
-        drive_right.publish(message.axes[1] * 8192 * 16 - message.axes[0] * 16 * 8192)
+        drive_left.publish(-(message.axes[1] * 8192 * 32 + message.axes[0] * 32 * 8192))
+        drive_right.publish(message.axes[1] * 8192 * 32 - message.axes[0] * 32 * 8192)
         flipper_front.publish((message.buttons[12] - message.buttons[13]) * 8192 * 85 / 8)
         flipper_rear.publish((message.buttons[15] - message.buttons[14]) * 8192 * 85 / 8)
 

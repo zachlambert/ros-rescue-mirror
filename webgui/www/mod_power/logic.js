@@ -18,12 +18,10 @@ function power_init(id) {
     });
 
     total_current_listener.subscribe(function(message) {
-        console.log(message);
         document.getElementById("total-current").style.height = message.data * 100 / 15 + "%";
     });
 
     odrive_current_listener.subscribe(function(message) {
-        console.log(message);
         document.getElementById("odrive-current").style.height = message.data * 100 / 15 + "%";
     });
 
