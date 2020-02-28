@@ -143,7 +143,8 @@ def init_messages():
     zero_arm_msg.data = True
 
 def init_handlers():
-    global arm_demand_pub, wrist_demand_pub
+    global target_pose_pub, arm_demand_pub, wrist_demand_pub
+    global arm_demand_sub, wrist_demand_sub
     global tf_listener, zero_arm_pub
     arm_demand_pub = rospy.Publisher(
         '/arm_demand_angles', Float32MultiArray, queue_size=10)
@@ -268,7 +269,7 @@ def constrained_movement(velocities, dt):
 
 button_status = [False, False, False, False, False, False]
 def handle_buttons(message):
-    global button_status, control_mode, zero_arm_pub, zero_arm_msg
+    global button_status, control_mode, zero_arm_pub, zero_arm_msg, gripper_velocity_pub
     # 0 -> A
     if message.buttons[0] == 1 and not button_status[0]:
         button_status[0] = True
@@ -295,24 +296,6 @@ def handle_buttons(message):
     elif message.buttons[15] == 0 and button_status[3]:
         button_status[3] = False
 
-    if message.buttons[14] == 1 and not button_status[4]:
-        button_status[4] = True
-        change_roll(-90)
-        print("here")
-    elif message.buttons[14] == 0 and button_status[4]:
-        button_status[4] = False
-
-    if message.buttons[13] == 1 and not button_status[5]:
-        button_status[5] = True
-        change_roll(180)
-    elif message.buttons[13] == 0 and button_status[5]:
-        button_status[5] = False
-
-def change_roll(change):
-    global arm_angles, wrist_angles
-    new_roll = wrist_angles[2] + change
-    new_roll = (new_roll + 180)%360 - 180
-    set_angles(arm_angles, [wrist_angles[0], wrist_angles[1], new_roll])
 
 """ "Public" Functions """
 
