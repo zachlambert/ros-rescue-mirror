@@ -7,6 +7,16 @@ function gamepad_init() {
         messageType: 'std_msgs/Bool'
     });
 
+    arm_control_mode_listener = new ROSLIB.Topic({
+        ros : ros,
+        name : '/arm_control_mode',
+        messageType : 'std_msgs/String'
+    });
+
+    listener.subscribe(function(message) {
+        document.getElementById("control_mode").innerText =
+    });
+
     window.addEventListener("gamepadconnected", function (e) {
         let gp = navigator.getGamepads()[e.gamepad.index];
         document.getElementById("controller_status").innerText = "Controller: " + gp.id;

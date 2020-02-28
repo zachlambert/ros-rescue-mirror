@@ -4,7 +4,7 @@ import math
 import rospy
 import tf
 from geometry_msgs.msg import Pose, Point
-from std_msgs.msg import Float32MultiArray, MultiArrayDimension, Bool, String
+from std_msgs.msg import Float32MultiArray, MultiArrayDimension, Bool, Float, String
 
 from inverse_kinematics.srv import PoseToAngles, AnglesToPose
 
@@ -143,12 +143,13 @@ def init_messages():
     zero_arm_msg.data = True
 
 def init_handlers():
-    global arm_demand_pub, wrist_demand_pub
-    global tf_listener, zero_arm_pub, arm_control_mode_pub
+    global target_pose_pub, arm_demand_pub, wrist_demand_pub, arm_control_mode_pubtf_listener, zero_arm_pub
     arm_demand_pub = rospy.Publisher(
         '/arm_demand_angles', Float32MultiArray, queue_size=10)
     wrist_demand_pub = rospy.Publisher(
         '/wrist_demand_angles', Float32MultiArray, queue_size=10)
+    gripper_velocity_pub = rospy.Publisher(
+        '/gripper/velocity', Float32, queue_size=10)
     tf_listener = tf.TransformListener()
     zero_arm_pub = rospy.Publisher(
         '/zero_arm_request', Bool, queue_size=1)
@@ -315,11 +316,6 @@ def handle_buttons(message):
     elif message.buttons[14] == 0 and button_status[4]:
         button_status[4] = False
 
-    if message.buttons[13] == 1 and not button_status[5]:
-        button_status[5] = True
-        change_roll(180)
-    elif message.buttons[13] == 0 and button_status[5]:
-        button_status[5] = False
 
 def change_roll(change):
     global arm_angles, wrist_angles
