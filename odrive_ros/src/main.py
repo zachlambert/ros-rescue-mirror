@@ -81,6 +81,8 @@ def did_discover_device(device):
     my_odrive = device
     my_odrive.axis0.controller.config.vel_limit = 8192 * 40
     my_odrive.axis1.controller.config.vel_limit = 8192 * 40
+    my_odrive.axis0.motor.config.current_lim = 30
+    my_odrive.axis1.motor.config.current_lim = 30
 
 
 def vel_setpoint(axis, value):
