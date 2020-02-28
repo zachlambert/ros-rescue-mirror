@@ -18,6 +18,7 @@ def receive_joy_data(message):
 
     if message.buttons[16] == 1 and last_message == 0:
         arm_control_mode = not arm_control_mode
+        controller_mode_pub.publish(["Movement", "Arm"][arm_control_mode])
     last_message = message.buttons[16]
 
     if arm_control_mode:
@@ -37,6 +38,9 @@ drive_left = rospy.Publisher('/odrive_drive/axis0/vel_setpoint', Int32, queue_si
 drive_right = rospy.Publisher('/odrive_drive/axis1/vel_setpoint', Int32, queue_size=10)
 flipper_front = rospy.Publisher('/odrive_flipper/axis0/vel_setpoint', Int32, queue_size=10)
 flipper_rear = rospy.Publisher('/odrive_flipper/axis1/vel_setpoint', Int32, queue_size=10)
+
+controller_mode_pub = rospy.Publisher('/controller_mode', String, queue_size=1)
+controller_mode_pub.publish(["Movement", "Arm"][arm_control_mode])
 
 arm_control.init()
 
