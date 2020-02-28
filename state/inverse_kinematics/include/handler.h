@@ -11,7 +11,7 @@
 #include <Eigen/Geometry>
 
 #include "inverse_kinematics/PoseToAngles.h"
-#include "inverse_kinematics/CheckAngles.h"
+#include "inverse_kinematics/AnglesToPose.h"
 
 class KinematicsHandler{
 public:
@@ -20,16 +20,20 @@ public:
     
     bool poseToAngles(inverse_kinematics::PoseToAngles::Request&,
                       inverse_kinematics::PoseToAngles::Response&);
-    bool checkAngles(inverse_kinematics::CheckAngles::Request&,
-                     inverse_kinematics::CheckAngles::Response&);
+    bool anglesToPose(inverse_kinematics::AnglesToPose::Request&,
+                      inverse_kinematics::AnglesToPose::Response&);
 
 private:
 
     void loadAnglesMsg();
+    void loadPoseMsg();
+
     bool validateState();
     bool checkCollision();
 
-    std_msgs::Float32MultiArray angles_msg;
+    geometry_msgs::Pose pose_msg;
+    std_msgs::Float32MultiArray arm_angles_msg;
+    std_msgs::Float32MultiArray wrist_angles_msg;
 
     robot_model_loader::RobotModelLoader robot_model_loader;
     robot_model::RobotModelPtr kinematic_model;

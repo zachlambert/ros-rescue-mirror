@@ -2,30 +2,54 @@
 #include "handler.h"
 #include <stdlib.h>
 #include <math.h>
+#include <string>
 
-bool largeAngleChange(const std::vector<double>& joints1,
-                      const std::vector<double>& joints2){
-    static const double ANGLE_THRESHOLD = M_PI/2;
-    if(joints1.size() != joints2.size()){
-        ROS_INFO("Comparing vectors of different sizes.");
-        return false;
+void convertToIntuitiveAngles(std::vector<double>& angles){
+    for(int i=0; i<angles.size(); i++){
+        angles[i] = angles[i] * (180.0/M_PI);
     }
-    for(int i=0; i<joints1.size(); i++){
-        if(abs(joints1[i] - joints2[i]) > ANGLE_THRESHOLD){
-            return true;
-        }
-    }
-    return false;
+    angles[1] = -angles[1];
 }
 
-void poseMsgToEigen(const geometry_msgs::Pose &m, Eigen::Isometry3d& e){
-    e = Eigen::Translation3d(m.position.x,
-                             m.position.y,
-                             m.position.z)*
-        Eigen::Quaterniond(m.orientation.w,
-                           m.orientation.x,
-                           m.orientation.y,
-                           m.orientation.z);
+void convertToModelAngles(std::vector<double>& angles){
+    for(int i=0; i<angles.size(); i++){
+        angles[i] = angles[i] * (M_PI/180.0);
+    }
+    angles[1] = -angles[1];
+}
+
+void poseMsgToEigen(const geometry_msgs::Pose& pose, Eigen::Isometry3d& e){
+    e = Eigen::Translation3d(pose.position.x,
+                             pose.position.y,
+                             pose.position.z)*
+        Eigen::Quaterniond(pose.orientation.w,
+                           pose.orientation.x,
+                           pose.orientation.y,
+                           pose.orientation.z);
+}
+
+void eigenToPoseMsg(const Eigen::Isometry3d& e, geometry_msgs::Pose& pose){
+    pose.position.x = e.translation().x();
+    pose.position.y = e.translation().y();
+    pose.position.z = e.translation().z();
+    Eigen::Quaterniond q(e.linear());
+    pose.orientation.x = q.x();
+    pose.orientation.y = q.y();
+    pose.orientation.z = q.z();
+    pose.orientation.w = q.w();
+}
+
+std_msgs::Float32MultiArray generateAnglesMessage(int size){
+    std_msgs::Float32MultiArray msg;
+    msg.layout.dim.push_back(std_msgs::MultiArrayDimension());
+    msg.layout.dim[0].label = "joint";
+    msg.layout.dim[0].size = size;
+    msg.layout.dim[0].stride = 1;
+    msg.data.clear();
+    for(int i=0; i<size; i++){
+        msg.data.push_back(0);
+    }
+    return msg;
 }
 
 KinematicsHandler::KinematicsHandler(ros::NodeHandle& n):
@@ -45,14 +69,8 @@ KinematicsHandler::KinematicsHandler(ros::NodeHandle& n):
 
     g_planning_scene = new planning_scene::PlanningScene(kinematic_model);
 
-    angles_msg.layout.dim.push_back(std_msgs::MultiArrayDimension());
-    angles_msg.layout.dim[0].label = "joint";
-    angles_msg.layout.dim[0].size = 6;
-    angles_msg.layout.dim[0].stride = 1;
-    angles_msg.data.clear();
-    for(int i=0; i<6; i++){
-        angles_msg.data.push_back(0);
-    }
+    arm_angles_msg = generateAnglesMessage(3);
+    wrist_angles_msg = generateAnglesMessage(3);
 }
 
 
@@ -70,7 +88,8 @@ bool KinematicsHandler::poseToAngles(
         res.valid = validateState();
         if(res.valid){
             loadAnglesMsg();
-            res.angles = angles_msg;
+            res.arm_angles = arm_angles_msg;
+            res.wrist_angles = wrist_angles_msg;
         }
     }else{
         ROS_INFO("IK not found.");
@@ -79,25 +98,51 @@ bool KinematicsHandler::poseToAngles(
     return true;
 }
 
-bool KinematicsHandler::checkAngles(
-        inverse_kinematics::CheckAngles::Request& req,
-        inverse_kinematics::CheckAngles::Response& res){
+bool KinematicsHandler::anglesToPose(
+        inverse_kinematics::AnglesToPose::Request& req,
+        inverse_kinematics::AnglesToPose::Response& res){
+    std::vector<std::string> joint_names = {
+        "arm1", "arm2", "arm3", "wrist1", "wrist2", "wrist3"
+    };
     std::vector<double> joint_values(6);
-    for(int i=0; i<6; i++){
-        joint_values[i] = req.angles.data[i];
+    for(int i=0; i<3; i++){
+        joint_values[i] = req.arm_angles.data[i];
     }
-    kinematic_state->setVariablePositions(joint_values);
+    for(int i=0; i<3; i++){
+        joint_values[i+3] = req.wrist_angles.data[i];
+    }
+    convertToModelAngles(joint_values);
+
+    kinematic_state->setVariablePositions(joint_names, joint_values);
     res.valid = validateState();
+    if(res.valid){
+        loadPoseMsg();
+        res.pose = pose_msg;
+    }
     return true;
 }
 
 void KinematicsHandler::loadAnglesMsg(){
     std::vector<double> joint_values;
     kinematic_state->copyJointGroupPositions(joint_model_group, joint_values);
-    angles_msg.data.clear();
-    for(int i=0; i<6; i++){
-        angles_msg.data.push_back(joint_values[i]);
+
+    convertToIntuitiveAngles(joint_values); 
+
+    arm_angles_msg.data.clear();
+    for(int i=0; i<3; i++){
+        arm_angles_msg.data.push_back(joint_values[i]);
     }
+
+    wrist_angles_msg.data.clear();
+    for(int i=0; i<3; i++){
+        wrist_angles_msg.data.push_back(joint_values[i+3]);
+    }
+}
+
+void KinematicsHandler::loadPoseMsg(){
+    const Eigen::Isometry3d& end_effector_state =
+        kinematic_state->getGlobalLinkTransform("gripper_1");
+    eigenToPoseMsg(end_effector_state, pose_msg);
 }
 
 bool KinematicsHandler::validateState(){

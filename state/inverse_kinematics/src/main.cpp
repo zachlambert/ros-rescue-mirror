@@ -10,7 +10,7 @@ int main(int argc, char** argv){
     ros::ServiceServer service1 = n.advertiseService(
         "pose_to_angles", &KinematicsHandler::poseToAngles, &handler);
     ros::ServiceServer service2 = n.advertiseService(
-        "check_angles", &KinematicsHandler::checkAngles, &handler);
+        "angles_to_pose", &KinematicsHandler::anglesToPose, &handler);
     ros::spin();
     return 0;
 }
