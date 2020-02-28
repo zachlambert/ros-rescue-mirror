@@ -4,7 +4,7 @@ import math
 import rospy
 import tf
 from geometry_msgs.msg import Pose, Point
-from std_msgs.msg import Float32MultiArray, MultiArrayDimension, Bool
+from std_msgs.msg import Float32MultiArray, MultiArrayDimension, Bool, String
 
 from inverse_kinematics.srv import PoseToAngles, AnglesToPose
 
@@ -144,7 +144,7 @@ def init_messages():
 
 def init_handlers():
     global arm_demand_pub, wrist_demand_pub
-    global tf_listener, zero_arm_pub
+    global tf_listener, zero_arm_pub, arm_control_mode_pub
     arm_demand_pub = rospy.Publisher(
         '/arm_demand_angles', Float32MultiArray, queue_size=10)
     wrist_demand_pub = rospy.Publisher(
@@ -152,6 +152,8 @@ def init_handlers():
     tf_listener = tf.TransformListener()
     zero_arm_pub = rospy.Publisher(
         '/zero_arm_request', Bool, queue_size=1)
+    arm_control_mode_pub = rospy.Publisher(
+        '/arm_control_mode', String, queue_size=1)
 
 def init_service_proxies():
     global pose_to_angles, angles_to_pose
@@ -242,6 +244,7 @@ def free_movement(velocities, dt):
     if is_close_to_base(new_pose):
         transition_to_constrained()
         direct_joint_control = True
+        publish_arm_control_mode()
     else:
         set_pose(new_pose)
 
@@ -251,6 +254,7 @@ def constrained_movement(velocities, dt):
     if velocities[0] > 0:
         transition_to_free()
         direct_joint_control = False
+        publish_arm_control_mode()
         return
 
     arm_length = 0.42
@@ -263,6 +267,15 @@ def constrained_movement(velocities, dt):
     new_arm_angles = [arm_angles[0], new_angle, new_angle*2]
     print(new_arm_angles)
     set_angles(new_arm_angles, wrist_angles)
+
+def publish_arm_control_mode():
+    string = ""
+    if direct_joint_control:
+        string += "joint control"
+    else:
+        string += "pose control : "
+        string += ["cartesian", "polar", "relative to gripper"][control_mode]
+    arm_control_mode_pub.publish(string)
 
 """ Handle buttons """
 
@@ -279,6 +292,7 @@ def handle_buttons(message):
     if message.buttons[2] == 1 and not button_status[1]:
         button_status[1] = True
         control_mode = (control_mode+1)%3
+        publish_arm_control_mode()
     elif message.buttons[2] == 0 and button_status[1]:
         button_status[1] = False
     # 3 -> Y
@@ -298,7 +312,6 @@ def handle_buttons(message):
     if message.buttons[14] == 1 and not button_status[4]:
         button_status[4] = True
         change_roll(-90)
-        print("here")
     elif message.buttons[14] == 0 and button_status[4]:
         button_status[4] = False
 
