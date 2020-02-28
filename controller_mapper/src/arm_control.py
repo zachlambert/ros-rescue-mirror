@@ -281,7 +281,7 @@ def publish_arm_control_mode():
 
 button_status = [False, False, False, False, False, False]
 def handle_buttons(message):
-    global button_status, control_mode, zero_arm_pub, zero_arm_msg
+    global button_status, control_mode, zero_arm_pub, zero_arm_msg, gripper_velocity_pub
     # 0 -> A
     if message.buttons[0] == 1 and not button_status[0]:
         button_status[0] = True

@@ -9,7 +9,7 @@
     <param name="~port" value="/dev/serial/by-id/usb-Teensyduino_USB_Serial_5451780-if00" type="str"/>
   </node>
   <node name="power_board" pkg="rosserial_python" type="serial_node.py" respawn="true">
-    <param name="~port" value="/dev/serial/by-id/usb-Teensyduino_USB_Serial_6260580-if00" type="str"/>
+    <param name="~port" value="/dev/serial/by-id/usb-Teensyduino_USB_Serial_6491540-if00" type="str"/>
   </node>
   <node name="webserver" pkg="roswww" type="webserver.py" respawn="true"/>
   <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
@@ -20,4 +20,5 @@
   <node name="wrist_driver" pkg="wrist_driver" type="main.py" respawn="true"/>
 
   <node name="controller_mapper" pkg="controller_mapper" type="main.py" output="screen" respawn="true"/>
+  <node name="topic_mapper" pkg="topic_mapper" type="main.py" output="screen" respawn="true"/>
 </launch>

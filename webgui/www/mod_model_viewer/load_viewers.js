@@ -5,7 +5,7 @@ function init() {
 
     // Connect to ROS.
     var ros = new ROSLIB.Ros({
-        url : 'ws://localhost:9090'
+        url: 'ws://' + window.location.hostname + ':9090'
     });
 
     var global_viewer = new ROS3D.Viewer({
@@ -47,7 +47,7 @@ function init() {
     var urdfClient = new ROS3D.UrdfClient({
         ros : ros,
         tfClient : global_tf_client,
-        path : 'http://localhost:8000/',
+        path : 'http://' + window.location.hostname + ':8000/',
         rootObject : global_viewer.scene,
         loader : ROS3D.COLLADA_LOADER_2
     });
