@@ -4,7 +4,7 @@ import math
 import rospy
 import tf
 from geometry_msgs.msg import Pose, Point
-from std_msgs.msg import Float32MultiArray, MultiArrayDimension, Bool, Float, String
+from std_msgs.msg import Float32MultiArray, MultiArrayDimension, Bool, Float32, String
 
 from inverse_kinematics.srv import PoseToAngles, AnglesToPose
 
@@ -143,18 +143,13 @@ def init_messages():
     zero_arm_msg.data = True
 
 def init_handlers():
-    global target_pose_pub, arm_demand_pub, wrist_demand_pub, arm_control_mode_pubtf_listener, zero_arm_pub
-    arm_demand_pub = rospy.Publisher(
-        '/arm_demand_angles', Float32MultiArray, queue_size=10)
-    wrist_demand_pub = rospy.Publisher(
-        '/wrist_demand_angles', Float32MultiArray, queue_size=10)
-    gripper_velocity_pub = rospy.Publisher(
-        '/gripper/velocity', Float32, queue_size=10)
+    global target_pose_pub, arm_demand_pub, wrist_demand_pub, arm_control_mode_pub, tf_listener, zero_arm_pub
+    arm_demand_pub = rospy.Publisher('/arm_demand_angles', Float32MultiArray, queue_size=10)
+    wrist_demand_pub = rospy.Publisher('/wrist_demand_angles', Float32MultiArray, queue_size=10)
+    gripper_velocity_pub = rospy.Publisher('/gripper/velocity', Float32, queue_size=10)
     tf_listener = tf.TransformListener()
-    zero_arm_pub = rospy.Publisher(
-        '/zero_arm_request', Bool, queue_size=1)
-    arm_control_mode_pub = rospy.Publisher(
-        '/arm_control_mode', String, queue_size=1)
+    zero_arm_pub = rospy.Publisher('/zero_arm_request', Bool, queue_size=1)
+    arm_control_mode_pub = rospy.Publisher('/arm_control_mode', String, queue_size=1)
 
 def init_service_proxies():
     global pose_to_angles, angles_to_pose
@@ -296,14 +291,25 @@ def handle_buttons(message):
         publish_arm_control_mode()
     elif message.buttons[2] == 0 and button_status[1]:
         button_status[1] = False
-    # 3 -> Y
-    if message.buttons[3] == 1 and not button_status[2]:
+    # 8 -> BACK
+    if message.buttons[8] == 1 and not button_status[2]:
         button_status[2] = True
         zero_arm()
-    elif message.buttons[3] == 0 and button_status[2]:
+    elif message.buttons[8] == 0 and button_status[2]:
         button_status[2] = False
-    # D-Pad buttons
 
+    gripper_velocity = Float32()
+    if message.buttons[3]:
+        # 3 -> Y
+        gripper_velocity.data = 100
+    elif message.buttons[1]:
+        # 1 -> B
+        gripper_velocity.data = -100
+
+    gripper_velocity_pub.publish(gripper_velocity)
+
+
+    # D-Pad buttons
     if message.buttons[15] == 1 and not button_status[3]:
         button_status[3] = True
         change_roll(90)
