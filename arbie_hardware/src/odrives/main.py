@@ -6,6 +6,7 @@ from rescue_hardware.srv import (
     WriteHardware, WriteHardwareResponse
 )
 from odrive_controller import OdriveController
+from math import pi
 
 # Setup hardware interface
 
@@ -42,11 +43,16 @@ tracks_res.pos.data = [0, 0]
 tracks_res.vel.data = [0, 0]
 tracks_res.eff.data = [0, 0]
 
-def set_flippers_front_position(msg):
-    flippers_res.pos.data[0] = msg
+# TODO: Set these as parameters
+flippers_front_offset = 373
+flippers_rear_offset =  605
+flippers_scale = 2 * pi/1024.0
 
-def set_flippers_rear_position(msg):
-    flippers_res.pos.data[1] = msg
+def set_flippers_front_position(raw_value):
+    flippers_res.pos.data[0] = (raw_value - flippers_front_offset) * flippers_scale
+
+def set_flippers_rear_position(raw_value):
+    flippers_res.pos.data[1] = (raw_value - flippers_rear_offset) * flippers_scale
 
 def flippers_read(req):
     if flippers.is_connected():
