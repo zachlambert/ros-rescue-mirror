@@ -7,14 +7,24 @@ function gamepad_init() {
         messageType: 'std_msgs/Bool'
     });
 
-    arm_control_mode_listener = new ROSLIB.Topic({
+    arm_control_mode = new ROSLIB.Topic({
         ros : ros,
         name : '/arm_control_mode',
         messageType : 'std_msgs/String'
     });
 
-    listener.subscribe(function(message) {
-        document.getElementById("control_mode").innerText =
+    arm_control_mode.subscribe(function(message) {
+        document.getElementById("arm_control_mode").innerText = "Arm control mode - " + message
+    });
+
+    controller_mode = new ROSLIB.Topic({
+        ros : ros,
+        name : '/controller_mode',
+        messageType : 'std_msgs/String'
+    });
+
+    controller_mode.subscribe(function(message) {
+        document.getElementById("controller_mode").innerText = "Controller mode - " + message
     });
 
     window.addEventListener("gamepadconnected", function (e) {
