@@ -4,24 +4,13 @@ project(arbie_hardware)
 find_package(catkin REQUIRED COMPONENTS
     rospy
     std_msgs
-    message_generation
+    geometry_msgs
 )
 
 catkin_python_setup()
 
-add_service_files(
-    FILES
-        ReadHardware.srv
-        WriteHardware.srv
-)
-
-generate_messages(
-    DEPENDENCIES
-        std_msgs
-)
-
 catkin_package(
-    CATKIN_DEPENDS message_runtime geometry_msgs rospy std_msgs
+    CATKIN_DEPENDS rospy std_msgs geometry_msgs
 )
 include_directories(
     ${catkin_INCLUDE_DIRECTORIES}

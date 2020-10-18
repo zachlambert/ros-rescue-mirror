@@ -12,32 +12,21 @@ find_package(catkin REQUIRED COMPONENTS
     geometry_msgs
     sensor_msgs
     nav_msgs
-    message_generation
     moveit_core
     moveit_ros_planning
     moveit_ros_planning_interface
     tf2_ros
     tf2_eigen
     tf2_geometry_msgs
-    arbie_hardware
+    arbie_msgs
 )
 
 find_package(Eigen3 REQUIRED)
 find_package(Boost REQUIRED system filesystem date_time thread)
 
-add_service_files(
-    FILES
-        GripperCommand.srv
-)
-generate_messages(
-    DEPENDENCIES
-        std_msgs
-)
-
 catkin_package(
     INCLUDE_DIRS include
     CATKIN_DEPENDS
-        message_runtime
         controller_manager
         geometry_msgs
         joint_state_controller
@@ -47,7 +36,7 @@ catkin_package(
         std_msgs
         tf2_geometry_msgs
         tf2_eigen
-        arbie_hardware
+        arbie_msgs
     DEPENDS
         EIGEN3
 )

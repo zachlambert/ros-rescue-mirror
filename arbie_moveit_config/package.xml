@@ -1,6 +1,6 @@
 <package>
 
-  <name>arbie_model_moveit</name>
+  <name>arbie_moveit_config</name>
   <version>0.3.0</version>
   <description>
      An automatically generated package with all the configuration and launch files for using the arbie with the MoveIt! Motion Planning Framework

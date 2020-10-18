@@ -1,7 +1,7 @@
 #include "ros/ros.h"
 #include "kinematics_handler.h"
 #include "controller_manager_msgs/SwitchController.h"
-#include "rescue_control/GripperCommand.h"
+#include "arbie_msgs/GripperCommand.h"
 
 class Node {
 public:
@@ -42,8 +42,8 @@ public:
     }
 
     bool gripper_command_callback(
-        rescue_control::GripperCommand::Request &req,
-        rescue_control::GripperCommand::Response &res)
+        arbie_msgs::GripperCommand::Request &req,
+        arbie_msgs::GripperCommand::Response &res)
     {
         switch_controllers_client.call(load_trajectory_msg);
         if (load_trajectory_msg.response.ok) {

@@ -4,8 +4,8 @@
 #include <ros/ros.h>
 #include <hardware_interface/joint_state_interface.h>
 #include <hardware_interface/joint_command_interface.h>
-#include <rescue_hardware/ReadHardware.h>
-#include <rescue_hardware/WriteHardware.h>
+#include <arbie_msgs/ReadHardware.h>
+#include <arbie_msgs/WriteHardware.h>
 
 class JointHandleGroup {
 public:
@@ -32,9 +32,9 @@ private:
     double *cmd;
 
     ros::ServiceClient read_client;
-    rescue_hardware::ReadHardware read_msg;
+    arbie_msgs::ReadHardware read_msg;
     ros::ServiceClient write_client;
-    rescue_hardware::WriteHardware write_msg;
+    arbie_msgs::WriteHardware write_msg;
 };
 
 #endif

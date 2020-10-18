@@ -16,7 +16,7 @@ JointHandleGroup::JointHandleGroup(
 
     std::stringstream read_service_name;
     read_service_name << "hardware/" << component_name << "/read";
-    read_client = n.serviceClient<rescue_hardware::ReadHardware>(
+    read_client = n.serviceClient<arbie_msgs::ReadHardware>(
             read_service_name.str()
     );
 
@@ -28,7 +28,7 @@ JointHandleGroup::JointHandleGroup(
 
     std::stringstream write_service_name;
     write_service_name << "hardware/" << component_name << "/write";
-    write_client = n.serviceClient<rescue_hardware::WriteHardware>(
+    write_client = n.serviceClient<arbie_msgs::WriteHardware>(
         write_service_name.str()
     );
 }

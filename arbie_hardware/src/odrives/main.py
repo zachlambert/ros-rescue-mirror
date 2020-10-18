@@ -1,7 +1,7 @@
 import rospy
 from std_msgs.msg import MultiArrayDimension, Float32
 from diagnostic_msgs.msg import DiagnosticStatus, KeyValue
-from rescue_hardware.srv import (
+from rescue_msgs.srv import (
     ReadHardware, ReadHardwareResponse,
     WriteHardware, WriteHardwareResponse
 )

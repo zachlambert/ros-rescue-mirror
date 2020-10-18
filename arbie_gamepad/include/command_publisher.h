@@ -4,7 +4,7 @@
 #include "ros/ros.h"
 #include "std_msgs/Float64MultiArray.h"
 #include "geometry_msgs/Twist.h"
-#include "rescue_control/GripperCommand.h"
+#include "arbie_msgs/GripperCommand.h"
 
 class CommandPublisher {
 public:
@@ -27,7 +27,7 @@ private:
     geometry_msgs::Twist tracks_command_msg;
 
     ros::ServiceClient gripper_command_service;
-    rescue_control::GripperCommand gripper_command_msg;
+    arbie_msgs::GripperCommand gripper_command_msg;
 };
 
 #endif

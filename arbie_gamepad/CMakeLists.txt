@@ -7,11 +7,11 @@ find_package(catkin REQUIRED COMPONENTS
     rospy
     std_msgs
     tf2_ros
-    arbie_control
+    arbie_msgs
 )
 catkin_package(
     INCLUDE_DIRS include
-    CATKIN_DEPENDS geometry_msgs roscpp rospy std_msgs arbie_control
+    CATKIN_DEPENDS geometry_msgs roscpp rospy std_msgs arbie_msgs
 )
 
 include_directories(

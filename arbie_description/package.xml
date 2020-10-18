@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-    <name>arbie_model</name>
+    <name>arbie_description</name>
     <version>0.0.0</version>
-    <description>The rescue_control package</description>
+    <description>The arbie_description package</description>
     <maintainer email="zachalambert@gmail.com">zach</maintainer>
     <license>TODO</license>
 
