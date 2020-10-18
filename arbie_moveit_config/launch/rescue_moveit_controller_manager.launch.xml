@@ -6,5 +6,5 @@
   <param name="moveit_controller_manager" value="$(arg moveit_controller_manager)"/>
 
   <!-- loads ros_controllers to the param server -->
-  <rosparam file="$(find rescue_control_moveit)/config/ros_controllers.yaml"/>
+  <rosparam file="$(find arbie_moveit_config)/config/ros_controllers.yaml"/>
 </launch>

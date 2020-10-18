@@ -1,11 +1,11 @@
 moveit_setup_assistant_config:
   URDF:
-    package: rescue_control
-    relative_path: model/rescue.urdf
+    package: arbie_description
+    relative_path: model/arbie.urdf
     xacro_args: ""
   SRDF:
     relative_path: config/rescue.srdf
   CONFIG:
     author_name: Zach Lambert
     author_email: zachalambert@gmail.com
-    generated_timestamp: 1599398130
+    generated_timestamp: 1603051036

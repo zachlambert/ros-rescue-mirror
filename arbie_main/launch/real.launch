@@ -9,9 +9,9 @@
 
     <!-- Hardware drivers -->
     <group ns="hardware">
-        <node name="arm" pkg="rescue_hardware" type="arm" output="screen"/>
-        <node name="wrist" pkg="rescue_hardware" type="wrist" output="screen"/>
-        <node name="odrives" pkg="rescue_hardware" type="odrives" output="screen"/>
+        <node name="arm" pkg="arbie_hardware" type="arm" output="screen"/>
+        <node name="wrist" pkg="arbie_hardware" type="wrist" output="screen"/>
+        <node name="odrives" pkg="arbie_hardware" type="odrives" output="screen"/>
     </group>
 
 

@@ -20,7 +20,7 @@
 
     <!-- Load controller configuration for the robot joints -->
     <rosparam
-        file="$(find rescue_control)/config/controllers.yaml"
+        file="$(find arbie_main)/config/controllers.yaml"
         command="load"
     />
 
@@ -65,7 +65,7 @@
 
     <!-- Launch the moveit move_group node, used for planning and executing
     trajectories -->
-    <include file="$(find rescue_control_moveit)/launch/move_group.launch"/>
+    <include file="$(find arbie_moveit_config)/launch/move_group.launch"/>
 
     <!-- Manipulation node, which controls the arm. Either moves arm with
     velocity commands, or passes pose commands to the moveit move_group node-->

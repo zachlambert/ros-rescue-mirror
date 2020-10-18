@@ -47,14 +47,14 @@
 <visual>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <geometry>
-        <mesh filename="package://rescue_control/meshes/base_link_m-binary.stl"/>
+        <mesh filename="package://arbie_description/meshes/base_link_m-binary.stl"/>
     </geometry>
     <material name="body"/>
 </visual>
 <collision>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <geometry>
-        <mesh filename="package://rescue_control/meshes/base_link_m-binary.stl"/>
+        <mesh filename="package://arbie_description/meshes/base_link_m-binary.stl"/>
     </geometry>
 </collision>
 </link>
@@ -68,14 +68,14 @@
 <visual>
     <origin rpy="0 0 0" xyz="0.088054 0.032677 0.040824"/>
     <geometry>
-        <mesh filename="package://rescue_control/meshes/right_belt_1_m-binary.stl"/>
+        <mesh filename="package://arbie_description/meshes/right_belt_1_m-binary.stl"/>
     </geometry>
     <material name="body"/>
 </visual>
 <collision>
     <origin rpy="0 0 0" xyz="0.088054 0.032677 0.040824"/>
     <geometry>
-        <mesh filename="package://rescue_control/meshes/right_belt_1_m-binary.stl"/>
+        <mesh filename="package://arbie_description/meshes/right_belt_1_m-binary.stl"/>
     </geometry>
 </collision>
 </link>
@@ -89,14 +89,14 @@
 <visual>
     <origin rpy="0 0 0" xyz="0.088054 0.032677 0.258325"/>
     <geometry>
-        <mesh filename="package://rescue_control/meshes/left_belt_1_m-binary.stl"/>
+        <mesh filename="package://arbie_description/meshes/left_belt_1_m-binary.stl"/>
     </geometry>
     <material name="body"/>
 </visual>
 <collision>
     <origin rpy="0 0 0" xyz="0.088054 0.032677 0.258325"/>
     <geometry>
-        <mesh filename="package://rescue_control/meshes/left_belt_1_m-binary.stl"/>
+        <mesh filename="package://arbie_description/meshes/left_belt_1_m-binary.stl"/>
     </geometry>
 </collision>
 </link>
@@ -110,7 +110,7 @@
 <visual>
     <origin rpy="0 0 0" xyz="0.088054 0.032677 -0.014176"/>
     <geometry>
-        <mesh filename="package://rescue_control/meshes/flipper_rear_right_1_m-binary.stl"/>
+        <mesh filename="package://arbie_description/meshes/flipper_rear_right_1_m-binary.stl"/>
     </geometry>
     <material name="flipper"/>
 </visual>
@@ -131,7 +131,7 @@
 <visual>
     <origin rpy="0 0 0" xyz="-0.366824 0.032677 -0.014176"/>
     <geometry>
-        <mesh filename="package://rescue_control/meshes/flipper_front_right_1_m-binary.stl"/>
+        <mesh filename="package://arbie_description/meshes/flipper_front_right_1_m-binary.stl"/>
     </geometry>
     <material name="flipper"/>
 </visual>
@@ -152,7 +152,7 @@
 <visual>
     <origin rpy="0 0 0" xyz="0.088054 0.032677 0.313325"/>
     <geometry>
-        <mesh filename="package://rescue_control/meshes/flipper_rear_left_1_m-binary.stl"/>
+        <mesh filename="package://arbie_description/meshes/flipper_rear_left_1_m-binary.stl"/>
     </geometry>
     <material name="flipper"/>
 </visual>
@@ -173,7 +173,7 @@
 <visual>
     <origin rpy="0 0 0" xyz="-0.366824 0.032677 0.313325"/>
     <geometry>
-        <mesh filename="package://rescue_control/meshes/flipper_front_left_1_m-binary.stl"/>
+        <mesh filename="package://arbie_description/meshes/flipper_front_left_1_m-binary.stl"/>
     </geometry>
     <material name="flipper"/>
 </visual>
@@ -194,14 +194,14 @@
 <visual>
     <origin rpy="0 0 0" xyz="-0.346824 -0.044823 0.149575"/>
     <geometry>
-        <mesh filename="package://rescue_control/meshes/arm_base_1_m-binary.stl"/>
+        <mesh filename="package://arbie_description/meshes/arm_base_1_m-binary.stl"/>
     </geometry>
     <material name="arm"/>
 </visual>
 <collision>
     <origin rpy="0 0 0" xyz="-0.346824 -0.044823 0.149575"/>
     <geometry>
-        <mesh filename="package://rescue_control/meshes/arm_base_1_m-binary.stl"/>
+        <mesh filename="package://arbie_description/meshes/arm_base_1_m-binary.stl"/>
     </geometry>
 </collision>
 </link>
@@ -215,14 +215,14 @@
 <visual>
     <origin rpy="0 0 0" xyz="-0.332393 -0.133016 0.155575"/>
     <geometry>
-        <mesh filename="package://rescue_control/meshes/arm_lower_1_m-binary.stl"/>
+        <mesh filename="package://arbie_description/meshes/arm_lower_1_m-binary.stl"/>
     </geometry>
     <material name="arm"/>
 </visual>
 <collision>
     <origin rpy="0 0 0" xyz="-0.332393 -0.133016 0.155575"/>
     <geometry>
-        <mesh filename="package://rescue_control/meshes/arm_lower_1_m-binary.stl"/>
+        <mesh filename="package://arbie_description/meshes/arm_lower_1_m-binary.stl"/>
     </geometry>
 </collision>
 </link>
@@ -236,14 +236,14 @@
 <visual>
     <origin rpy="0 0 0" xyz="0.06563 -0.172839 0.155575"/>
     <geometry>
-        <mesh filename="package://rescue_control/meshes/arm_upper_1_m-binary.stl"/>
+        <mesh filename="package://arbie_description/meshes/arm_upper_1_m-binary.stl"/>
     </geometry>
     <material name="arm"/>
 </visual>
 <collision>
     <origin rpy="0 0 0" xyz="0.06563 -0.172839 0.155575"/>
     <geometry>
-        <mesh filename="package://rescue_control/meshes/arm_upper_1_m-binary.stl"/>
+        <mesh filename="package://arbie_description/meshes/arm_upper_1_m-binary.stl"/>
     </geometry>
 </collision>
 </link>
@@ -257,14 +257,14 @@
 <visual>
     <origin rpy="0 0 0" xyz="-0.25005 -0.172881 0.168575"/>
     <geometry>
-        <mesh filename="package://rescue_control/meshes/wrist_yaw_1_m-binary.stl"/>
+        <mesh filename="package://arbie_description/meshes/wrist_yaw_1_m-binary.stl"/>
     </geometry>
     <material name="wrist"/>
 </visual>
 <collision>
     <origin rpy="0 0 0" xyz="-0.25005 -0.172881 0.168575"/>
     <geometry>
-        <mesh filename="package://rescue_control/meshes/wrist_yaw_1_m-binary.stl"/>
+        <mesh filename="package://arbie_description/meshes/wrist_yaw_1_m-binary.stl"/>
     </geometry>
 </collision>
 </link>
@@ -278,14 +278,14 @@
 <visual>
     <origin rpy="0 0 0" xyz="-0.306585 -0.18744 0.149575"/>
     <geometry>
-        <mesh filename="package://rescue_control/meshes/wrist_pitch_1_m-binary.stl"/>
+        <mesh filename="package://arbie_description/meshes/wrist_pitch_1_m-binary.stl"/>
     </geometry>
     <material name="wrist"/>
 </visual>
 <collision>
     <origin rpy="0 0 0" xyz="-0.306585 -0.18744 0.149575"/>
     <geometry>
-        <mesh filename="package://rescue_control/meshes/wrist_pitch_1_m-binary.stl"/>
+        <mesh filename="package://arbie_description/meshes/wrist_pitch_1_m-binary.stl"/>
     </geometry>
 </collision>
 </link>
@@ -299,14 +299,14 @@
 <visual>
     <origin rpy="0 0 0" xyz="-0.3656 -0.173002 0.149575"/>
     <geometry>
-        <mesh filename="package://rescue_control/meshes/gripper_1_m-binary.stl"/>
+        <mesh filename="package://arbie_description/meshes/gripper_1_m-binary.stl"/>
     </geometry>
     <material name="gripper"/>
 </visual>
 <collision>
     <origin rpy="0 0 0" xyz="-0.3656 -0.173002 0.149575"/>
     <geometry>
-        <mesh filename="package://rescue_control/meshes/gripper_1_m-binary.stl"/>
+        <mesh filename="package://arbie_description/meshes/gripper_1_m-binary.stl"/>
     </geometry>
 </collision>
 </link>
