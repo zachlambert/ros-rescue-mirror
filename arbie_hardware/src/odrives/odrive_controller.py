@@ -14,7 +14,6 @@ class OdriveController:
         self.shutdown_token = Event()
         self.logger = Logger(verbose=False)
         self.device = None
-        # diagnostic_pub = rospy.Publisher('odrivediag', DiagnosticStatus, queue_size=10)
         odrive.find_all(
             "usb",
             self.serial_no,
@@ -98,21 +97,3 @@ class OdriveController:
 
     def write_velocity_axis1(self, value):
         self._write_velocity(value, self.device.axis1)
-
-rospy.init_node("odrive")
-
-serial_no = rospy.get_param("~serial_no")
-
-rospy.Subscriber(rospy.get_name() + "/axis0/vel_setpoint", msg.Int32, lambda value: vel_setpoint("axis0", value), queue_size=1) # Need to use ros param server to give this nice values but default to axis0/axis1
-rospy.Subscriber(rospy.get_name() + "/axis1/vel_setpoint", msg.Int32, lambda value: vel_setpoint("axis1", value), queue_size=1)
-
-rospy.Service(rospy.get_name() + "/axis0/calibrate", Trigger, lambda value: calibrate("axis0", value))
-rospy.Service(rospy.get_name() + "/axis1/calibrate", Trigger, lambda value: calibrate("axis1", value))
-
-odrive.find_all("usb", serial_no, did_discover_device, shutdown_token, shutdown_token, logger)
-
-r = rospy.Rate(1)
-while not rospy.core.is_shutdown():
-    r.sleep()
-    diagnostics()
-

@@ -1,10 +1,11 @@
 import rospy
-from std_msgs.msg import MultiArrayDimension
+from std_msgs.msg import MultiArrayDimension, Float32
+from diagnostic_msgs.msg import DiagnosticStatus, KeyValue
 from rescue_hardware.srv import (
     ReadHardware, ReadHardwareResponse,
     WriteHardware, WriteHardwareResponse
 )
-from odrive_functions import OdriveController
+from odrive_controller import OdriveController
 
 # Setup hardware interface
 
@@ -12,13 +13,13 @@ from odrive_functions import OdriveController
 flippers = OdriveController("336631563536")
 
 # TODO: flippers = OdriveController(rospy.get_param("~flippers_serial_no")
-flippers = OdriveController("209137933548")
+tracks = OdriveController("209137933548")
 
 if not flippers.is_connected():
     print("Flippers hardware not connected")
 
-if not flippers.is_connected():
-    print("Flippers hardware not connected")
+if not tracks.is_connected():
+    print("Tracks hardware not connected")
 
 
 # Setup ROS interface
@@ -41,34 +42,43 @@ tracks_res.pos.data = [0, 0]
 tracks_res.vel.data = [0, 0]
 tracks_res.eff.data = [0, 0]
 
+def set_flippers_front_position(msg):
+    flippers_res.pos.data[0] = msg
+
+def set_flippers_rear_position(msg):
+    flippers_res.pos.data[1] = msg
+
 def flippers_read(req):
     if flippers.is_connected():
-        pass # TODO
-    flippers_res.success = True
+        flippers_res.success = True
+    else:
+        flipper_res.success = False
     return flippers_res
 
 def flippers_write(req):
-    if hardware_connected:
-        pass # TODO
-    else:
+    if flippers.is_connected():
+        flippers.write_velocity_axis0(flippers_res.vel.data[0])
+        flippers.write_velocity_axis1(flippers_res.vel.data[1])
         flippers_res.vel.data = req.cmd.data
-        for i in range(len(flippers_res.pos.data)):
-            flippers_res.pos.data[i] += flippers_res.vel.data[i] * 0.1 # Arbitrary fake dt
-    return WriteHardwareResponse(True)
+        return WriteHardwareResponse(True)
+    else:
+        return WriteHardwareResponse(False)
 
 def tracks_read(req):
-    if hardware_connected:
-        pass # TODO
-    tracks_res.success = True
+    if tracks.is_connected():
+        tracks_res.success = True
+    else:
+        tracks_res.success = False
     return tracks_res
 
 def tracks_write(req):
-    if hardware_connected:
-        pass #TODO
-    else:
+    if tracks.is_connected():
+        tracks.write_velocity_axis0(flippers_res.vel.data[0])
+        flippers.write_velocity_axis1(flippers_res.vel.data[1])
         tracks_res.vel.data = req.cmd.data
-        for i in range(len(tracks_res.pos.data)):
-            tracks_res.pos.data[i] += tracks_res.vel.data[i] * 0.1 # Arbitrary fake dt
+        return WriteHardwareResponse(True)
+    else:
+        return WriteHardwareResponse(False)
     return WriteHardwareResponse(True)
 
 def main():
@@ -78,6 +88,9 @@ def main():
     rospy.Service("tracks/read", ReadHardware, tracks_read)
     rospy.Service("tracks/write", WriteHardware, tracks_write)
 
+    rospy.Subscriber("/flipper/front", Float32, set_flippers_front_position)
+    rospy.Subscriber("/flipper/rear", Float32, set_flippers_rear_position)
+
     flippers_diagnostic_pub = rospy.Publisher(
         "flippers/diagnostic", DiagnosticStatus, 10)
     tracks_diagnostic_pub = rospy.Publisher(
@@ -85,6 +98,6 @@ def main():
 
     rate = rospy.Rate(1);
     while not rospy.is_shutdown():
-        flippers_diagnostic_pub.publish(flippers.get_diagnostics_message);
-        tracks_diagnostic_pub.publish(tracks.get_diagnostics_message);
+        flippers_diagnostic_pub.publish(flippers.get_diagnostics_message());
+        tracks_diagnostic_pub.publish(tracks.get_diagnostics_message());
         rate.sleep()
