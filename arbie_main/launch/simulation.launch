@@ -1,9 +1,8 @@
 <launch>
+<group ns="arbie">
     <include file="$(find arbie_main)/launch/common.launch"/>
-
     <include file="$(find arbie_gazebo)/main.launch"/>
-
     <!-- Perhaps create a placeholder node which acts which acts like
         the main pcb, but with arbitrary data -->
-
+</group>
 </launch>

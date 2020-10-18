@@ -1,4 +1,6 @@
 <launch>
+<group ns="arbie">
+
     <include file="$(find arbie_main)/launch/common.launch"/>
 
     <!-- Incorporate the following 4 nodes into arbie_hardware -->
@@ -42,4 +44,6 @@
             type="str"
         />
     </node>
+
+</group>
 </launch>
