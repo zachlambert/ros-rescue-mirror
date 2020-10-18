@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(rescue_control)
+project(arbie_control)
 
 find_package(catkin REQUIRED COMPONENTS
     controller_manager

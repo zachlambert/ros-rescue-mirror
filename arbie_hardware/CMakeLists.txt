@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(rescue_hardware)
+project(arbie_hardware)
 
 find_package(catkin REQUIRED COMPONENTS
     rospy

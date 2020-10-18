@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(rescue_control)
+project(arbie_control)
 
 find_package(catkin REQUIRED COMPONENTS
     controller_manager
@@ -19,7 +19,7 @@ find_package(catkin REQUIRED COMPONENTS
     tf2_ros
     tf2_eigen
     tf2_geometry_msgs
-    rescue_hardware
+    arbie_hardware
 )
 
 find_package(Eigen3 REQUIRED)
@@ -47,7 +47,7 @@ catkin_package(
         std_msgs
         tf2_geometry_msgs
         tf2_eigen
-        rescue_hardware
+        arbie_hardware
     DEPENDS
         EIGEN3
 )

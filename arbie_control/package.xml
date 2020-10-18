@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>rescue_control</name>
+  <name>arbie_control</name>
   <version>0.0.0</version>
-  <description>The rescue_control package</description>
+  <description>The arbie_control package</description>
 
   <maintainer email="zachalambert@gmail.com">zach</maintainer>
 
@@ -52,9 +52,4 @@
   <exec_depend>tf2_geometry_msgs</exec_depend>
   <exec_depend>rescue_hardware</exec_depend>
 
-  <!-- The export tag contains other, unspecified, tags -->
-  <export>
-    <!-- Other tools can request additional information be placed here -->
-
-  </export>
 </package>

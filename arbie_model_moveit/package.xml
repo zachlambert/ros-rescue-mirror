@@ -1,9 +1,9 @@
 <package>
 
-  <name>rescue_control_moveit</name>
+  <name>arbie_model_moveit</name>
   <version>0.3.0</version>
   <description>
-     An automatically generated package with all the configuration and launch files for using the rescue with the MoveIt! Motion Planning Framework
+     An automatically generated package with all the configuration and launch files for using the arbie with the MoveIt! Motion Planning Framework
   </description>
   <author email="zachalambert@gmail.com">Zach Lambert</author>
   <maintainer email="zachalambert@gmail.com">Zach Lambert</maintainer>
@@ -28,8 +28,7 @@
   <run_depend>xacro</run_depend>
   <!-- This package is referenced in the warehouse launch files, but does not build out of the box at the moment. Commented the dependency until this works. -->
   <!-- <run_depend>warehouse_ros_mongo</run_depend> -->
-  <build_depend>rescue_control</build_depend>
-  <run_depend>rescue_control</run_depend>
-
+  <build_depend>arbie_model</build_depend>
+  <run_depend>arbie_model</run_depend>
 
 </package>

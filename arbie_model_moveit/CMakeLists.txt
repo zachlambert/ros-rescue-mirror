@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.1.3)
-project(rescue_control_moveit)
+project(arbie_model_moveit)
 
 find_package(catkin REQUIRED)
 
