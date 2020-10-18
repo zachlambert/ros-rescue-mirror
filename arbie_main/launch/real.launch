@@ -1,5 +1,4 @@
 <launch>
-<group ns="arbie">
     <!-- ===== COMMON BETWEEN REAL AND SIMULATION ===== -->
 
     <include file="$(find arbie_main)/launch/common.launch"/>
@@ -13,19 +12,18 @@
         <node name="wrist" pkg="arbie_hardware" type="wrist" output="screen"/>
         <node name="odrives" pkg="arbie_hardware" type="odrives" output="screen"/>
     </group>
-
+    <node name="hardware_interface" pkg="arbie_hardware" type="interface"/>
 
     <!-- Interface to teensy on main pcb -->
-    <node
+    <!--<node
         name="power_board"
         pkg="rosserial_python"
         type="serial_node.py"
-        respawn="true">
+        respawn="false">
         <param
             name="~port"
             value="/dev/serial/by-id/usb-Teensyduino_USB_Serial_6491540-if00"
             type="str"
         />
-    </node>
-</group>
+    </node>-->
 </launch>

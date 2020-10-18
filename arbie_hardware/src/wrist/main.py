@@ -1,6 +1,6 @@
 import rospy
 from std_msgs.msg import MultiArrayDimension
-from rescue_msgs.srv import (
+from arbie_msgs.srv import (
     ReadHardware, ReadHardwareResponse,
     WriteHardware, WriteHardwareResponse
 )
