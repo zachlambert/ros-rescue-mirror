@@ -1,0 +1,49 @@
+# Track controller: Set velocity of joint group
+tracks_velocity_controller:
+    type: diff_drive_controller/DiffDriveController
+    left_wheel: track_left
+    right_wheel: track_right
+    pose_covariance_diagonal: [0.001, 0.001, 1000000.0, 1000000.0, 1000000.0, 1000000.0]
+    twist_covariance_diagonal: [0.001, 0.001, 1000000.0, 1000000.0, 1000000.0, 1000000.0]
+    base_frame_id: base_link
+    enable_odom_tf: false
+
+# Flippers controller: Set positions of joint group
+flippers_velocity_controller:
+    type: velocity_controllers/JointGroupVelocityController
+    joints:
+        - flippers_front
+        - flippers_rear
+
+# Arm controller: Set positions of joint group
+arm_position_controller:
+    type: position_controllers/JointGroupPositionController
+    joints:
+        - arm1
+        - arm2
+        - arm3
+        - wrist1
+        - wrist2
+        - wrist3
+
+# Joint state controller: Publish all joint angles under the
+# /joint_states topic, which is used by robot_state_publisher
+joint_state_controller:
+    type: joint_state_controller/JointStateController
+    publish_rate: 50
+
+# Trajectory controller for the arm
+# This provides an ALTERNATIVE way of controlling the arm.
+# If using moveit to plan a trajectory then execute it, this controller
+# is used. If using teleoperation with the xbox controller, joints are
+# commanded more directly using the arm_position_controller.
+arm_trajectory_controller:
+    type: position_controllers/JointTrajectoryController
+    action_ns: follow_joint_trajectory
+    joints:
+      - arm1
+      - arm2
+      - arm3
+      - wrist1
+      - wrist2
+      - wrist3

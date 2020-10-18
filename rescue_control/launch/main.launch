@@ -1,0 +1,31 @@
+<launch>
+    <!-- Add robot description to the parameter server -->
+    <param
+        name="robot_description"
+        command="cat $(find rescue_control)/model/rescue.urdf"
+    />
+
+    <!-- Start the robot_state_publisher node, which is responsible for reading
+    the robot description (from urdf file) and joint angles (from /joint_states
+    topic) and then publishing the relative transform between links -->
+    <node
+        name="robot_state_publisher"
+        pkg="robot_state_publisher"
+        type="robot_state_publisher"
+        respawn="false"
+        output="screen">
+    </node>
+
+    <!-- Include the launch files for settuping the hardware interface,
+    and setting up inverse kinematics services -->
+    <include file="$(find rescue_control)/launch/control.launch"/>
+    <include file="$(find rescue_control)/launch/inverse_kinematics.launch"/>
+
+    <!-- Create a placholder for localisation, which is responsible for
+    publishing the base transform of the robot -->
+    <node
+        name="localisation_placeholder"
+        pkg="rescue_control"
+        type="localisation_placeholder"
+    />
+</launch>
