@@ -1,0 +1,42 @@
+<launch>
+    <!-- Add controller configurations to the parameter server -->
+    <rosparam
+        file="$(find rescue_control)/config/controllers.yaml"
+        command="load"
+    />
+
+    <!-- Start the hardware node, which creates the controller manager,
+    and provides it with a hardware interface to read and write hardware.
+    The result is that it creates topics to send commands to hardware -->
+    <!-- TODO: Don't start the control node in simulation,
+    since gazebo launches its own controller manage and
+    hardware interface-->
+    <node
+        name="control"
+        pkg="rescue_control"
+        type="control"
+        output="screen"
+    />
+
+    <!-- Load controllers, and start all but the arm_controller.
+    The arm_position_controller and wrist_position_controller allow for
+    manual control of the arms, whereas the arm_controller is a trajectory
+    controller which allows for trajectory execuation and planning with
+    moveit. They access the same resources (ie: control the same joints) so
+    can't both be active at the same time -->
+    <node
+        name="controller_spawner"
+        pkg="controller_manager"
+        type="spawner"
+        respawn="false"
+        args="arm_position_controller tracks_velocity_controller flippers_velocity_controller joint_state_controller"
+    />
+    <node
+        name="controller_spawner2"
+        pkg="controller_manager"
+        type="spawner"
+        respawn="false"
+        args="--stopped arm_trajectory_controller"
+    />
+
+</launch>
