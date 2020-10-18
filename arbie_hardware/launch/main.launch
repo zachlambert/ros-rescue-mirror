@@ -1,7 +1,0 @@
-<launch>
-<group ns="hardware">
-    <node name="arm" pkg="rescue_hardware" type="arm" output="screen"/>
-    <node name="wrist" pkg="rescue_hardware" type="wrist" output="screen"/>
-    <node name="odrives" pkg="rescue_hardware" type="odrives" output="screen"/>
-</group>
-</launch>

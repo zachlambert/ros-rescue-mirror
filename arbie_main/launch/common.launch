@@ -1,11 +1,50 @@
 <launch>
 
-    <!-- Replace with arbie_control -->
-    <include file="$(find state_publisher)/launch/state_publisher.launch"/>
-    <include file="$(find robot_config)/launch/planning_context.launch"/>
-    <node name="inverse_kinematics" pkg="inverse_kinematics" type="inverse_kinematics" output="screen" respawn="true"/>
+    <!-- ===== ROBOT MODEL, STATE AND CONTROL INTERFACE  ===== -->
 
-    <!-- Webserver -->
+    <!-- Load robot description -->
+    <param
+        name="robot_description"
+        command="cat $(find arbie_description)/model/arbie.urdf"
+    />
+
+    <!-- Start robot_state publisher, which does FK for the robot joints,
+    updating the state of the model -->
+    <node
+        name="robot_state_publisher"
+        pkg="robot_state_publisher"
+        type="robot_state_publisher"
+        respawn="false"
+        output="screen">
+    </node>
+
+    <!-- Load controller configuration for the robot joints -->
+    <rosparam
+        file="$(find rescue_control)/config/controllers.yaml"
+        command="load"
+    />
+
+    <!-- Spawn the joint controllers, both for manual joint control, and
+    trajectory following -->
+    <node
+        name="controller_spawner"
+        pkg="controller_manager"
+        type="spawner"
+        respawn="false"
+        args="arm_position_controller tracks_velocity_controller flippers_velocity_controller joint_state_controller"
+    />
+    <node
+        name="controller_spawner2"
+        pkg="controller_manager"
+        type="spawner"
+        respawn="false"
+        args="--stopped arm_trajectory_controller"
+    />
+
+
+    <!-- ===== USER INPUT ===== -->
+
+    <!-- Launch the webserver for visualisation and user input -->
     <node
         name="webserver"
         pkg="roswww"
@@ -14,15 +53,41 @@
     />
     <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
 
-    <!-- Replace with arbie_gamepad -->
+    <!-- Read and process gamepad values -->
     <node
-        name="controller_mapper"
-        pkg="controller_mapper"
-        type="main.py"
-        output="screen"
-        respawn="true"
+        name="gamepad"
+        pkg="arbie_gamepad"
+        type="gamepad"
     />
 
-    <!-- TODO: arbie_perception, arbie_navigation -->
+
+    <!-- ===== ARM MANIPULATION ===== -->
+
+    <!-- Launch the moveit move_group node, used for planning and executing
+    trajectories -->
+    <include file="$(find rescue_control_moveit)/launch/move_group.launch"/>
+
+    <!-- Manipulation node, which controls the arm. Either moves arm with
+    velocity commands, or passes pose commands to the moveit move_group node-->
+    <node
+        name="manipulation"
+        pkg="arbie_manipulation"
+        type="manipulation"
+        output="screen"
+    />
+
+
+    <!-- ===== PERCEPTION ===== -->
+
+    <!-- Placeholder for perception stack. Outputs base transform of robot -->
+    <node
+        name="localisation_placeholder"
+        pkg="arbie_debug"
+        type="localisation_placeholder"
+    />
+
+
+    <!-- ===== NAVIGATION ===== -->
+    <!-- TODO -->
 
 </launch>

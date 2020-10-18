@@ -1,38 +1,21 @@
 <launch>
 <group ns="arbie">
+    <!-- ===== COMMON BETWEEN REAL AND SIMULATION ===== -->
 
     <include file="$(find arbie_main)/launch/common.launch"/>
 
-    <!-- Incorporate the following 4 nodes into arbie_hardware -->
-    <node
-        name="odrive_flipper"
-        pkg="odrive_ros"
-        type="main.py"
-        output="screen" respawn="true">
-            <param name="serial_no" value="336631563536" type="str"/>
-    </node>
-    <node
-        name="odrive_drive"
-        pkg="odrive_ros"
-        type="main.py"
-        output="screen"
-        respawn="true">
-            <param name="serial_no" value="209137933548" type="str"/>
-    </node>
-    <node
-        name="wrist_driver"
-        pkg="wrist_driver"
-        type="main.py"
-        respawn="true"
-    />
-    <node
-        name="topic_mapper"
-        pkg="topic_mapper"
-        type="main.py"
-        output="screen" respawn="true"
-    />
 
-    <!-- Rosserial for pcb -->
+    <!-- ===== HARDWARE ONLY ===== -->
+
+    <!-- Hardware drivers -->
+    <group ns="hardware">
+        <node name="arm" pkg="rescue_hardware" type="arm" output="screen"/>
+        <node name="wrist" pkg="rescue_hardware" type="wrist" output="screen"/>
+        <node name="odrives" pkg="rescue_hardware" type="odrives" output="screen"/>
+    </group>
+
+
+    <!-- Interface to teensy on main pcb -->
     <node
         name="power_board"
         pkg="rosserial_python"
@@ -44,6 +27,5 @@
             type="str"
         />
     </node>
-
 </group>
 </launch>
