@@ -1,0 +1,28 @@
+<launch>
+
+    <!-- Replace with arbie_control -->
+    <include file="$(find state_publisher)/launch/state_publisher.launch"/>
+    <include file="$(find robot_config)/launch/planning_context.launch"/>
+    <node name="inverse_kinematics" pkg="inverse_kinematics" type="inverse_kinematics" output="screen" respawn="true"/>
+
+    <!-- Webserver -->
+    <node
+        name="webserver"
+        pkg="roswww"
+        type="webserver.py"
+        respawn="true"
+    />
+    <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
+
+    <!-- Replace with arbie_gamepad -->
+    <node
+        name="controller_mapper"
+        pkg="controller_mapper"
+        type="main.py"
+        output="screen"
+        respawn="true"
+    />
+
+    <!-- TODO: arbie_perception, arbie_navigation -->
+
+</launch>
