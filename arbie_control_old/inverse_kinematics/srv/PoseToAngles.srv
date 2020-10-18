@@ -1,5 +1,0 @@
-geometry_msgs/Pose pose
----
-std_msgs/Float32MultiArray arm_angles
-std_msgs/Float32MultiArray wrist_angles
-bool valid
