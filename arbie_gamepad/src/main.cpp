@@ -31,14 +31,14 @@ int main(int argc, char **argv)
                 joystick_listener.query_axis(JoyAxis::RIGHT_HORIZONTAL));
         } else {
             command_publisher.set_gripper_velocity(
-                joystick_listener.query_axis(JoyAxis::LEFT_VERTICAL),
-                joystick_listener.query_axis(JoyAxis::LEFT_HORIZONTAL),
-                0.5 * (joystick_listener.query_axis(JoyAxis::LT)
-                 - joystick_listener.query_axis(JoyAxis::RT)),
-                3 * (joystick_listener.query_button_value(JoyButton::LB)
-                 - joystick_listener.query_button_value(JoyButton::RB)),
-                joystick_listener.query_axis(JoyAxis::RIGHT_VERTICAL),
-                joystick_listener.query_axis(JoyAxis::RIGHT_HORIZONTAL)
+                -joystick_listener.query_axis(JoyAxis::LEFT_VERTICAL),
+                -joystick_listener.query_axis(JoyAxis::LEFT_HORIZONTAL),
+                0.5 * (joystick_listener.query_axis(JoyAxis::RT)
+                 - joystick_listener.query_axis(JoyAxis::LT)),
+                3 * (joystick_listener.query_button_value(JoyButton::RB)
+                 - joystick_listener.query_button_value(JoyButton::LB)),
+                -joystick_listener.query_axis(JoyAxis::RIGHT_VERTICAL),
+                -joystick_listener.query_axis(JoyAxis::RIGHT_HORIZONTAL)
             );
 
             if (joystick_listener.query_button_state(JoyButton::A) == JoyButtonState::PRESSED) {

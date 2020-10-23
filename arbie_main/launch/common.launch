@@ -60,8 +60,9 @@
     <node
         name="gamepad"
         pkg="arbie_gamepad"
-        type="gamepad"
-    />
+        type="gamepad">
+        <remap from="joy" to="gamepad/values"/>
+    </node>
 
 
     <!-- ===== ARM MANIPULATION ===== -->

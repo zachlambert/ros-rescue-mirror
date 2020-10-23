@@ -11,23 +11,27 @@ enum class JoyButton {
     Y,
     LB,
     RB,
+    _unknown1,
+    _unknown2,
     BACK,
     START,
-    POWER,
     BUTTON_STICK_LEFT,
     BUTTON_STICK_RIGHT,
+    DPAD_UP,
+    DPAD_DOWN,
+    DPAD_LEFT,
+    DPAD_RIGHT,
+    XBOX_BUTTON,
     COUNT
 };
 
 enum class JoyAxis {
     LEFT_HORIZONTAL,
     LEFT_VERTICAL,
-    LT,
     RIGHT_HORIZONTAL,
     RIGHT_VERTICAL,
+    LT,
     RT,
-    CROSS_HORIZONTAL,
-    CROSS_VERTICAL,
     COUNT
 };
 
