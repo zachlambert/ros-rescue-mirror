@@ -12,7 +12,7 @@
         <node name="wrist" pkg="arbie_hardware" type="wrist" output="screen"/>
         <node name="odrives" pkg="arbie_hardware" type="odrives" output="screen"/>
     </group>
-    <node name="hardware_interface" pkg="arbie_hardware" type="interface"/>
+    <node name="hardware_interface" pkg="arbie_hardware" type="interface" output="screen"/>
 
     <!-- Interface to teensy on main pcb -->
     <!--<node

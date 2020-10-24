@@ -90,6 +90,16 @@ KinematicsHandler::KinematicsHandler(ros::NodeHandle& n):
     c_req.verbose = false;
     g_planning_scene = new planning_scene::PlanningScene(kinematic_model);
 
+    // Setup subscriber for joint_states - for initialising arm state and
+    // checking that the arm keeps up with the command angles
+    joints_updated = false;
+    joint_state_sub = n.subscribe(
+        "joint_states",
+        1,
+        &KinematicsHandler::joint_state_callback,
+        this
+    );
+
     // Setup subscriber for gripper_velocity
     velocity_sub = n.subscribe(
         "gripper_velocity",
@@ -110,8 +120,6 @@ KinematicsHandler::KinematicsHandler(ros::NodeHandle& n):
         1000
     );
 
-    initialise_arm_state();
-
     // May need to use the below to do IK near the base position.
     // Alternatively, may choose to use moveit to return to home.
     effective_arm_length =
@@ -121,6 +129,14 @@ KinematicsHandler::KinematicsHandler(ros::NodeHandle& n):
 
 void KinematicsHandler::initialise_arm_state()
 {
+    // Won't update until it receives the first joint_state message
+    for (std::size_t i = 0; i < joint_state_actual.name.size(); i++) {
+        kinematic_state->setJointPositions(
+            joint_state_actual.name[i], &joint_state_actual.position[i]
+        );
+        ROS_INFO("%s: %f", joint_state_actual.name[i].c_str(), joint_state_actual.position[i]);
+    }
+
     // Get the relative gripper pose
     Eigen::Isometry3d gripper_pose_absolute =
         kinematic_state->getFrameTransform("gripper_1");
@@ -130,11 +146,18 @@ void KinematicsHandler::initialise_arm_state()
         gripper_pose_absolute,
         arm_state_buffer.next().gripper_coords
     );
-    // Also store the corresponding angles
-    kinematic_state->copyJointGroupPositions(
-        joint_model_group, arm_state_buffer.next().joint_angles);
 
     arm_state_buffer.increment();
+}
+
+void KinematicsHandler::joint_state_callback(
+    sensor_msgs::JointState joint_state_msg)
+{
+    joint_state_actual = joint_state_msg;
+    if (!joints_updated) {
+        initialise_arm_state();
+        joints_updated = true;
+    }
 }
 
 void KinematicsHandler::velocity_callback(
@@ -159,7 +182,8 @@ void KinematicsHandler::loop(const ros::TimerEvent &timer)
 
     if (velocity_is_zero) return;
 
-    if (validate_velocity(dt)) {
+    // Don't update until joints have been updated with actual values
+    if (joints_updated && validate_velocity(dt)) {
         update_position(dt);
     } else {
         ROS_INFO("Velocity failed");
@@ -239,7 +263,8 @@ void KinematicsHandler::velocity_failed()
         // If there are no valid states left then it is stuck.
         // Shouldn't get here, but need to make sure.
         if (arm_state_buffer.empty()) {
-            ROS_INFO("No valid poses, stuck.");
+            arm_state_buffer.current().fail_count = 0;
+            joints_updated = false;
             return;
         }
 
@@ -315,9 +340,10 @@ bool KinematicsHandler::gripper_command(const std::string &pose_name)
         // Update gripper coords with new position
         kinematic_state->setJointGroupPositions(
             joint_model_group, move_group.getCurrentJointValues());
-        // Reset state history, re-initialise at new position
+        // Reset state history, and invalidate current state, so wait
+        // until the state gets updated with actual angles
         arm_state_buffer.reset();
-        initialise_arm_state();
+        joints_updated = false;
         return true;
     }
     return false;

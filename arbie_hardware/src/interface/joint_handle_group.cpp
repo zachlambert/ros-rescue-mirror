@@ -13,6 +13,11 @@ JointHandleGroup::JointHandleGroup(
     vel = new double[N];
     eff = new double[N];
     cmd = new double[N];
+    // Ensure they are all initialised to zero
+    memset(pos, 0, N*sizeof(double));
+    memset(vel, 0, N*sizeof(double));
+    memset(eff, 0, N*sizeof(double));
+    memset(cmd, 0, N*sizeof(double));
 
     std::stringstream read_service_name;
     read_service_name << "hardware/" << component_name << "/read";

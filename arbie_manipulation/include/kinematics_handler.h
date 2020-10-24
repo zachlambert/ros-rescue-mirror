@@ -63,6 +63,7 @@ class KinematicsHandler{
 public:
     KinematicsHandler(ros::NodeHandle& n);
 
+    void joint_state_callback(sensor_msgs::JointState joint_state_msg);
     void velocity_callback(std_msgs::Float64MultiArray velocity_msg);
     void loop(const ros::TimerEvent &timer);
     
@@ -96,6 +97,10 @@ private:
     planning_scene::PlanningScene* g_planning_scene;
 
     ArmStateBuffer arm_state_buffer;
+
+    ros::Subscriber joint_state_sub;
+    sensor_msgs::JointState joint_state_actual;
+    bool joints_updated;
 
     ros::Subscriber velocity_sub;
     std::vector<double> gripper_velocity;
