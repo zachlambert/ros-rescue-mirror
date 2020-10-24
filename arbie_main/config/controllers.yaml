@@ -14,6 +14,9 @@ flippers_velocity_controller:
     joints:
         - flippers_front
         - flippers_rear
+    pid_gains:
+        flippers_front: {p: 5.0, i: 1, d: 0.1}
+        flippers_rear: {p: 5.0, i: 1, d: 0.1}
 
 # Arm controller: Set positions of joint group
 arm_position_controller:
@@ -25,6 +28,13 @@ arm_position_controller:
         - wrist1
         - wrist2
         - wrist3
+    pid_gains:
+        arm1: {p: 5.0, i: 1, d: 0.1}
+        arm2: {p: 5.0, i: 1, d: 0.1}
+        arm3: {p: 5.0, i: 1, d: 0.1}
+        wrist1: {p: 5.0, i: 1, d: 0.1}
+        wrist2: {p: 5.0, i: 1, d: 0.1}
+        wrist3: {p: 5.0, i: 1, d: 0.1}
 
 # Joint state controller: Publish all joint angles under the
 # /joint_states topic, which is used by robot_state_publisher

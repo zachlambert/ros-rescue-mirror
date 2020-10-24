@@ -1,6 +1,4 @@
 <launch>
-<group ns="arbie">
-
     <!-- Launch gazebo with a given world.
     Do this separately from the rest of the robot code, to avoid having to
     keep opening and closing gazebo -->
@@ -11,6 +9,4 @@
             value="$(find arbie_gazebo)/worlds/rescue.world"
         />
     </include>
-
-</group>
 </launch>

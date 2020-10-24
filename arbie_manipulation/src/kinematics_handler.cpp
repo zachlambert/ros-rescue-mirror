@@ -134,7 +134,6 @@ void KinematicsHandler::initialise_arm_state()
         kinematic_state->setJointPositions(
             joint_state_actual.name[i], &joint_state_actual.position[i]
         );
-        ROS_INFO("%s: %f", joint_state_actual.name[i].c_str(), joint_state_actual.position[i]);
     }
 
     // Get the relative gripper pose

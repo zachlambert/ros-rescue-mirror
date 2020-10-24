@@ -4,8 +4,8 @@ moveit_setup_assistant_config:
     relative_path: model/arbie.urdf
     xacro_args: ""
   SRDF:
-    relative_path: config/rescue.srdf
+    relative_path: config/arbie.srdf
   CONFIG:
     author_name: Zach Lambert
     author_email: zachalambert@gmail.com
-    generated_timestamp: 1603483471
+    generated_timestamp: 1603578311
