@@ -24,8 +24,8 @@ int main(int argc, char **argv)
         }
         if (!arm_mode) {
             command_publisher.set_tracks_command(
-                joystick_listener.query_axis(JoyAxis::LEFT_VERTICAL),
-                joystick_listener.query_axis(JoyAxis::LEFT_HORIZONTAL));
+                -joystick_listener.query_axis(JoyAxis::LEFT_VERTICAL),
+                -joystick_listener.query_axis(JoyAxis::LEFT_HORIZONTAL));
             command_publisher.set_flippers_command(
                 joystick_listener.query_axis(JoyAxis::RIGHT_VERTICAL),
                 joystick_listener.query_axis(JoyAxis::RIGHT_HORIZONTAL));
