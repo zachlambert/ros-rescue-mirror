@@ -134,8 +134,7 @@ void KinematicsHandler::initialise_arm_state()
         );
     }
 
-    // Tidy this up at some point, there should be a way to just access
-    // the joint angles for the arm group from the kinematic state
+    // TODO: Tidy up the block below
     static const std::size_t arm_joint_indexes[] = {0, 1, 2, 7, 8, 9};
     for (std::size_t i = 0; i < 6; i++) {
         arm_state_buffer.next().joint_angles[i] =
@@ -163,6 +162,17 @@ void KinematicsHandler::joint_state_callback(
     sensor_msgs::JointState joint_state_msg)
 {
     joint_state_actual = joint_state_msg;
+
+    // TODO: Tidy the block below
+    kinematic_state->setJointPositions(
+        "flippers_front", &joint_state_msg.position[3]);
+    kinematic_state->setJointPositions(
+        "flippers_rear", &joint_state_msg.position[4]);
+    kinematic_state->setJointPositions(
+        "track_left", &joint_state_msg.position[5]);
+    kinematic_state->setJointPositions(
+        "track_right", &joint_state_msg.position[6]);
+
     if (!joints_updated) {
         initialise_arm_state();
         joints_updated = true;
