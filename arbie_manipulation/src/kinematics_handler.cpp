@@ -80,8 +80,6 @@ KinematicsHandler::KinematicsHandler(ros::NodeHandle& n):
         velocity_is_zero(true),
         move_group("arm")
 {
-    kinematic_state->setToDefaultValues();
-
     // Setup collision detection
     c_req.group_name = "arm";
     c_req.contacts = true;
@@ -136,15 +134,27 @@ void KinematicsHandler::initialise_arm_state()
         );
     }
 
+    // Tidy this up at some point, there should be a way to just access
+    // the joint angles for the arm group from the kinematic state
+    static const std::size_t arm_joint_indexes[] = {0, 1, 2, 7, 8, 9};
+    for (std::size_t i = 0; i < 6; i++) {
+        arm_state_buffer.next().joint_angles[i] =
+            joint_state_actual.position[arm_joint_indexes[i]];
+    }
+
     // Get the relative gripper pose
     Eigen::Isometry3d gripper_pose_absolute =
         kinematic_state->getFrameTransform("gripper_1");
+
+    // Clear arm state buffer
+    arm_state_buffer.reset();
 
     // Convert this gripper pose to euler coordinates
     gripper_pose_to_coords(
         gripper_pose_absolute,
         arm_state_buffer.next().gripper_coords
     );
+    arm_state_buffer.next().fail_count = 0;
 
     arm_state_buffer.increment();
 }
@@ -179,10 +189,10 @@ void KinematicsHandler::loop(const ros::TimerEvent &timer)
 {
     double dt = ros::Duration(timer.current_real - timer.last_real).toSec();
 
-    if (velocity_is_zero) return;
+    if (!joints_updated || velocity_is_zero) return;
 
     // Don't update until joints have been updated with actual values
-    if (joints_updated && validate_velocity(dt)) {
+    if (validate_velocity(dt)) {
         update_position(dt);
     } else {
         ROS_INFO("Velocity failed");
@@ -295,7 +305,7 @@ bool KinematicsHandler::ik_constraint(
 
 bool KinematicsHandler::validate_state(const Eigen::Isometry3d &gripper_pose)
 {
-    static const float IK_TIMEOUT = 0.1;
+    static const float IK_TIMEOUT = 0.2;
 
     static const moveit::core::GroupStateValidityCallbackFn constraint =
         boost::bind(&KinematicsHandler::ik_constraint, this, _1, _2, _3);
@@ -336,9 +346,6 @@ bool KinematicsHandler::gripper_command(const std::string &pose_name)
     moveit::planning_interface::MoveGroupInterface::Plan plan;
     if (move_group.plan(plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS) {
         move_group.move();
-        // Update gripper coords with new position
-        kinematic_state->setJointGroupPositions(
-            joint_model_group, move_group.getCurrentJointValues());
         // Reset state history, and invalidate current state, so wait
         // until the state gets updated with actual angles
         arm_state_buffer.reset();

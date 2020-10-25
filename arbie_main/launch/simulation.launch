@@ -17,6 +17,6 @@
         name="spawn_model"
         pkg="gazebo_ros"
         type="spawn_model"
-        args="-param robot_description -urdf -x 0 -y 0 -z 0 -model arbie"
+        args="-param robot_description -urdf -x 0 -y 0 -z 0 -model arbie -b"
     />
 </launch>

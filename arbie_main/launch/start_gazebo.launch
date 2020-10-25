@@ -9,4 +9,7 @@
             value="$(find arbie_gazebo)/worlds/rescue.world"
         />
     </include>
+
+    <!-- Replace the above with node: package=gazebo_ros, type=gzserver
+    to run gazebo without the gui, if the gui is unecessary -->
 </launch>
