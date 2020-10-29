@@ -4,13 +4,6 @@
 
     <!-- ===== SIMULATION ONLY ===== -->
 
-    <param
-        name="robot_description_sdf"
-        command="cat $(find arbie_description)/model/arbie.sdf"
-    />
-
-    <!-- Assumes gazebo is started -->
-
     <!-- Spawn the model -->
     <!-- Haven't gotten it to work with sdf model yet -->
     <node

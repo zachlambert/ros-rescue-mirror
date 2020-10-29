@@ -15,15 +15,14 @@
     <node name="hardware_interface" pkg="arbie_hardware" type="interface" output="screen"/>
 
     <!-- Interface to teensy on main pcb -->
-    <!--<node
+    <!-- <node
         name="power_board"
         pkg="rosserial_python"
-        type="serial_node.py"
-        respawn="false">
+        type="serial_node.py">
         <param
             name="~port"
             value="/dev/serial/by-id/usb-Teensyduino_USB_Serial_6491540-if00"
             type="str"
         />
-    </node>-->
+    </node> -->
 </launch>
