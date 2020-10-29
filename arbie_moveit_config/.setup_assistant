@@ -1,0 +1,11 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: arbie_description
+    relative_path: model/arbie.urdf
+    xacro_args: ""
+  SRDF:
+    relative_path: config/arbie.srdf
+  CONFIG:
+    author_name: Zach Lambert
+    author_email: zachalambert@gmail.com
+    generated_timestamp: 1603578311

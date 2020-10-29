@@ -1,0 +1,4 @@
+#!/usr/bin/env python
+if __name__ == "__main__":
+    from odrives.main import main
+    main()

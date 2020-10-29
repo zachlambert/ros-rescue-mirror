@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>arbie_main</name>
+  <version>0.0.0</version>
+  <description>The arbie_main package</description>
+  <maintainer email="richard@todo.todo">richard</maintainer>
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+</package>
