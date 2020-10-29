@@ -1,15 +1,7 @@
 <launch>
-    <!-- ===== COMMON BETWEEN REAL AND SIMULATION ===== -->
-    <include file="$(find arbie_main)/launch/common.launch"/>
-
-    <!-- ===== SIMULATION ONLY ===== -->
-
-    <!-- Spawn the model -->
-    <!-- Haven't gotten it to work with sdf model yet -->
-    <node
-        name="spawn_model"
-        pkg="gazebo_ros"
-        type="spawn_model"
-        args="-param robot_description -urdf -x 0 -y 0 -z 0 -model arbie -b"
-    />
+    <include file="$(find arbie_main)/launch/main.launch">
+    <arg name="simulated" value="true"/>
+    <arg name="joints_connected" value="false"/>
+    <arg name="pcb_connected" value="false"/>
+    </include>
 </launch>

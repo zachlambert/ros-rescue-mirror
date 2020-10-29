@@ -1,0 +1,4 @@
+usb:
+    odrive_flippers: /dev/a
+    odrive_tracks: /dev/b
+    pcb: /dev/c

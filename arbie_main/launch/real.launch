@@ -1,28 +1,7 @@
 <launch>
-    <!-- ===== COMMON BETWEEN REAL AND SIMULATION ===== -->
-
-    <include file="$(find arbie_main)/launch/common.launch"/>
-
-
-    <!-- ===== HARDWARE ONLY ===== -->
-
-    <!-- Hardware drivers -->
-    <group ns="hardware">
-        <node name="arm" pkg="arbie_hardware" type="arm" output="screen"/>
-        <node name="wrist" pkg="arbie_hardware" type="wrist" output="screen"/>
-        <node name="odrives" pkg="arbie_hardware" type="odrives" output="screen"/>
-    </group>
-    <node name="hardware_interface" pkg="arbie_hardware" type="interface" output="screen"/>
-
-    <!-- Interface to teensy on main pcb -->
-    <!-- <node
-        name="power_board"
-        pkg="rosserial_python"
-        type="serial_node.py">
-        <param
-            name="~port"
-            value="/dev/serial/by-id/usb-Teensyduino_USB_Serial_6491540-if00"
-            type="str"
-        />
-    </node> -->
+    <include file="$(find arbie_main)/launch/main.launch">
+    <arg name="simulated" value="false"/>
+    <arg name="joints_connected" value="true"/>
+    <arg name="pcb_connected" value="true"/>
+    </include>
 </launch>

@@ -25,7 +25,6 @@
 
 <!-- BASE LINK -->
 
-<virtual_joint name="virtual_joint" type="floating" parent_frame="world" child_link="base_link" />
 
 <link name="base_link">
 </link>
@@ -35,6 +34,8 @@
     <child link="main_body"/>
     <origin rpy="1.57075 0 0" xyz="-0.105 -0.17 0.15"/>
 </joint>
+
+<virtual_joint name="virtual_joint" type="floating" parent_frame="world" child_link="base_link" />
 
 <!-- MAIN LINKS -->
 

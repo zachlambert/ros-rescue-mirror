@@ -1,12 +1,63 @@
 <launch>
 
-    <!-- ===== ROBOT MODEL, STATE AND CONTROL INTERFACE  ===== -->
+    <arg name="simulated"/>
+    <arg name="joints_connected"/>
+    <arg name="pcb_connected"/>
 
-    <!-- Load robot description -->
+
+    <!-- ===== MODEL ===== -->
+
     <param
         name="robot_description"
         command="cat $(find arbie_description)/model/arbie.urdf"
     />
+    <param
+        name="robot_description_sdf"
+        command="cat $(find arbie_description)/model/arbie.sdf"
+    />
+
+
+    <!-- ===== VIRTUAL OR REAL HARDWARE ===== -->
+
+    <group if="$(arg simulated)">
+    <!-- Assumes that gzserver is running -->
+    <node
+        name="spawn_model"
+        pkg="gazebo_ros"
+        type="spawn_model"
+        args="-param robot_description -urdf -x 0 -y 0 -z 0 -model arbie -b"
+    />
+    </group>
+
+    <rosparam
+        file="$(find arbie_main)/config/usb.yaml"
+        command="load"
+    />
+
+    <group if="$(arg joints_connected)">
+    <group ns="hardware">
+        <node name="arm" pkg="arbie_hardware" type="arm"/>
+        <node name="wrist" pkg="arbie_hardware" type="wrist"/>
+        <node name="odrives" pkg="arbie_hardware" type="odrives"/>
+    </group>
+    <node
+        name="hardware_interface"
+        pkg="arbie_hardware"
+        type="interface"
+    />
+    </group>
+
+    <group if="$(arg pcb_connected)">
+    <node
+        name="power_board"
+        pkg="rosserial_python"
+        type="serial_node.py">
+        <remap from="~port" to="/usb/pcb"/>
+    </node>
+    </group>
+
+
+    <!-- ===== CONTROLLERS AND STATE PUBLISHER ===== -->
 
     <!-- Start robot_state publisher, which does FK for the robot joints,
     updating the state of the model -->
@@ -42,7 +93,7 @@
     />
 
 
-    <!-- ===== USER INPUT ===== -->
+    <!-- ===== MONITORING AND TELEOPERATION ===== -->
 
     <!-- Launch the webserver for visualisation and user input -->
     <node
@@ -63,9 +114,6 @@
         type="gamepad">
         <remap from="joy" to="gamepad/values"/>
     </node>
-
-
-    <!-- ===== ARM MANIPULATION ===== -->
 
     <!-- Launch the moveit move_group node, used for planning and executing
     trajectories -->
