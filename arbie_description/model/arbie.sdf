@@ -19,7 +19,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>model://arbie_description/meshes/base_link_m-binary.stl</uri>
+            <uri>file:/../arbie_description/meshes/base_link_m-binary.stl</uri>
           </mesh>
         </geometry>
       </collision>
@@ -28,7 +28,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>model://arbie_description/meshes/right_belt_1_m-binary.stl</uri>
+            <uri>file:/../arbie_description/meshes/right_belt_1_m-binary.stl</uri>
           </mesh>
         </geometry>
       </collision>
@@ -37,7 +37,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>model://arbie_description/meshes/left_belt_1_m-binary.stl</uri>
+            <uri>file:/../arbie_description/meshes/left_belt_1_m-binary.stl</uri>
           </mesh>
         </geometry>
       </collision>
@@ -46,7 +46,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>model://arbie_description/meshes/base_link_m-binary.stl</uri>
+            <uri>file:/../arbie_description/meshes/base_link_m-binary.stl</uri>
           </mesh>
         </geometry>
       </visual>
@@ -55,7 +55,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>model://arbie_description/meshes/right_belt_1_m-binary.stl</uri>
+            <uri>file:/../arbie_description/meshes/right_belt_1_m-binary.stl</uri>
           </mesh>
         </geometry>
       </visual>
@@ -64,7 +64,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>model://arbie_description/meshes/left_belt_1_m-binary.stl</uri>
+            <uri>file:/../arbie_description/meshes/left_belt_1_m-binary.stl</uri>
           </mesh>
         </geometry>
       </visual>
@@ -88,7 +88,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>model://arbie_description/meshes/flipper_front_right_1_m-binary.stl</uri>
+            <uri>file:/../arbie_description/meshes/flipper_front_right_1_m-binary.stl</uri>
           </mesh>
         </geometry>
       </collision>
@@ -97,7 +97,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>model://arbie_description/meshes/flipper_front_left_1_m-binary.stl</uri>
+            <uri>file:/../arbie_description/meshes/flipper_front_left_1_m-binary.stl</uri>
           </mesh>
         </geometry>
       </collision>
@@ -106,7 +106,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>model://arbie_description/meshes/flipper_front_right_1_m-binary.stl</uri>
+            <uri>file:/../arbie_description/meshes/flipper_front_right_1_m-binary.stl</uri>
           </mesh>
         </geometry>
       </visual>
@@ -115,7 +115,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>model://arbie_description/meshes/flipper_front_left_1_m-binary.stl</uri>
+            <uri>file:/../arbie_description/meshes/flipper_front_left_1_m-binary.stl</uri>
           </mesh>
         </geometry>
       </visual>
@@ -157,7 +157,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>model://arbie_description/meshes/flipper_rear_right_1_m-binary.stl</uri>
+            <uri>file:/../arbie_description/meshes/flipper_rear_right_1_m-binary.stl</uri>
           </mesh>
         </geometry>
       </collision>
@@ -166,7 +166,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>model://arbie_description/meshes/flipper_rear_left_1_m-binary.stl</uri>
+            <uri>file:/../arbie_description/meshes/flipper_rear_left_1_m-binary.stl</uri>
           </mesh>
         </geometry>
       </collision>
@@ -175,7 +175,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>model://arbie_description/meshes/flipper_rear_right_1_m-binary.stl</uri>
+            <uri>file:/../arbie_description/meshes/flipper_rear_right_1_m-binary.stl</uri>
           </mesh>
         </geometry>
       </visual>
@@ -184,7 +184,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>model://arbie_description/meshes/flipper_rear_left_1_m-binary.stl</uri>
+            <uri>file:/../arbie_description/meshes/flipper_rear_left_1_m-binary.stl</uri>
           </mesh>
         </geometry>
       </visual>
@@ -346,7 +346,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>model://arbie_description/meshes/arm_base_1_m-binary.stl</uri>
+            <uri>file:/../arbie_description/meshes/arm_base_1_m-binary.stl</uri>
           </mesh>
         </geometry>
       </collision>
@@ -355,7 +355,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>model://arbie_description/meshes/arm_base_1_m-binary.stl</uri>
+            <uri>file:/../arbie_description/meshes/arm_base_1_m-binary.stl</uri>
           </mesh>
         </geometry>
       </visual>
@@ -397,7 +397,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>model://arbie_description/meshes/arm_lower_1_m-binary.stl</uri>
+            <uri>file:/../arbie_description/meshes/arm_lower_1_m-binary.stl</uri>
           </mesh>
         </geometry>
       </collision>
@@ -406,7 +406,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>model://arbie_description/meshes/arm_lower_1_m-binary.stl</uri>
+            <uri>file:/../arbie_description/meshes/arm_lower_1_m-binary.stl</uri>
           </mesh>
         </geometry>
       </visual>
@@ -448,7 +448,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>model://arbie_description/meshes/arm_upper_1_m-binary.stl</uri>
+            <uri>file:/../arbie_description/meshes/arm_upper_1_m-binary.stl</uri>
           </mesh>
         </geometry>
       </collision>
@@ -457,7 +457,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>model://arbie_description/meshes/arm_upper_1_m-binary.stl</uri>
+            <uri>file:/../arbie_description/meshes/arm_upper_1_m-binary.stl</uri>
           </mesh>
         </geometry>
       </visual>
@@ -499,7 +499,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>model://arbie_description/meshes/wrist_yaw_1_m-binary.stl</uri>
+            <uri>file:/../arbie_description/meshes/wrist_yaw_1_m-binary.stl</uri>
           </mesh>
         </geometry>
       </collision>
@@ -508,7 +508,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>model://arbie_description/meshes/wrist_yaw_1_m-binary.stl</uri>
+            <uri>file:/../arbie_description/meshes/wrist_yaw_1_m-binary.stl</uri>
           </mesh>
         </geometry>
       </visual>
@@ -548,7 +548,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>model://arbie_description/meshes/wrist_pitch_1_m-binary.stl</uri>
+            <uri>file:/../arbie_description/meshes/wrist_pitch_1_m-binary.stl</uri>
           </mesh>
         </geometry>
       </collision>
@@ -557,7 +557,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>model://arbie_description/meshes/wrist_pitch_1_m-binary.stl</uri>
+            <uri>file:/../arbie_description/meshes/wrist_pitch_1_m-binary.stl</uri>
           </mesh>
         </geometry>
       </visual>
@@ -597,7 +597,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>model://arbie_description/meshes/gripper_1_m-binary.stl</uri>
+            <uri>file:/../arbie_description/meshes/gripper_1_m-binary.stl</uri>
           </mesh>
         </geometry>
       </collision>
@@ -606,7 +606,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>model://arbie_description/meshes/gripper_1_m-binary.stl</uri>
+            <uri>file:/../arbie_description/meshes/gripper_1_m-binary.stl</uri>
           </mesh>
         </geometry>
       </visual>
