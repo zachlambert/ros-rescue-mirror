@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>exp_main</name>
+  <version>0.0.0</version>
+  <description>The zach_main package</description>
+  <maintainer email="zach@todo.todo">zach</maintainer>
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+</package>
