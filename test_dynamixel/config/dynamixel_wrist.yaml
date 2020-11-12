@@ -1,0 +1,25 @@
+# Use operating mode 1 = velocity control
+wrist_tilt_left:
+    ID: 1
+    Return_Delay_Time: 0
+    Operating_Mode: 1
+wrist_tilt_right:
+    ID: 1
+    Return_Delay_Time: 0
+    Operating_Mode: 1
+wrist_pan:
+    ID: 1
+    Return_Delay_Time: 0
+    Operating_Mode: 1
+wrist_roll:
+    ID: 1
+    Return_Delay_Time: 0
+    Operating_Mode: 1
+gripper_left:
+    ID: 1
+    Return_Delay_Time: 0
+    Operating_Mode: 1
+gripper_right:
+    ID: 1
+    Return_Delay_Time: 0
+    Operating_Mode: 1
