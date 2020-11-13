@@ -3,7 +3,7 @@
     <arg name="baud_rate" default="57600"/>
 
     <param name="dynamixel_info"
-        value="$(find test_dynamixel)/config/dynamixel_info.yaml"/>
+        value="$(find test_dynamixel)/config/dynamixel_info_vel.yaml"/>
     <node
         name="dynamixel"
         pkg="dynamixel_workbench_controllers"
@@ -12,7 +12,7 @@
         args="$(arg usb_port) $(arg baud_rate)">
         <param name="use_moveit" value="false"/>
         <param name="use_joint_states_topic" value="true"/>
-        <param name="use_cmd_vel_topic" value="false"/>
+        <param name="use_cmd_vel_topic" value="true"/>
         <rosparam>
             publish_period: 0.010
             dxl_read_period: 0.010

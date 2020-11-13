@@ -1,0 +1,48 @@
+# Arm: XL430-W250
+# Use operating mode 1 = velocity control
+arm_1:
+    ID: 1
+    Return_Delay_Time: 0
+    Operating_Mode: 1
+arm_2:
+    ID: 2
+    Return_Delay_Time: 0
+    Operating_Mode: 1
+arm_3:
+    ID: 3
+    Return_Delay_Time: 0
+    Operating_Mode: 1
+
+# Wrist + gripper: AX-12A
+# Set compliance slope to max value (CW and CCW) for
+# smooth motion
+wrist_tilt_right:
+    ID: 4
+    Return_Delay_Time: 0
+    CW_Compliance_Slope: 128
+    CCW_Compliance_Slope: 128
+wrist_tilt_left:
+    ID: 5
+    Return_Delay_Time: 0
+    CW_Compliance_Slope: 128
+    CCW_Compliance_Slope: 128
+wrist_pan:
+    ID: 6
+    Return_Delay_Time: 0
+    CW_Compliance_Slope: 128
+    CCW_Compliance_Slope: 128
+wrist_roll:
+    ID: 7
+    Return_Delay_Time: 0
+    CW_Compliance_Slope: 128
+    CCW_Compliance_Slope: 128
+gripper_right:
+    ID: 8
+    Return_Delay_Time: 0
+    CW_Compliance_Slope: 128
+    CCW_Compliance_Slope: 128
+gripper_left:
+    ID: 9
+    Return_Delay_Time: 0
+    CW_Compliance_Slope: 128
+    CCW_Compliance_Slope: 128
