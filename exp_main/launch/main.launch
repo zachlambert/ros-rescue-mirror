@@ -40,17 +40,4 @@
         args="--perspective-file $(find exp_main)/config/rqt_control.perspective"
     />
 
-    <node
-        name="image_view_right"
-        pkg="image_view"
-        type="image_view"
-        args="image:=/camera/right/image_raw"
-    />
-    <node
-        name="image_view_left"
-        pkg="image_view"
-        type="image_view"
-        args="image:=/camera/left/image_raw"
-    />
-
 </launch>
