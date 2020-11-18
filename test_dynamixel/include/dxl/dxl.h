@@ -1,5 +1,5 @@
-#ifndef DXL_CONTROL_BASE_CONTROLLER_H
-#define DXL_CONTROL_BASE_CONTROLLER_H
+#ifndef DXL_DXL_H
+#define DXL_DXL_H
 
 #include <iostream>
 #include <dynamixel_sdk/dynamixel_sdk.h>

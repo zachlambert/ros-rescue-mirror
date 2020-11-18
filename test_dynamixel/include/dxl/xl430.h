@@ -1,7 +1,7 @@
-#ifndef DXL_CONTROL_XL430
-#define DXL_CONTROL_XL430
+#ifndef DXL_XL430_H
+#define DXL_XL430_H
 
-#include "dxl_control/base_controller.h"
+#include "dxl/dxl.h"
 #include <math.h>
 
 namespace dxl {

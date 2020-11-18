@@ -1,5 +1,6 @@
 #include <ros/ros.h>
-#include "dxl_control/xl430.h"
+#include "dxl/xl430.h"
+#include "dxl/ax12a.h"
 
 int main(int argc, char **argv)
 {
@@ -7,9 +8,8 @@ int main(int argc, char **argv)
     ros::NodeHandle n;
 
     dxl::CommHandler commHandler("/dev/ttyUSB0");
-    dxl::xl430::VelocityController arm1(commHandler, commHandler.PROTOCOL_1, 1);
     dxl::xl430::VelocityController arm2(commHandler, commHandler.PROTOCOL_1, 2);
-    dxl::xl430::VelocityController arm3(commHandler, commHandler.PROTOCOL_1, 3);
+    dxl::ax12a::JointController wristRoll(commHandler, commHandler.PROTOCOL_1, 6);
 
     arm2.enable();
     arm2.writeGoalVelocity(-0.5);
@@ -19,6 +19,17 @@ int main(int argc, char **argv)
     }
     arm2.writeGoalVelocity(0);
     arm2.disable();
+
+    wristRoll.writeComplianceSlope(255);
+
+    wristRoll.enable();
+    wristRoll.writeGoalPosition(0);
+    ros::Duration(0.5).sleep();
+    wristRoll.writeGoalPosition(50);
+    ros::Duration(0.5).sleep();
+    wristRoll.writeGoalPosition(0);
+    ros::Duration(0.5).sleep();
+    wristRoll.disable();
 
     return 0;
 }
