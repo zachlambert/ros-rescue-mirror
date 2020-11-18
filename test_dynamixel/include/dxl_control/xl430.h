@@ -4,20 +4,24 @@
 #include "dxl_control/base_controller.h"
 #include <math.h>
 
-class XL430Controller: public BaseController {
+namespace dxl {
+
+namespace xl430 {
+
+class BaseController: public dxl::BaseController {
 protected:
     static constexpr uint32_t ADDR_OPERATING_MODE = 11;
     static constexpr uint32_t ADDR_TORQUE_ENABLE = 64;
     static constexpr uint32_t ADDR_PRESENT_POSITION = 132;
     static constexpr uint32_t ADDR_PRESENT_VELOCITY = 128;
-    // static constexpr uint32_t ADDR_GOAL_POSITION = 116;
+    static constexpr uint32_t ADDR_PRESENT_LOAD = 126;
 
 public:
-    XL430Controller(
+    BaseController(
         CommHandler &commHandler,
         CommHandler::Protocol protocol,
         uint32_t id):
-            BaseController(commHandler, protocol, id) {}
+            dxl::BaseController(commHandler, protocol, id) {}
 
     void enable()
     {
@@ -38,22 +42,28 @@ public:
 
     double readVelocity()
     {
-        uint32_t value;
-        read4Byte(ADDR_PRESENT_VELOCITY, &value);
+        int32_t value;
+        read4Byte(ADDR_PRESENT_VELOCITY, (uint32_t*)&value);
         return (double)value * 0.02398;
     }
 
+    double readLoad()
+    {
+        int16_t value;
+        read2Byte(ADDR_PRESENT_LOAD, (uint16_t*)&value);
+        return (double)value * 0.1;
+    }
 };
 
-class XL430VelocityController: public XL430Controller {
+class VelocityController: public BaseController {
     static constexpr uint32_t ADDR_GOAL_VELOCITY = 104;
 
 public:
-    XL430VelocityController(
+    VelocityController(
         CommHandler &commHandler,
         CommHandler::Protocol protocol,
         uint32_t id):
-            XL430Controller(commHandler, protocol, id)
+            BaseController(commHandler, protocol, id)
     {
         write1Byte(ADDR_OPERATING_MODE, 1);
     }
@@ -64,5 +74,8 @@ public:
         write4Byte(ADDR_GOAL_VELOCITY, value);
     }
 };
+
+} // namespace xl430
+} // namespace dxl
 
 #endif

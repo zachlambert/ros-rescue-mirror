@@ -4,6 +4,8 @@
 #include <iostream>
 #include <dynamixel_sdk/dynamixel_sdk.h>
 
+namespace dxl {
+
 class CommHandler {
 public:
     CommHandler(const std::string &port, int default_baud_rate = 57600)
@@ -122,5 +124,7 @@ private:
     dynamixel::PortHandler *portHandler;
     dynamixel::PacketHandler *packetHandler;
 };
+
+} // namespace dxl
 
 #endif
