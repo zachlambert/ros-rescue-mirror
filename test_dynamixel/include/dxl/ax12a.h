@@ -64,6 +64,8 @@ public:
 
     void writeGoalPosition(double angle)
     {
+        // Should be given in radians, but convert to degrees here for simplicity
+        angle *= 180/M_PI;
         if (angle > 150) angle = 150;
         if (angle < -150) angle = -150;
         uint16_t value = floor((angle + 150)/300 * 1024);
@@ -74,7 +76,7 @@ public:
     {
         uint16_t value;
         read2Byte(ADDR_PRESENT_POSITION, &value);
-        return (((double)value - 512) / 1024) * 300 * 2*M_PI/180;
+        return (((double)value - 512) / 1024) * 300 * M_PI/180;
     }
 
     double readVelocity()
