@@ -1,9 +1,4 @@
 <launch>
-    <rosparam
-        file="$(find exp_main)/config/controllers.yaml"
-        command="load"
-    />
-
     <node
         name="controller_spawner"
         pkg="controller_manager"
@@ -13,9 +8,9 @@
     />
 
     <node
-        name="rqt_gui"
-        pkg="rqt_gui"
-        type="rqt_gui"
-        args="--perspective-file $(find exp_main)/config/rqt_control.perspective"
-    />
+        name="teleop_twist_keyboard"
+        pkg="teleop_twist_keyboard"
+        type="teleop_twist_keyboard.py"
+        args="cmd_vel:='/diff_drive_controller/cmd_vel' _speed:='0.5' _turn:='1.5'">
+    </node>
 </launch>

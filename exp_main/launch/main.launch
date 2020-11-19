@@ -4,6 +4,11 @@
         command="cat $(find exp_description)/model/simple.urdf"
     />
 
+    <rosparam
+        file="$(find exp_main)/config/controllers.yaml"
+        command="load"
+    />
+
     <!-- Assumes that gzserver is running -->
     <node
         name="spawn_model"

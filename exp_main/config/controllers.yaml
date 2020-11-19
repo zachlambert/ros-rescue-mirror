@@ -10,3 +10,8 @@ diff_drive_controller:
 joint_state_controller:
     type: joint_state_controller/JointStateController
     publish_rate: 50
+
+gazebo_ros_control:
+    pid_gains:
+        wheel_left: { p: 0.5, i: 0, d: 0 }
+        wheel_right: { p: 0.5, i: 0, d: 0 }
