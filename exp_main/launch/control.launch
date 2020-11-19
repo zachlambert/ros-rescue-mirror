@@ -1,0 +1,21 @@
+<launch>
+    <rosparam
+        file="$(find exp_main)/config/controllers.yaml"
+        command="load"
+    />
+
+    <node
+        name="controller_spawner"
+        pkg="controller_manager"
+        type="spawner"
+        respawn="false"
+        args="diff_drive_controller joint_state_controller"
+    />
+
+    <node
+        name="rqt_gui"
+        pkg="rqt_gui"
+        type="rqt_gui"
+        args="--perspective-file $(find exp_main)/config/rqt_control.perspective"
+    />
+</launch>
