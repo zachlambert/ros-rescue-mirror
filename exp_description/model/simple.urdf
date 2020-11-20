@@ -10,71 +10,76 @@
 <link name="body">
 <visual>
     <geometry>
-        <box size="0.6 0.4 0.1"/>
+        <box size="0.6 0.3 0.2"/>
     </geometry>
-    <origin xyz="-0.1 0 0"/>
+    <origin xyz="-0.2 0 0.05"/>
 </visual>
 <collision>
     <geometry>
-        <box size="0.6 0.4 0.1"/>
+        <box size="0.6 0.3 0.2"/>
     </geometry>
-    <origin xyz="-0.1 0 0"/>
+    <origin xyz="-0.2 0 0.05"/>
 </collision>
 <inertial>
-    <mass value="0.5"/>
+    <mass value="1"/>
     <inertia
-        ixx="0.0071"
-        iyy="0.0154"
-        izz="0.0217"
+        ixx="0.0108"
+        iyy="0.0333"
+        izz="0.0375"
         ixy="0" ixz="0" iyz="0"
     />
-    <origin xyz="-0.1 0 0"/>
+    <origin xyz="-0.2 0 0.05"/>
 </inertial>
 
 <visual>
     <geometry>
-        <sphere radius="0.05"/>
+        <sphere radius="0.1"/>
     </geometry>
-    <origin xyz="-0.35 0 -0.05"/>
+    <origin xyz="-0.4 0 -0.05"/>
 </visual>
 <collision>
     <geometry>
-        <sphere radius="0.05"/>
+        <sphere radius="0.1"/>
     </geometry>
-    <origin xyz="-0.35 0 -0.05"/>
+    <origin xyz="-0.4 0 -0.05"/>
 </collision>
 <inertial>
-    <mass value="0.05"/>
+    <mass value="6"/>
     <inertia
-        ixx="0.00005"
-        iyy="0.00005"
-        izz="0.00005"
+        ixx="0.024"
+        iyy="0.024"
+        izz="0.024"
         ixy="0" ixz="0" iyz="0"
     />
-    <origin xyz="-0.35 0 -0.05"/>
+    <origin xyz="-0.4 0 -0.05"/>
 </inertial>
 
 </link>
 
+<gazebo reference="body">
+    <mu1>0</mu1>
+    <mu2>0</mu2>
+</gazebo>
+
 <link name="wheel_right">
 <visual>
     <geometry>
-        <cylinder length="0.05" radius="0.1"/>
+        <cylinder length="0.05" radius="0.15"/>
     </geometry>
     <origin xyz="0 0 0.025"/>
 </visual>
 <collision>
     <geometry>
-        <cylinder length="0.05" radius="0.1"/>
+        <cylinder length="0.05" radius="0.15"/>
     </geometry>
     <origin xyz="0 0 0.025"/>
 </collision>
 <inertial>
-    <mass value="0.1"/>
+    <mass value="0.5"/>
     <inertia
-        ixx="0.000146"
-        iyy="0.000146"
-        izz="0.0005"
+        ixx="0.00146"
+        iyy="0.00146"
+        izz="0.00281"
         ixy="0" ixz="0" iyz="0"
     />
     <origin xyz="0 0 0.025"/>
@@ -84,29 +89,29 @@
 <link name="wheel_left">
 <visual>
     <geometry>
-        <cylinder length="0.05" radius="0.1"/>
+        <cylinder length="0.05" radius="0.15"/>
     </geometry>
     <origin xyz="0 0 0.025"/>
 </visual>
 <collision>
     <geometry>
-        <cylinder length="0.05" radius="0.1"/>
+        <cylinder length="0.05" radius="0.15"/>
     </geometry>
     <origin xyz="0 0 0.025"/>
 </collision>
 <inertial>
-    <mass value="0.1"/>
+    <mass value="0.5"/>
     <inertia
-        ixx="0.000146"
-        iyy="0.000146"
-        izz="0.0005"
+        ixx="0.00146"
+        iyy="0.00146"
+        izz="0.00281"
         ixy="0" ixz="0" iyz="0"
     />
     <origin xyz="0 0 0.025"/>
 </inertial>
 </link>
 
-<link name="T265">
+<link name="T265_link">
 <visual>
     <geometry>
         <box size="0.04 0.06 0.04"/>
@@ -131,7 +136,7 @@
 </inertial>
 </link>
 
-<link name="D435i">
+<link name="D435i_link">
 <visual>
     <geometry>
         <box size="0.04 0.04 0.04"/>
@@ -159,27 +164,27 @@
 <joint name="wheel_right" type="continuous">
     <parent link="body"/>
     <child link="wheel_right"/>
-    <origin xyz="0 -0.2 0" rpy="1.571 0 0"/>
+    <origin xyz="0 -0.15 0" rpy="1.571 0 0"/>
     <axis xyz="0 0 -1"/>
 </joint>
 
 <joint name="wheel_left" type="continuous">
     <parent link="body"/>
     <child link="wheel_left"/>
-    <origin xyz="0 0.2 0" rpy="-1.571 0 0"/>
+    <origin xyz="0 0.15 0" rpy="-1.571 0 0"/>
     <axis xyz="0 0 1"/>
 </joint>
 
-<joint name="T265" type="fixed">
+<joint name="T265_joint" type="fixed">
     <parent link="body"/>
-    <child link="T265"/>
-    <origin xyz="0.16 0 0.05"/>
+    <child link="T265_link"/>
+    <origin xyz="0.08 0 0.15"/>
 </joint>
 
-<joint name="D435i" type="fixed">
+<joint name="D435i_joint" type="fixed">
     <parent link="body"/>
-    <child link="D435i"/>
-    <origin xyz="0.16 0 0.09"/>
+    <child link="D435i_link"/>
+    <origin xyz="0.08 0 0.19"/>
 </joint>
 
 <gazebo>
@@ -208,7 +213,7 @@
     </actuator>
 </transmission>
 
-<gazebo reference="T265">
+<gazebo reference="T265_link">
 <sensor type="multicamera" name="T265">
     <update_rate>30.0</update_rate>
     <camera name="left">
@@ -253,7 +258,7 @@
         <cameraName>T265</cameraName>
         <imageTopicName>image_raw</imageTopicName>
         <cameraInfoTopicName>camera_info</cameraInfoTopicName>
-        <frameName>T265</frameName>
+        <frameName>T265_link</frameName>
         <hackBaseline>0.07</hackBaseline>
         <distortionK1>0.0</distortionK1>
         <distortionK2>0.0</distortionK2>
@@ -264,20 +269,22 @@
 </sensor>
 </gazebo>
 
+<!--
 <gazebo>
-<plugin name="imu_plugin" filename="libgazebo_ros_imu.so">
+<plugin name="T265_imu" filename="libgazebo_ros_imu.so">
     <alwaysOn>true</alwaysOn>
-    <bodyName>T265</bodyName>
-    <topicName>T265/imu</topicName>
+    <bodyName>T265_link</bodyName>
+    <topicName>/T265/imu</topicName>
     <serviceName>imu_service</serviceName>
     <gaussianNoise>0.0</gaussianNoise>
     <updateRate>20.0</updateRate>
 </plugin>
 </gazebo>
+-->
 
-<gazebo reference="D435i">
+<gazebo reference="D435i_link">
 <sensor name="D435i" type="depth">
-    <update_rate>20</update_rate>
+    <update_rate>30.0</update_rate>
     <camera>
         <horizontal_fov>1.047198</horizontal_fov>
         <image>
@@ -287,7 +294,7 @@
         </image>
         <clip>
             <near>0.05</near>
-            <far>3</far>
+            <far>300</far>
         </clip>
     </camera>
     <plugin name="D435i_controller" filename="libgazebo_ros_openni_kinect.so">
@@ -300,7 +307,7 @@
         <depthImageTopicName>/D435i/depth/image_raw</depthImageTopicName>
         <depthImageInfoTopicName>/D435i/depth/camera_info</depthImageInfoTopicName>
         <pointCloudTopicName>/D435i/depth/points</pointCloudTopicName>
-        <frameName>D435i</frameName>
+        <frameName>D435i_link</frameName>
         <pointCloudCutoff>0.5</pointCloudCutoff>
         <pointCloudCutoffMax>3.0</pointCloudCutoffMax>
         <distortionK1>0.00000001</distortionK1>
@@ -314,6 +321,27 @@
         <focalLength>0</focalLength>
         <hackBaseline>0</hackBaseline>
     </plugin>
+</sensor>
+</gazebo>
+
+<gazebo reference="D435i_link">
+<gravity>true</gravity>
+<sensor name="D435i_imu" type="imu">
+    <always_on>true</always_on>
+    <update_rate>30.0</update_rate>
+    <visualize>true</visualize>
+    <topic>/D435i/imu</topic>
+    <plugin filename="libgazebo_ros_imu_sensor.so" name="D435_imu">
+        <topicName>/D435i/imu</topicName>
+        <bodyName>D435i_link</bodyName>
+        <updateRateHZ>10.0</updateRateHZ>
+        <gaussianNoise>0.0</gaussianNoise>
+        <xyzOffset>0 0 0</xyzOffset>
+        <rpyOffset>0 0 0</rpyOffset>
+        <frameName>D435i_link</frameName>
+        <initialOrientationAsReference>false</initialOrientationAsReference>
+    </plugin>
+    <pose>0 0 0 0 0 0</pose>
 </sensor>
 </gazebo>
 
