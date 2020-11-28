@@ -65,13 +65,15 @@ public:
         uint32_t id):
             BaseController(commHandler, protocol, id)
     {
-        write1Byte(ADDR_OPERATING_MODE, 1);
+        // write1Byte(ADDR_OPERATING_MODE, 1);
+        write1Byte(ADDR_OPERATING_MODE, 16);
     }
 
     void writeGoalVelocity(double velocity)
     {
-        uint32_t value = velocity / 0.02398;
-        write4Byte(ADDR_GOAL_VELOCITY, value);
+        // uint32_t value = velocity / 0.02398;
+        // write4Byte(ADDR_GOAL_VELOCITY, value);
+        write2Byte(100, 100*velocity);
     }
 };
 
