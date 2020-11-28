@@ -77,6 +77,7 @@ public:
         pos = controller.readPosition();
         vel = controller.readVelocity();
         eff = controller.readLoad();
+        ROS_INFO("Pos = %f", pos);
     }
 private:
     dxl::xl430::VelocityController controller;
@@ -165,7 +166,7 @@ public:
     Node(ros::NodeHandle& n, const std::string &port): hw(n, port), cm(&hw, n)
     {
         loop_timer = n.createTimer(
-            ros::Duration(1.0/20),
+            ros::Duration(1.0/50),
             &Node::loop,
             this
         );
@@ -194,7 +195,7 @@ int main(int argc, char **argv)
     std::string port = "/dev/ttyUSB0";
     Node node(n, port);
 
-    ros::AsyncSpinner spinner(4);
+    ros::AsyncSpinner spinner(2);
     spinner.start();
     ros::waitForShutdown();
     return 0;
