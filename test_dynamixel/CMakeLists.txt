@@ -6,18 +6,32 @@ find_package(catkin REQUIRED COMPONENTS
     roscpp
     std_msgs
     sensor_msgs
+    controller_manager
 )
 
-catkin_package()
+catkin_package(CATKIN_DEPENDS
+    dynamixel_sdk
+    roscpp
+    std_msgs
+    sensor_msgs
+    controller_manager
+)
 
 include_directories(
   ${catkin_INCLUDE_DIRS}
   include
 )
-add_executable(dynamixel_controller
-    src/main.cpp
-    src/dynamixel_controller.cpp
+
+add_executable(dxl_test
+    src/dxl_test/main.cpp
 )
-target_link_libraries(dynamixel_controller
+target_link_libraries(dxl_test
+    ${catkin_LIBRARIES}
+)
+
+add_executable(hardware
+    src/hardware/main.cpp
+)
+target_link_libraries(hardware
     ${catkin_LIBRARIES}
 )

@@ -1,0 +1,20 @@
+<launch>
+    <node
+        name="hardware"
+        pkg="test_dynamixel"
+        type="hardware"
+    />
+
+    <rosparam
+        file="$(find test_dynamixel)/config/controllers.yaml"
+        command="load"
+    />
+
+    <node
+        name="controller_spawner"
+        pkg="controller_manager"
+        type="spawner"
+        respawn="false"
+        args="arm1_controller arm2_controller arm3_controller wrist1_controller wrist2_controller wrist3_controller joint_state_controller"
+    />
+</launch>
