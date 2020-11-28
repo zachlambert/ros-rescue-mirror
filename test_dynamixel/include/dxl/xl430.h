@@ -35,8 +35,8 @@ public:
 
     double readPosition()
     {
-        uint32_t value;
-        read4Byte(ADDR_PRESENT_POSITION, &value);
+        int32_t value;
+        read4Byte(ADDR_PRESENT_POSITION, (uint32_t*)&value);
         return ((double)value / 4096) * 2*M_PI;
     }
 

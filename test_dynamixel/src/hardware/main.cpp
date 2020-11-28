@@ -24,7 +24,7 @@ protected:
         VEL
     };
 public:
-    HardwareHandle(const std::string &name, HardwareInterface &interface, Type type)
+    HardwareHandle(const std::string &name, HardwareInterface &interface, Type type): pos(0), vel(0), eff(0), cmd(0)
     {
         interface.state.registerHandle(hardware_interface::JointStateHandle(
                 name, &pos, &vel, &eff
@@ -42,8 +42,8 @@ public:
                 break;
         }
     }
+    virtual ~HardwareHandle() {}
     void write() {
-        ROS_INFO("COMMAND: = %f", cmd);
         write(cmd);
     }
     virtual void write(double cmd) = 0;
@@ -52,7 +52,7 @@ public:
         read(pos, vel, cmd);
     }
     virtual void read(double &pos, double &vel, double &eff) = 0;
-private:
+protected:
     double pos, vel, eff, cmd;
 };
 
@@ -63,9 +63,14 @@ public:
         HardwareInterface &interface,
         dxl::xl430::VelocityController controller):
             HardwareHandle(name, interface, HardwareHandle::VEL),
-            controller(controller) {}
+            controller(controller) {
+        controller.disable(); // If already enabled
+        controller.enable();
+    }
+    ~HardwareHandle_Xl430(){
+        controller.disable();
+    }
     void write(double cmd) {
-        ROS_INFO("Writing: %f", cmd);
         controller.writeGoalVelocity(cmd);
     }
     void read(double &pos, double &vel, double &eff) {
@@ -84,7 +89,13 @@ public:
         HardwareInterface &interface,
         dxl::ax12a::JointController controller):
             HardwareHandle(name, interface, HardwareHandle::POS),
-            controller(controller) {}
+            controller(controller) {
+        controller.disable(); // If already enabled
+        controller.enable();
+    }
+    ~HardwareHandle_Ax12a() {
+        controller.disable();
+    }
     void write(double cmd) {
         controller.writeGoalPosition(cmd);
     }
@@ -163,7 +174,6 @@ public:
     void loop(const ros::TimerEvent &timer)
     {
         hw.read();
-        ROS_INFO("LOOP");
         cm.update(
             ros::Time::now(),
             ros::Duration(timer.current_real - timer.last_real)
