@@ -21,7 +21,8 @@ class HardwareHandle {
 protected:
     enum Type {
         POS,
-        VEL
+        VEL,
+        EFF
     };
 public:
     HardwareHandle(const std::string &name, HardwareInterface &interface, Type type): pos(0), vel(0), eff(0), cmd(0)
@@ -37,6 +38,11 @@ public:
                 break;
             case Type::VEL:
                 interface.vel.registerHandle(hardware_interface::JointHandle(
+                        interface.state.getHandle(name), &cmd
+                ));
+                break;
+            case Type::EFF:
+                interface.eff.registerHandle(hardware_interface::JointHandle(
                         interface.state.getHandle(name), &cmd
                 ));
                 break;

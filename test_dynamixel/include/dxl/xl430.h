@@ -65,15 +65,35 @@ public:
         uint32_t id):
             BaseController(commHandler, protocol, id)
     {
-        // write1Byte(ADDR_OPERATING_MODE, 1);
-        write1Byte(ADDR_OPERATING_MODE, 16);
+        write1Byte(ADDR_OPERATING_MODE, 1);
     }
 
     void writeGoalVelocity(double velocity)
     {
-        // uint32_t value = velocity / 0.02398;
-        // write4Byte(ADDR_GOAL_VELOCITY, value);
-        write2Byte(100, 100*velocity);
+        uint32_t value = velocity / 0.02398;
+        write4Byte(ADDR_GOAL_VELOCITY, value);
+    }
+};
+
+class PwmController: public BaseController {
+    static constexpr uint32_t ADDR_GOAL_PWM = 100;
+
+public:
+    PwmController(
+        CommHandler &commHandler,
+        CommHandler::Protocol protocol,
+        uint32_t id):
+            BaseController(commHandler, protocol, id)
+    {
+        write1Byte(ADDR_OPERATING_MODE, 16);
+    }
+
+    void writeGoalVelocity(double pwm)
+    {
+        // pwm: -1 -> 1
+        // value: -885 -> 885 signed
+        int16_t value = 885*pwm;
+        write2Byte(100, pwm);
     }
 };
 
