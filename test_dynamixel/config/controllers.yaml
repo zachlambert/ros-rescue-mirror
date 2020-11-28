@@ -1,18 +1,19 @@
 arm1_controller:
-    type: velocity_controllers/JointPositionController
+    type: velocity_controllers/JointVelocityController
     joint: arm1
-    pid: {p: 2, i: 0, d: 0.1}
 
 arm2_controller:
-    type: velocity_controllers/JointPositionController
-    joint: arm1
-    pid: {p: 2, i: 0, d: 0.1}
+    type: velocity_controllers/JointVelocityController
+    joint: arm2
 
 arm3_controller:
-    type: velocity_controllers/JointPositionController
-    joint: arm1
-    pid: {p: 2, i: 0, d: 0.1}
+    type: velocity_controllers/JointVelocityController
+    joint: arm3
 
 wrist_yaw_controller:
     type: position_controllers/JointPositionController
     joint: wrist_yaw
+
+joint_state_controller:
+    type: joint_state_controller/JointStateController
+    publish_rate: 20

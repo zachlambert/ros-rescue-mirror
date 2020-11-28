@@ -26,18 +26,24 @@ protected:
 public:
     HardwareHandle(const std::string &name, HardwareInterface &interface, Type type)
     {
-        auto handle = hardware_interface::JointStateHandle(name, &pos, &vel, &eff);
-        interface.state.registerHandle(handle);
+        interface.state.registerHandle(hardware_interface::JointStateHandle(
+                name, &pos, &vel, &eff
+        ));
         switch (type) {
             case Type::POS:
-                interface.pos.registerHandle(hardware_interface::JointHandle(handle, &cmd));
+                interface.pos.registerHandle(hardware_interface::JointHandle(
+                        interface.state.getHandle(name), &cmd
+                ));
                 break;
             case Type::VEL:
-                interface.vel.registerHandle(hardware_interface::JointHandle(handle, &cmd));
+                interface.vel.registerHandle(hardware_interface::JointHandle(
+                        interface.state.getHandle(name), &cmd
+                ));
                 break;
         }
     }
     void write() {
+        ROS_INFO("COMMAND: = %f", cmd);
         write(cmd);
     }
     virtual void write(double cmd) = 0;
@@ -59,6 +65,7 @@ public:
             HardwareHandle(name, interface, HardwareHandle::VEL),
             controller(controller) {}
     void write(double cmd) {
+        ROS_INFO("Writing: %f", cmd);
         controller.writeGoalVelocity(cmd);
     }
     void read(double &pos, double &vel, double &eff) {
@@ -76,7 +83,7 @@ public:
         const std::string &name,
         HardwareInterface &interface,
         dxl::ax12a::JointController controller):
-            HardwareHandle(name, interface, HardwareHandle::VEL),
+            HardwareHandle(name, interface, HardwareHandle::POS),
             controller(controller) {}
     void write(double cmd) {
         controller.writeGoalPosition(cmd);
@@ -115,6 +122,10 @@ public:
             interface,
             dxl::ax12a::JointController(commHandler, commHandler.PROTOCOL_1, 6))
         );
+        registerInterface(&interface.state);
+        registerInterface(&interface.pos);
+        registerInterface(&interface.vel);
+        registerInterface(&interface.eff);
     }
 
     void read()
@@ -152,6 +163,7 @@ public:
     void loop(const ros::TimerEvent &timer)
     {
         hw.read();
+        ROS_INFO("LOOP");
         cm.update(
             ros::Time::now(),
             ros::Duration(timer.current_real - timer.last_real)
