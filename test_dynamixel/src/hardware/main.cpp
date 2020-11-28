@@ -77,7 +77,6 @@ public:
         pos = controller.readPosition();
         vel = controller.readVelocity();
         eff = controller.readLoad();
-        ROS_INFO("Pos = %f", pos);
     }
 private:
     dxl::xl430::VelocityController controller;

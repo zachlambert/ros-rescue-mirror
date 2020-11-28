@@ -1,7 +1,7 @@
 arm1_controller:
     type: velocity_controllers/JointPositionController
     joint: arm1
-    pid: {p: 2, i: 0, d: 0}
+    pid: {p: 3, i: 0, d: 0.8}
 
 arm2_controller:
     type: velocity_controllers/JointPositionController
