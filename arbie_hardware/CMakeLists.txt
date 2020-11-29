@@ -37,16 +37,6 @@ target_include_directories(hardware PRIVATE
     include
 )
 
-add_executable(dxl_test
-    src/dxl_test/main.cpp
-)
-target_link_libraries(dxl_test
-    ${catkin_LIBRARIES}
-)
-target_include_directories(dxl_test PRIVATE
-    include
-)
-
 install(PROGRAMS
   nodes/odrives
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}

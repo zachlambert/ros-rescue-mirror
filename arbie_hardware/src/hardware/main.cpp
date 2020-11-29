@@ -14,26 +14,53 @@ public:
     Hardware(ros::NodeHandle &n, std::string port):
         commHandler(port)
     {
-        handles.push_back(handle::make(
+        // TODO: Get IDs from param server
+
+        // Arm
+        handles.push_back(std::make_unique<handle::xl430::Velocity>(
             "arm1",
             interfaces,
-            dxl::xl430::VelocityController(commHandler, commHandler.PROTOCOL_1, 1))
-        );
-        handles.push_back(handle::make(
+            dxl::xl430::VelocityController(commHandler, commHandler.PROTOCOL_1, 1)
+        ));
+        handles.push_back(std::make_unique<handle::xl430::Velocity>(
             "arm2",
             interfaces,
-            dxl::xl430::VelocityController(commHandler, commHandler.PROTOCOL_1, 2))
-        );
-        handles.push_back(handle::make(
+            dxl::xl430::VelocityController(commHandler, commHandler.PROTOCOL_1, 2)
+        ));
+        handles.push_back(std::make_unique<handle::xl430::Velocity>(
             "arm3",
             interfaces,
-            dxl::xl430::VelocityController(commHandler, commHandler.PROTOCOL_1, 3))
-        );
-        handles.push_back(handle::make(
+            dxl::xl430::VelocityController(commHandler, commHandler.PROTOCOL_1, 3)
+        ));
+
+        // Wrist
+        handles.push_back(std::make_unique<handle::ax12a::PositionPair>(
+            "wrist_pitch",
+            interfaces,
+            dxl::ax12a::JointController(commHandler, commHandler.PROTOCOL_1, 4),
+            dxl::ax12a::JointController(commHandler, commHandler.PROTOCOL_1, 5),
+            0, 0, -1, 1
+        ));
+        handles.push_back(std::make_unique<handle::ax12a::Position>(
             "wrist_yaw",
             interfaces,
-            dxl::ax12a::JointController(commHandler, commHandler.PROTOCOL_1, 6))
-        );
+            dxl::ax12a::JointController(commHandler, commHandler.PROTOCOL_1, 6)
+        ));
+        handles.push_back(std::make_unique<handle::ax12a::Position>(
+            "wrist_roll",
+            interfaces,
+            dxl::ax12a::JointController(commHandler, commHandler.PROTOCOL_1, 7)
+        ));
+
+        // Gripper
+        handles.push_back(std::make_unique<handle::ax12a::PositionPair>(
+            "gripper",
+            interfaces,
+            dxl::ax12a::JointController(commHandler, commHandler.PROTOCOL_1, 8),
+            dxl::ax12a::JointController(commHandler, commHandler.PROTOCOL_1, 9),
+            0.348, -0.317, 1, -1
+        ));
+
         registerInterface(&interfaces.state);
         registerInterface(&interfaces.pos);
         registerInterface(&interfaces.vel);
