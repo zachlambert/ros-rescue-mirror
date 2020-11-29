@@ -46,8 +46,7 @@ public:
                         interface.state.getHandle(name), &cmd
                 ));
                 break;
-        }
-    }
+        } }
     virtual ~HardwareHandle() {}
     void write() {
         write(cmd);

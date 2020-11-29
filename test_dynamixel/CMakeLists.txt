@@ -22,16 +22,16 @@ include_directories(
   include
 )
 
-add_executable(dxl_test
+add_executable(test_dxl_test
     src/dxl_test/main.cpp
 )
-target_link_libraries(dxl_test
+target_link_libraries(test_dxl_test
     ${catkin_LIBRARIES}
 )
 
-add_executable(hardware
+add_executable(test_hardware
     src/hardware/main.cpp
 )
-target_link_libraries(hardware
+target_link_libraries(test_hardware
     ${catkin_LIBRARIES}
 )
