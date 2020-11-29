@@ -11,6 +11,7 @@
         name="hardware"
         pkg="arbie_hardware"
         type="hardware"
+        output="screen"
     />
     <node
         name="controller_spawner"
