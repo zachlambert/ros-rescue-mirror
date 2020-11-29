@@ -58,7 +58,7 @@ public:
             interfaces,
             dxl::ax12a::JointController(commHandler, commHandler.PROTOCOL_1, 8),
             dxl::ax12a::JointController(commHandler, commHandler.PROTOCOL_1, 9),
-            0.348, -0.317, 1, -1
+            0.348, -0.317, -1, 1
         ));
 
         registerInterface(&interfaces.state);

@@ -127,9 +127,9 @@ public:
         // If not consistent, disable controller
         double pos2 = (controller2.readPosition() - origin2)/scale2;
         if (fabs(pos2 - pos) < pos_diff_allowance) {
-            controller1.disable();
-            controller2.disable();
-            ROS_ERROR("handle::ax12a::PositionPair stopped. Motor position differ.");
+            // controller1.disable();
+            // controller2.disable();
+            ROS_INFO("Pos1 = %f, pos2 = %f", pos, pos2);
         }
         // eff not implemented
     }

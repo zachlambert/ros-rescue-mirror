@@ -31,4 +31,10 @@
         type="rviz"
         args="-d $(find arbie_debug)/config/view_model.rviz"
     />
+    <node
+        name="rqt_gui"
+        pkg="rqt_gui"
+        type="rqt_gui"
+        args="--perspective-file $(find arbie_debug)/config/test_arm_control.perspective"
+    />
 </launch>
