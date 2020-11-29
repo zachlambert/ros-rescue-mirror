@@ -1,0 +1,41 @@
+<launch>
+    <param
+        name="robot_description"
+        command="cat $(find arbie_description)/model/arbie.urdf"
+    />
+    <rosparam
+        file="$(find arbie_debug)/config/arm_controllers.yaml"
+        command="load"
+    />
+    <node
+        name="hardware"
+        pkg="arbie_hardware"
+        type="hardware"
+        output="screen"
+    />
+    <node
+        name="controller_spawner"
+        pkg="controller_manager"
+        type="spawner"
+        respawn="false"
+        args="arm_1_controller arm_2_controller arm_3_controller wrist_pitch_controller wrist_yaw_controller wrist_roll_controller gripper_controller joint_state_controller"
+    />
+
+    <node
+        name="robot_state_publisher"
+        pkg="robot_state_publisher"
+        type="robot_state_publisher"
+    />
+    <node
+        name="rviz"
+        pkg="rviz"
+        type="rviz"
+        args="-d $(find arbie_debug)/config/view_model.rviz"
+    />
+    <node
+        name="rqt_gui"
+        pkg="rqt_gui"
+        type="rqt_gui"
+        args="--perspective-file $(find arbie_debug)/config/test_arm_control.perspective"
+    />
+</launch>

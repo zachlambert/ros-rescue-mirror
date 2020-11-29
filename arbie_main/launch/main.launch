@@ -35,16 +35,7 @@
     />
 
     <group if="$(arg joints_connected)">
-    <group ns="hardware">
-        <node name="arm" pkg="arbie_hardware" type="arm"/>
-        <node name="wrist" pkg="arbie_hardware" type="wrist"/>
-        <node name="odrives" pkg="arbie_hardware" type="odrives"/>
-    </group>
-    <node
-        name="hardware_interface"
-        pkg="arbie_hardware"
-        type="interface"
-    />
+        <include file="$(find arbie_hardware)/launch/main.launch"/>
     </group>
 
     <group if="$(arg pcb_connected)">
