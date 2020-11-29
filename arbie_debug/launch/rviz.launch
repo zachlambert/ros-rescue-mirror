@@ -1,8 +1,0 @@
-<launch>
-    <node
-        name="rviz"
-        pkg="rviz"
-        type="rviz"
-        args="-d $(find arbie_debug)/rviz/arbie.rviz"
-    />
-</launch>

@@ -21,6 +21,9 @@
 <material name="gripper">
     <color rgba="1 1 1 1"/>
 </material>
+<material name="camera">
+    <color rgba="1 0.4 0 1"/>
+</material>
 
 
 <!-- BASE LINK -->
@@ -31,7 +34,7 @@
 <joint name="base_joint" type="fixed">
 <!-- TODO: Put suitable values here so base_link is located on the ground,
 below the centre of the body -->
-  <origin rpy="0 1.57 0" xyz="0 0 0.5"/>
+  <origin rpy="1.5708 0 1.5708" xyz="0.01 0 0.075"/>
   <parent link="base_link"/>
   <child link="body_link"/>
 </joint>
@@ -521,19 +524,20 @@ below the centre of the body -->
 
 <link name="gripper_right_linkage_link">
   <inertial>
-    <origin rpy="0 0 0" xyz="0.005348977862044579 0.00500022075444323 0.01750042810563407"/>
+    <origin rpy="0 0 0" xyz="0.005348977862044579 0.00500022075444323 -0.01750042810563407"/>
     <mass value="0.00386409068463368"/>
     <inertia ixx="1e-06" ixy="0.0" ixz="0.0" iyy="1e-06" iyz="-0.0" izz="0.0"/>
   </inertial>
   <visual>
-    <origin rpy="0 0 0" xyz="-0.03671 -0.238651 -0.153719"/>
+    <origin rpy="0 0 0" xyz="0.015 -0.485 -0.09"/>
+    <!--<origin rpy="0 0 0" xyz="0.03671 -0.238651 -0.153719"/>-->
     <geometry>
       <mesh filename="package://arbie_description/meshes/gripper_right_linkage.stl"/>
     </geometry>
     <material name="gripper"/>
   </visual>
   <collision>
-    <origin rpy="0 0 0" xyz="-0.03671 -0.238651 -0.153719"/>
+    <origin rpy="0 0 0" xyz="-0.03671 -0.238651 0.153719"/>
     <geometry>
       <mesh filename="package://arbie_description/meshes/gripper_right_linkage.stl"/>
     </geometry>
@@ -591,7 +595,7 @@ below the centre of the body -->
   <visual>
     <origin rpy="0 0 0" xyz="0.013094 -0.261251 -0.207219"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/gripper_left_conctact.stl"/>
+      <mesh filename="package://arbie_description/meshes/gripper_left_contact.stl"/>
     </geometry>
     <material name="gripper"/>
   </visual>
@@ -964,31 +968,31 @@ below the centre of the body -->
   <parent link="gripper_right_driver_link"/>
   <child link="gripper_right_contact_link"/>
   <axis xyz="0 1 0"/>
-  <mimic joint="gripper_right_driver_joint"/>
+  <mimic joint="gripper_right_driver_joint" multiplier="-1"/>
 </joint>
 
 <joint name="gripper_left_contact_dependent_joint" type="continuous">
   <origin rpy="0 0 0" xyz="0.0 -0.0024 0.035"/>
   <parent link="gripper_left_driver_link"/>
   <child link="gripper_left_contact_link"/>
-  <axis xyz="0 -1 0"/>
-  <mimic joint="gripper_left_driver_joint"/>
+  <axis xyz="0 1 0"/>
+  <mimic joint="gripper_left_driver_joint" multiplier="-1"/>
 </joint>
 
 <joint name="gripper_right_linkage_dependent_joint" type="continuous">
   <origin rpy="0 0 0" xyz="0.039616 -0.006 0.0302"/>
   <parent link="gripper_base_link"/>
   <child link="gripper_right_linkage_link"/>
-  <axis xyz="0 -1 0"/>
-  <mimic joint="gripper_right_driver_joint"/>
+  <axis xyz="0 1 0"/>
+  <mimic joint="gripper_right_driver_joint" multiplier="1"/>
 </joint>
 
 <joint name="gripper_left_linkage_dependent_joint" type="continuous">
   <origin rpy="0 0 0" xyz="-0.039616 -0.006 0.0302"/>
   <parent link="gripper_base_link"/>
   <child link="gripper_left_linkage_link"/>
-  <axis xyz="0 -1 0"/>
-  <mimic joint="gripper_left_driver_joint"/>
+  <axis xyz="0 1 0"/>
+  <mimic joint="gripper_left_driver_joint" multiplier="1"/>
 </joint>
 
 
