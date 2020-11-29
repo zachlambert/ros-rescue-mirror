@@ -48,14 +48,14 @@ below the centre of the body -->
   <visual>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/base_link_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/body.stl"/>
     </geometry>
     <material name="body"/>
   </visual>
   <collision>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/base_link_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/body.stl"/>
     </geometry>
   </collision>
 </link>
@@ -72,7 +72,7 @@ below the centre of the body -->
   <visual>
     <origin rpy="0 0 0" xyz="0.124694 -0.019326 0.010978"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/Tracks_R_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/tracks_right.stl"/>
     </geometry>
     <material name="silver">
       <color rgba="1 0 0 1"/>
@@ -81,7 +81,7 @@ below the centre of the body -->
   <collision>
     <origin rpy="0 0 0" xyz="0.124694 -0.019326 0.010978"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/Tracks_R_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/tracks_right.stl"/>
     </geometry>
   </collision>
 </link>
@@ -95,7 +95,7 @@ below the centre of the body -->
   <visual>
     <origin rpy="0 0 0" xyz="-0.123306 -0.019326 0.010978"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/Tracks_L_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/tracks_left.stl"/>
     </geometry>
     <material name="silver">
       <color rgba="1 0 0 1"/>
@@ -104,7 +104,7 @@ below the centre of the body -->
   <collision>
     <origin rpy="0 0 0" xyz="-0.123306 -0.019326 0.010978"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/Tracks_L_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/tracks_left.stl"/>
     </geometry>
   </collision>
 </link>
@@ -118,7 +118,7 @@ below the centre of the body -->
   <visual>
     <origin rpy="0 0 0" xyz="0.144694 -0.019326 0.010978"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/equivalent_wheel_R_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/tracks_right_wheel.stl"/>
     </geometry>
     <material name="silver">
       <color rgba="1 0 0 1"/>
@@ -127,7 +127,7 @@ below the centre of the body -->
   <collision>
     <origin rpy="0 0 0" xyz="0.144694 -0.019326 0.010978"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/equivalent_wheel_R_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/tracks_right_wheel.stl"/>
     </geometry>
   </collision>
 </link>
@@ -141,7 +141,7 @@ below the centre of the body -->
   <visual>
     <origin rpy="0 0 0" xyz="-0.143306 -0.019326 0.010978"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/equivalent_wheel_L_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/tracks_left_wheel.stl"/>
     </geometry>
     <material name="silver">
       <color rgba="1 0 0 1"/>
@@ -150,7 +150,7 @@ below the centre of the body -->
   <collision>
     <origin rpy="0 0 0" xyz="-0.143306 -0.019326 0.010978"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/equivalent_wheel_L_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/tracks_left_wheel.stl"/>
     </geometry>
   </collision>
 </link>
@@ -167,7 +167,7 @@ below the centre of the body -->
   <visual>
     <origin rpy="0 0 0" xyz="-0.037807 -0.048101 -0.262572"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/Leg_1_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/camera_mount_leg_1.stl"/>
     </geometry>
     <material name="silver">
       <color rgba="1 0 0 1"/>
@@ -176,7 +176,7 @@ below the centre of the body -->
   <collision>
     <origin rpy="0 0 0" xyz="-0.037807 -0.048101 -0.262572"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/Leg_1_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/camera_mount_leg_1.stl"/>
     </geometry>
   </collision>
 </link>
@@ -190,7 +190,7 @@ below the centre of the body -->
   <visual>
     <origin rpy="0 0 0" xyz="0.039194 -0.048101 -0.262572"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/Leg_2_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/camera_mount_leg_2.stl"/>
     </geometry>
     <material name="silver">
       <color rgba="1 0 0 1"/>
@@ -199,7 +199,7 @@ below the centre of the body -->
   <collision>
     <origin rpy="0 0 0" xyz="0.039194 -0.048101 -0.262572"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/Leg_2_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/camera_mount_leg_2.stl"/>
     </geometry>
   </collision>
 </link>
@@ -213,7 +213,7 @@ below the centre of the body -->
   <visual>
     <origin rpy="0 0 0" xyz="-0.033807 -0.073851 -0.262572"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/Cam_mount_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/camera_mount.stl"/>
     </geometry>
     <material name="silver">
       <color rgba="1 0 0 1"/>
@@ -222,7 +222,7 @@ below the centre of the body -->
   <collision>
     <origin rpy="0 0 0" xyz="-0.033807 -0.073851 -0.262572"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/Cam_mount_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/camera_mount.stl"/>
     </geometry>
   </collision>
 </link>
@@ -236,7 +236,7 @@ below the centre of the body -->
   <visual>
     <origin rpy="0 0 0" xyz="-0.02125 0.0 0.025"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/D435_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/camera_d435.stl"/>
     </geometry>
     <material name="silver">
       <color rgba="1 0 0 1"/>
@@ -245,7 +245,7 @@ below the centre of the body -->
   <collision>
     <origin rpy="0 0 0" xyz="-0.02125 0.0 0.025"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/D435_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/camera_d435.stl"/>
     </geometry>
   </collision>
 </link>
@@ -259,7 +259,7 @@ below the centre of the body -->
   <visual>
     <origin rpy="0 0 0" xyz="-0.016177 -0.060351 -0.276572"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/T265_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/camera_t265.stl"/>
     </geometry>
     <material name="silver">
       <color rgba="1 0 0 1"/>
@@ -268,7 +268,7 @@ below the centre of the body -->
   <collision>
     <origin rpy="0 0 0" xyz="-0.016177 -0.060351 -0.276572"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/T265_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/camera_t265.stl"/>
     </geometry>
   </collision>
 </link>
@@ -285,7 +285,7 @@ below the centre of the body -->
   <visual>
     <origin rpy="0 0 0" xyz="0.174694 -0.024729 -0.219022"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/Flipper_FR_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/flipper_front_right.stl"/>
     </geometry>
     <material name="silver">
       <color rgba="1 0 0 1"/>
@@ -294,7 +294,7 @@ below the centre of the body -->
   <collision>
     <origin rpy="0 0 0" xyz="0.174694 -0.024729 -0.219022"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/Flipper_FR_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/flipper_front_right.stl"/>
     </geometry>
   </collision>
 </link>
@@ -308,7 +308,7 @@ below the centre of the body -->
   <visual>
     <origin rpy="0 0 0" xyz="-0.173306 -0.024729 -0.219022"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/Flipper_FL_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/flipper_front_left.stl"/>
     </geometry>
     <material name="silver">
       <color rgba="1 0 0 1"/>
@@ -317,7 +317,7 @@ below the centre of the body -->
   <collision>
     <origin rpy="0 0 0" xyz="-0.173306 -0.024729 -0.219022"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/Flipper_FL_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/flipper_front_left.stl"/>
     </geometry>
   </collision>
 </link>
@@ -331,7 +331,7 @@ below the centre of the body -->
   <visual>
     <origin rpy="0 0 0" xyz="0.174694 -0.024729 0.240978"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/Flipper_RR_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/flipper_rear_right.stl"/>
     </geometry>
     <material name="silver">
       <color rgba="1 0 0 1"/>
@@ -340,7 +340,7 @@ below the centre of the body -->
   <collision>
     <origin rpy="0 0 0" xyz="0.174694 -0.024729 0.240978"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/Flipper_RR_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/flipper_rear_right.stl"/>
     </geometry>
   </collision>
 </link>
@@ -354,7 +354,7 @@ below the centre of the body -->
   <visual>
     <origin rpy="0 0 0" xyz="-0.173306 -0.024729 0.240978"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/Flipper_RL_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/flipper_rear_left.stl"/>
     </geometry>
     <material name="silver">
       <color rgba="1 0 0 1"/>
@@ -363,7 +363,7 @@ below the centre of the body -->
   <collision>
     <origin rpy="0 0 0" xyz="-0.173306 -0.024729 0.240978"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/Flipper_RL_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/flipper_rear_left.stl"/>
     </geometry>
   </collision>
 </link>
@@ -380,7 +380,7 @@ below the centre of the body -->
   <visual>
     <origin rpy="0 0 0" xyz="0.000694 -0.107101 -0.186272"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/Arm_rotation_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/arm_base.stl"/>
     </geometry>
     <material name="silver">
       <color rgba="1 0 0 1"/>
@@ -389,7 +389,7 @@ below the centre of the body -->
   <collision>
     <origin rpy="0 0 0" xyz="0.000694 -0.107101 -0.186272"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/Arm_rotation_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/arm_base.stl"/>
     </geometry>
   </collision>
 </link>
@@ -403,7 +403,7 @@ below the centre of the body -->
   <visual>
     <origin rpy="0 0 0" xyz="-0.052806 -0.174101 -0.186495"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/Arm_link_1_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/arm_lower.stl"/>
     </geometry>
     <material name="silver">
       <color rgba="1 0 0 1"/>
@@ -412,7 +412,7 @@ below the centre of the body -->
   <collision>
     <origin rpy="0 0 0" xyz="-0.052806 -0.174101 -0.186495"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/Arm_link_1_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/arm_lower.stl"/>
     </geometry>
   </collision>
 </link>
@@ -426,7 +426,7 @@ below the centre of the body -->
   <visual>
     <origin rpy="0 0 0" xyz="-0.019806 -0.209101 0.263505"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/Arm_link_2_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/arm_upper.stl"/>
     </geometry>
     <material name="silver">
       <color rgba="1 0 0 1"/>
@@ -435,7 +435,7 @@ below the centre of the body -->
   <collision>
     <origin rpy="0 0 0" xyz="-0.019806 -0.209101 0.263505"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/Arm_link_2_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/arm_upper.stl"/>
     </geometry>
   </collision>
 </link>
@@ -452,7 +452,7 @@ below the centre of the body -->
   <visual>
     <origin rpy="0 0 0" xyz="-0.002806 -0.244101 0.038505"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/wrist_base_link_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/wrist_base.stl"/>
     </geometry>
     <material name="silver">
       <color rgba="1 0 0 1"/>
@@ -461,7 +461,7 @@ below the centre of the body -->
   <collision>
     <origin rpy="0 0 0" xyz="-0.002806 -0.244101 0.038505"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/wrist_base_link_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/wrist_base.stl"/>
     </geometry>
   </collision>
 </link>
@@ -475,7 +475,7 @@ below the centre of the body -->
   <visual>
     <origin rpy="0 0 0" xyz="-0.036206 -0.244101 -0.014995"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/pitch_mount_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/wrist_pitch.stl"/>
     </geometry>
     <material name="silver">
       <color rgba="1 0 0 1"/>
@@ -484,7 +484,7 @@ below the centre of the body -->
   <collision>
     <origin rpy="0 0 0" xyz="-0.036206 -0.244101 -0.014995"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/pitch_mount_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/wrist_pitch.stl"/>
     </geometry>
   </collision>
 </link>
@@ -498,7 +498,7 @@ below the centre of the body -->
   <visual>
     <origin rpy="0 0 0" xyz="-0.002906 -0.225651 -0.078119"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/roll_yaw_servo_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/wrist_yaw.stl"/>
     </geometry>
     <material name="silver">
       <color rgba="1 0 0 1"/>
@@ -507,7 +507,7 @@ below the centre of the body -->
   <collision>
     <origin rpy="0 0 0" xyz="-0.002906 -0.225651 -0.078119"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/roll_yaw_servo_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/wrist_yaw.stl"/>
     </geometry>
   </collision>
 </link>
@@ -524,7 +524,7 @@ below the centre of the body -->
   <visual>
     <origin rpy="0 0 0" xyz="-0.002906 -0.244651 -0.123519"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/gripper_mount_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/gripper_base.stl"/>
     </geometry>
     <material name="silver">
       <color rgba="1 0 0 1"/>
@@ -533,7 +533,7 @@ below the centre of the body -->
   <collision>
     <origin rpy="0 0 0" xyz="-0.002906 -0.244651 -0.123519"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/gripper_mount_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/gripper_base.stl"/>
     </geometry>
   </collision>
 </link>
@@ -547,7 +547,7 @@ below the centre of the body -->
   <visual>
     <origin rpy="0 0 0" xyz="-0.018906 -0.263651 -0.172219"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/r_link1_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/gripper_right_driver.stl"/>
     </geometry>
     <material name="silver">
       <color rgba="1 0 0 1"/>
@@ -556,7 +556,7 @@ below the centre of the body -->
   <collision>
     <origin rpy="0 0 0" xyz="-0.018906 -0.263651 -0.172219"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/r_link1_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/gripper_right_driver.stl"/>
     </geometry>
   </collision>
 </link>
@@ -570,7 +570,7 @@ below the centre of the body -->
   <visual>
     <origin rpy="0 0 0" xyz="-0.03671 -0.238651 -0.153719"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/r_link2_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/gripper_right_linkage.stl"/>
     </geometry>
     <material name="silver">
       <color rgba="1 0 0 1"/>
@@ -579,7 +579,7 @@ below the centre of the body -->
   <collision>
     <origin rpy="0 0 0" xyz="-0.03671 -0.238651 -0.153719"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/r_link2_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/gripper_right_linkage.stl"/>
     </geometry>
   </collision>
 </link>
@@ -593,7 +593,7 @@ below the centre of the body -->
   <visual>
     <origin rpy="0 0 0" xyz="-0.018906 -0.261251 -0.207219"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/r_finger_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/gripper_right_contact.stl"/>
     </geometry>
     <material name="silver">
       <color rgba="1 0 0 1"/>
@@ -602,7 +602,7 @@ below the centre of the body -->
   <collision>
     <origin rpy="0 0 0" xyz="-0.018906 -0.261251 -0.207219"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/r_finger_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/gripper_right_contact.stl"/>
     </geometry>
   </collision>
 </link>
@@ -616,7 +616,7 @@ below the centre of the body -->
   <visual>
     <origin rpy="0 0 0" xyz="0.013094 -0.263651 -0.172219"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/l_link1_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/gripper_left_driver.stl"/>
     </geometry>
     <material name="silver">
       <color rgba="1 0 0 1"/>
@@ -625,7 +625,7 @@ below the centre of the body -->
   <collision>
     <origin rpy="0 0 0" xyz="0.013094 -0.263651 -0.172219"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/l_link1_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/gripper_left_driver.stl"/>
     </geometry>
   </collision>
 </link>
@@ -639,7 +639,7 @@ below the centre of the body -->
   <visual>
     <origin rpy="0 0 0" xyz="0.013094 -0.261251 -0.207219"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/l_finger_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/gripper_left_conctact.stl"/>
     </geometry>
     <material name="silver">
       <color rgba="1 0 0 1"/>
@@ -648,7 +648,7 @@ below the centre of the body -->
   <collision>
     <origin rpy="0 0 0" xyz="0.013094 -0.261251 -0.207219"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/l_finger_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/gripper_left_contact.stl"/>
     </geometry>
   </collision>
 </link>
@@ -662,7 +662,7 @@ below the centre of the body -->
   <visual>
     <origin rpy="0 0 0" xyz="0.03671 -0.238651 -0.153719"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/l_link2_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/gripper_left_linkage.stl"/>
     </geometry>
     <material name="silver">
       <color rgba="1 0 0 1"/>
@@ -671,7 +671,7 @@ below the centre of the body -->
   <collision>
     <origin rpy="0 0 0" xyz="0.03671 -0.238651 -0.153719"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/l_link2_1_m-binary.stl"/>
+      <mesh filename="package://arbie_description/meshes/gripper_left_linkage.stl"/>
     </geometry>
   </collision>
 </link>
