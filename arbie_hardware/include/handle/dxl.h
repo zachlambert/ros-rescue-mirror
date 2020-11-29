@@ -19,15 +19,16 @@ public:
         Interfaces &interface,
         dxl::xl430::VelocityController controller,
         double scale=1,
-        double eff2_threshold=2):
+        double eff2_threshold=2,
+        double zero_pos=0):
             Handle(name, interface, Handle::VEL),
             controller(controller),
             scale(scale),
-            eff2_threshold(eff2_threshold){
+            eff2_threshold(eff2_threshold),
+            zero_pos(zero_pos){
         controller.disable(); // If already enabled
         controller.enable();
         origin = controller.readPosition();
-        zero_pos = 0;
     }
     ~Velocity(){
         controller.disable();
@@ -35,7 +36,7 @@ public:
 
     void calibrate() {
         ROS_INFO("CALIBRATING");
-        controller.writeGoalVelocity(-1);
+        write(-0.04);
         ros::Duration(0.25).sleep();
         static constexpr std::size_t N = 10;
         std::array<double, N> eff2;
@@ -52,8 +53,7 @@ public:
             ROS_INFO("Load2: %f", mean_eff2);
             ros::Duration(0.1).sleep();
         } while(mean_eff2 < eff2_threshold);
-        controller.writeGoalVelocity(0);
-        zero_pos = 0;
+        write(0);
         origin = controller.readPosition();
     }
 

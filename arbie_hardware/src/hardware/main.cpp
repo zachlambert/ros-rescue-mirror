@@ -20,14 +20,15 @@ public:
         handles.push_back(std::make_unique<handle::xl430::Velocity>(
             "arm_1_joint",
             interfaces,
-            dxl::xl430::VelocityController(commHandler, commHandler.PROTOCOL_1, 1)
+            dxl::xl430::VelocityController(commHandler, commHandler.PROTOCOL_1, 1),
+            89/14
         ));
 
         handles.push_back(std::make_unique<handle::xl430::Velocity>(
             "arm_2_joint",
             interfaces,
             dxl::xl430::VelocityController(commHandler, commHandler.PROTOCOL_1, 2),
-            1,
+            25,
             8
         ));
         arm_2_handle = dynamic_cast<handle::xl430::Velocity*>(handles.back().get());
@@ -36,8 +37,9 @@ public:
             "arm_3_joint",
             interfaces,
             dxl::xl430::VelocityController(commHandler, commHandler.PROTOCOL_1, 3),
-            1,
-            20
+            25,
+            40,
+            -0.11 // found empirically - ie: try different values
         ));
         arm_3_handle = dynamic_cast<handle::xl430::Velocity*>(handles.back().get());
 
@@ -82,8 +84,10 @@ public:
 
         // Calibrate
 
+        ros::Duration(1).sleep();
+
         arm_2_handle->calibrate();
-        arm_2_handle->write(2);
+        arm_2_handle->write(0.08);
         ros::Duration(1.5).sleep();
         arm_2_handle->write(0);
         ros::Duration(1).sleep();
@@ -93,7 +97,7 @@ public:
         ros::Duration(1).sleep();
 
         arm_3_handle->calibrate();
-        arm_3_handle->write(3);
+        arm_3_handle->write(0.12);
         ros::Duration(2).sleep();
         arm_3_handle->write(0);
         ros::Duration(1).sleep();
