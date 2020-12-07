@@ -11,10 +11,6 @@
         name="robot_description"
         command="cat $(find arbie_description)/model/arbie.urdf"
     />
-    <param
-        name="robot_description_sdf"
-        command="cat $(find arbie_description)/model/arbie.sdf"
-    />
 
 
     <!-- ===== VIRTUAL OR REAL HARDWARE ===== -->

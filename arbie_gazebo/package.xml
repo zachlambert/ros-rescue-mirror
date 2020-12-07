@@ -10,5 +10,8 @@
   <build_depend>gazebo_ros</build_depend>
   <build_export_depend>gazebo_ros</build_export_depend>
   <exec_depend>gazebo_ros</exec_depend>
-
+  <export>
+    <gazebo_ros gazebo_model_path="${prefix}/models"/>
+    <gazebo_ros gazebo_media_path="${prefix}/models"/>
+  </export>
 </package>
