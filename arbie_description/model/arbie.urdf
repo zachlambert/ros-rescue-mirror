@@ -32,8 +32,6 @@
 </link>
 
 <joint name="base_joint" type="fixed">
-<!-- TODO: Put suitable values here so base_link is located on the ground,
-below the centre of the body -->
   <origin rpy="1.5708 0 1.5708" xyz="0.01 0 0.075"/>
   <parent link="base_link"/>
   <child link="body_link"/>
@@ -631,16 +629,28 @@ below the centre of the body -->
 
 <!-- RIGID JOINTS -->
 
+<joint name="rigid_body_to_tracks_right_joint" type="fixed">
+  <origin rpy="0 0 0" xyz="-0.124694 0.019326 -0.010978"/>
+  <parent link="body_link"/>
+  <child link="tracks_right_link"/>
+</joint>
+
 <joint name="rigid_body_to_tracks_left_joint" type="fixed">
   <origin rpy="0 0 0" xyz="0.123306 0.019326 -0.010978"/>
   <parent link="body_link"/>
   <child link="tracks_left_link"/>
 </joint>
 
-<joint name="rigid_body_to_tracks_right_joint" type="fixed">
-  <origin rpy="0 0 0" xyz="-0.124694 0.019326 -0.010978"/>
-  <parent link="body_link"/>
-  <child link="tracks_right_link"/>
+<joint name="rigid_flipper_front_right_to_flipper_front_left" type="fixed">
+  <origin rpy="0 0 0" xyz="0.347996 0 0"/>
+  <parent link="flipper_front_right_link"/>
+  <child link="flipper_front_left_link"/>
+</joint>
+
+<joint name="rigid_flipper_rear_right_to_flipper_rear_left" type="fixed">
+  <origin rpy="0 0 0" xyz="0.347996 0 0"/>
+  <parent link="flipper_rear_right_link"/>
+  <child link="flipper_rear_left_link"/>
 </joint>
 
 <joint name="rigid_body_to_camera_mount_leg_1_joint" type="fixed">
@@ -742,14 +752,6 @@ below the centre of the body -->
   <axis xyz="1 0 0"/>
 </joint>
 
-<joint name="flipper_front_mimic_joint" type="continuous">
-  <origin rpy="0 0 0" xyz="0.05 0.005403 0.23"/>
-  <parent link="tracks_left_link"/>
-  <child link="flipper_front_left_link"/>
-  <axis xyz="1 0 0"/>
-  <mimic joint="flipper_front_joint"/>
-</joint>
-
 <transmission name="flipper_front_transmission">
   <type>transmission_interface/SimpleTransmission</type>
   <joint name="flipper_front_joint">
@@ -766,14 +768,6 @@ below the centre of the body -->
   <parent link="tracks_right_link"/>
   <child link="flipper_rear_right_link"/>
   <axis xyz="1 0 0"/>
-</joint>
-
-<joint name="flipper_rear_mimic_joint" type="continuous">
-  <origin rpy="0 0 0" xyz="0.05 0.005403 -0.23"/>
-  <parent link="tracks_left_link"/>
-  <child link="flipper_rear_left_link"/>
-  <axis xyz="1 0 0"/>
-  <mimic joint="flipper_rear_joint"/>
 </joint>
 
 <transmission name="flipper_rear_transmission">
