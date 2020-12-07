@@ -97,6 +97,31 @@ public:
     }
 };
 
+class ExtendedPositionController: public BaseController {
+    static constexpr uint32_t ADDR_GOAL_POSITION = 116;
+
+public:
+    ExtendedPositionController(
+        CommHandler &commHandler,
+        CommHandler::Protocol protocol,
+        uint32_t id):
+            BaseController(commHandler, protocol, id)
+    {
+        write1Byte(ADDR_OPERATING_MODE, 4);
+        initial_pos = readPosition();
+        std::cout << "Initial pos: " << initial_pos << std::endl;
+    }
+
+    void writeGoalPosition(double pos)
+    {
+        uint32_t value = 4096 * pos/(2*M_PI);
+        write4Byte(ADDR_GOAL_POSITION, value);
+    }
+
+private:
+    double initial_pos;
+};
+
 } // namespace xl430
 } // namespace dxl
 

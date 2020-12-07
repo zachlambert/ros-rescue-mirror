@@ -735,78 +735,57 @@ below the centre of the body -->
 
 <!-- FLIPPER JOINTS -->
 
-<joint name="flipper_front_right_joint" type="continuous">
+<joint name="flipper_front_joint" type="continuous">
   <origin rpy="0 0 0" xyz="-0.05 0.005403 0.23"/>
   <parent link="tracks_right_link"/>
   <child link="flipper_front_right_link"/>
   <axis xyz="1 0 0"/>
 </joint>
 
-<transmission name="flipper_front_right_transmission">
+<joint name="flipper_front_mimic_joint" type="continuous">
+  <origin rpy="0 0 0" xyz="0.05 0.005403 0.23"/>
+  <parent link="tracks_left_link"/>
+  <child link="flipper_front_left_link"/>
+  <axis xyz="1 0 0"/>
+  <mimic joint="flipper_front_joint"/>
+</joint>
+
+<transmission name="flipper_front_transmission">
   <type>transmission_interface/SimpleTransmission</type>
-  <joint name="">
-    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+  <joint name="flipper_front_joint">
+    <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
   </joint>
-  <actuator name="flipper_front_right_actuator">
-    <hardwareInterface>PositionJointInterface</hardwareInterface>
+  <actuator name="flipper_front_actuator">
+    <hardwareInterface>VelocityJointInterface</hardwareInterface>
     <mechanicalReduction>1</mechanicalReduction>
   </actuator>
 </transmission>
 
-<joint name="flipper_rear_right_joint" type="continuous">
+<joint name="flipper_rear_joint" type="continuous">
   <origin rpy="0 0 0" xyz="-0.05 0.005403 -0.23"/>
   <parent link="tracks_right_link"/>
   <child link="flipper_rear_right_link"/>
   <axis xyz="1 0 0"/>
 </joint>
 
-<transmission name="flipper_rear_right_transmission">
-  <type>transmission_interface/SimpleTransmission</type>
-  <joint name="flipper_rear_right_joint">
-    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-  </joint>
-  <actuator name="flipper_rear_right_actuator">
-    <hardwareInterface>PositionJointInterface</hardwareInterface>
-    <mechanicalReduction>1</mechanicalReduction>
-  </actuator>
-</transmission>
-
-<joint name="flipper_front_left_joint" type="continuous">
-  <origin rpy="0 0 0" xyz="0.05 0.005403 0.23"/>
-  <parent link="tracks_left_link"/>
-  <child link="flipper_front_left_link"/>
-  <axis xyz="1 0 0"/>
-</joint>
-
-<transmission name="flipper_front_left_transmission">
-  <type>transmission_interface/SimpleTransmission</type>
-  <joint name="flipper_front_left_joint">
-    <hardwareInterface>hardware_interace/PositionJointInterface</hardwareInterface>
-  </joint>
-  <actuator name="flipper_front_left_transmission">
-    <hardwareInterface>PositionJointInterface</hardwareInterface>
-    <mechanicalReduction>1</mechanicalReduction>
-  </actuator>
-</transmission>
-
-<joint name="flipper_rear_left_joint" type="continuous">
+<joint name="flipper_rear_mimic_joint" type="continuous">
   <origin rpy="0 0 0" xyz="0.05 0.005403 -0.23"/>
   <parent link="tracks_left_link"/>
   <child link="flipper_rear_left_link"/>
   <axis xyz="1 0 0"/>
+  <mimic joint="flipper_rear_joint"/>
 </joint>
 
-<transmission name="flipper_rear_left_transmission">
+<transmission name="flipper_rear_transmission">
   <type>transmission_interface/SimpleTransmission</type>
-  <joint name="flipper_rear_left_joint">
-    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+  <joint name="flipper_rear_joint">
+    <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
   </joint>
-  <actuator name="flipper_rear_left_actuator">
-    <hardwareInterface>PositionJointInterface</hardwareInterface>
+  <actuator name="flipper_rear_actuator">
+    <hardwareInterface>VelocityJointInterface</hardwareInterface>
     <mechanicalReduction>1</mechanicalReduction>
   </actuator>
 </transmission>
-
 
 <!-- ARM JOINTS -->
 
@@ -933,7 +912,7 @@ below the centre of the body -->
 
 <transmission name="gripper_right_driver_transmission">
   <type>transmission_interface/SimpleTransmission</type>
-  <joint name="gripper_right_driver_joint">
+  <joint name="gripper_joint">
     <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
   </joint>
   <actuator name="gripper_right_driver_actuator">
@@ -952,6 +931,17 @@ the other -->
   <axis xyz="0 1 0"/>
   <mimic joint="gripper_joint" multiplier="-1"/>
 </joint>
+
+<transmission name="gripper_left_driver_transmission">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="gripper_mimic_joint">
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="gripper_left_driver_actuator">
+    <hardwareInterface>PositionJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
 
 <!-- GRIPPER DEPENDENT JOINTS -->
 
