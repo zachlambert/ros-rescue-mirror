@@ -3,15 +3,14 @@
         name="robot_description"
         command="cat $(find arbie_description)/model/arbie.urdf"
     />
-    <!-- Just using urdf at the moment
     <param
         name="robot_description_sdf"
-        command="cat $(find arbie_description)/model/arbie.sdf"
-    /> -->
+        command="cat $(find arbie_description)/models/arbie/model.sdf"
+    />
     <node
         name="spawn_model"
         pkg="gazebo_ros"
         type="spawn_model"
-        args="-param robot_description -urdf -x 0 -y 0 -z 0 -model arbie -b -gazebo_namespace gzserver"
+        args="-param robot_description_sdf -sdf -x 0 -y 0 -z 0 -model arbie -b -gazebo_namespace gzserver"
     />
 </launch>
