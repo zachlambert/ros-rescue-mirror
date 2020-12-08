@@ -19,4 +19,6 @@
 <xacro:include filename='components/arm.urdf.xacro'/>
 <xacro:arm pos_interface='PositionJointInterface' vel_interface='VelocityJointInterface'/>
 
+<plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so"/>
+
 </robot>
