@@ -1,0 +1,28 @@
+<launch>
+    <param
+        name="robot_description"
+        command="cat $(find arbie_description)/model/arbie.urdf"
+    />
+
+    <include file="$(find arbie_bringup)/launch/hardware.launch">
+        <arg name="pcb" value="false"/>
+    </include>
+
+    <include file="$(find arbie_bringup)/launch/control.launch">
+        <arg name="base" value="false"/>
+        <arg name="flippers" value="false"/>
+    </include>
+
+    <node
+        name="rviz"
+        pkg="rviz"
+        type="rviz"
+        args="-d $(find arbie_utils)/config/view_model.rviz"
+    />
+    <node
+        name="rqt_gui"
+        pkg="rqt_gui"
+        type="rqt_gui"
+        args="--perspective-file $(find arbie_test)/config/test_arm_control.perspective"
+    />
+</launch>
