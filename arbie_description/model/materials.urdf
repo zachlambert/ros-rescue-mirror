@@ -7,8 +7,11 @@
 <material name="flipper">
     <color rgba="0 0.8 1 1"/>
 </material>
-<material name="track">
-    <color rgba="0 0 0 1"/>
+<material name="tracks">
+    <color rgba="0 0 0 0.5"/>
+</material>
+<material name="tracks_wheel">
+    <color rgba="1 1 1 0.8"/>
 </material>
 <material name="arm">
     <color rgba="0 1 0 1"/>

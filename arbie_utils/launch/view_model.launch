@@ -1,7 +1,7 @@
 <launch>
     <param
         name="robot_description"
-        command="cat $(find arbie_description)/model/arbie.urdf"
+        command="xacro $(find arbie_description)/model/real.urdf.xacro"
     />
     <node
         name="robot_state_publisher"
@@ -17,6 +17,6 @@
         name="rviz"
         pkg="rviz"
         type="rviz"
-        args="-d $(find arbie_debug)/config/view_model.rviz"
+        args="-d $(find arbie_utils)/config/view_model.rviz"
     />
 </launch>

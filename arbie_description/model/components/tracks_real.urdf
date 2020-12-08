@@ -1,50 +1,6 @@
 <?xml version="1.0"?>
 <to_include xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-<!-- BOUNDING MESH FOR TRACKS -->
-
-<link name="tracks_right_link">
-  <inertial>
-    <origin rpy="0 0 0" xyz="-0.02499954358879042 0.002120489076708521 -0.0007430080149572974"/>
-    <mass value="44.76242127990538"/>
-    <inertia ixx="1.472289" ixy="-0.0" ixz="-0.0" iyy="1.350001" iyz="0.000109" izz="0.140939"/>
-  </inertial>
-  <visual>
-    <origin rpy="0 0 0" xyz="0.124694 -0.019326 0.010978"/>
-    <geometry>
-      <mesh filename="package://arbie_description/meshes/tracks_right.stl"/>
-    </geometry>
-    <material name="tracks"/>
-  </visual>
-  <collision>
-    <origin rpy="0 0 0" xyz="0.124694 -0.019326 0.010978"/>
-    <geometry>
-      <mesh filename="package://arbie_description/meshes/tracks_right.stl"/>
-    </geometry>
-  </collision>
-</link>
-
-<link name="tracks_left_link">
-  <inertial>
-    <origin rpy="0 0 0" xyz="0.02500045641121243 0.00212048907670849 -0.000743015955378042"/>
-    <mass value="44.76242127990538"/>
-    <inertia ixx="1.472289" ixy="-0.0" ixz="-0.0" iyy="1.350001" iyz="0.000109" izz="0.140939"/>
-  </inertial>
-  <visual>
-    <origin rpy="0 0 0" xyz="-0.123306 -0.019326 0.010978"/>
-    <geometry>
-      <mesh filename="package://arbie_description/meshes/tracks_left.stl"/>
-    </geometry>
-    <material name="tracks"/>
-  </visual>
-  <collision>
-    <origin rpy="0 0 0" xyz="-0.123306 -0.019326 0.010978"/>
-    <geometry>
-      <mesh filename="package://arbie_description/meshes/tracks_left.stl"/>
-    </geometry>
-  </collision>
-</link>
-
 <!-- EQUIVALENT WHEELS FOR TRACKS - USED TO CALCULATE VELOCITY COMMANDS -->
 
 <link name="tracks_right_wheel_link">
@@ -58,7 +14,7 @@
     <geometry>
       <mesh filename="package://arbie_description/meshes/tracks_right_wheel.stl"/>
     </geometry>
-    <material name="tracks"/>
+    <material name="tracks_wheel"/>
   </visual>
   <collision>
     <origin rpy="0 0 0" xyz="0.144694 -0.019326 0.010978"/>
@@ -79,7 +35,7 @@
     <geometry>
       <mesh filename="package://arbie_description/meshes/tracks_left_wheel.stl"/>
     </geometry>
-    <material name="tracks"/>
+    <material name="tracks_wheel"/>
   </visual>
   <collision>
     <origin rpy="0 0 0" xyz="-0.143306 -0.019326 0.010978"/>
@@ -88,20 +44,6 @@
     </geometry>
   </collision>
 </link>
-
-<!-- RIGID JOINTS FOR TRACK BOUNDING MESHES -->
-
-<joint name="rigid_body_to_tracks_right_joint" type="fixed">
-  <origin rpy="0 0 0" xyz="-0.124694 0.019326 -0.010978"/>
-  <parent link="body_link"/>
-  <child link="tracks_right_link"/>
-</joint>
-
-<joint name="rigid_body_to_tracks_left_joint" type="fixed">
-  <origin rpy="0 0 0" xyz="0.123306 0.019326 -0.010978"/>
-  <parent link="body_link"/>
-  <child link="tracks_left_link"/>
-</joint>
 
 <!-- TRACK WHEEL JOINTS -->
 
