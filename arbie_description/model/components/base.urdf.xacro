@@ -1,0 +1,420 @@
+<?xml version='1.0'?>
+<to_include xmlns:xacro="https://www.ros.org/wiki/xacro">
+
+<xacro:macro name="base" params="pos_interface vel_interface">
+
+<!-- BASE LINK -->
+
+<link name="base_link">
+</link>
+
+<joint name="base_joint" type="fixed">
+  <origin rpy="1.5708 0 1.5708" xyz="0.01 0 0.075"/>
+  <parent link="base_link"/>
+  <child link="body_link"/>
+</joint>
+
+<!-- BODY LINK -->
+
+<link name="body_link">
+  <inertial>
+    <origin rpy="0 0 0" xyz="-0.0007103904794560104 0.04685539726506198 -0.03652499028281223"/>
+    <mass value="132.38352048208554"/>
+    <inertia ixx="3.87908" ixy="-0.00108" ixz="-0.002599" iyy="4.409886" iyz="0.163573" izz="0.920138"/>
+  </inertial>
+  <visual>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <geometry>
+      <mesh filename="package://arbie_description/meshes/body.stl"/>
+    </geometry>
+    <material name="body"/>
+  </visual>
+  <collision>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <geometry>
+      <mesh filename="package://arbie_description/meshes/body.stl"/>
+    </geometry>
+  </collision>
+</link>
+
+
+<!-- TRACKS LINKS -->
+
+<link name="tracks_right_link">
+  <inertial>
+    <origin rpy="0 0 0" xyz="-0.02499954358879042 0.002120489076708521 -0.0007430080149572974"/>
+    <mass value="44.76242127990538"/>
+    <inertia ixx="1.472289" ixy="-0.0" ixz="-0.0" iyy="1.350001" iyz="0.000109" izz="0.140939"/>
+  </inertial>
+  <visual>
+    <origin rpy="0 0 0" xyz="0.124694 -0.019326 0.010978"/>
+    <geometry>
+      <mesh filename="package://arbie_description/meshes/tracks_right.stl"/>
+    </geometry>
+    <material name="tracks"/>
+  </visual>
+  <collision>
+    <origin rpy="0 0 0" xyz="0.124694 -0.019326 0.010978"/>
+    <geometry>
+      <mesh filename="package://arbie_description/meshes/tracks_right.stl"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="tracks_left_link">
+  <inertial>
+    <origin rpy="0 0 0" xyz="0.02500045641121243 0.00212048907670849 -0.000743015955378042"/>
+    <mass value="44.76242127990538"/>
+    <inertia ixx="1.472289" ixy="-0.0" ixz="-0.0" iyy="1.350001" iyz="0.000109" izz="0.140939"/>
+  </inertial>
+  <visual>
+    <origin rpy="0 0 0" xyz="-0.123306 -0.019326 0.010978"/>
+    <geometry>
+      <mesh filename="package://arbie_description/meshes/tracks_left.stl"/>
+    </geometry>
+    <material name="tracks"/>
+  </visual>
+  <collision>
+    <origin rpy="0 0 0" xyz="-0.123306 -0.019326 0.010978"/>
+    <geometry>
+      <mesh filename="package://arbie_description/meshes/tracks_left.stl"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="tracks_right_wheel_link">
+  <inertial>
+    <origin rpy="0 0 0" xyz="-0.004999543588790428 2.946488827579308e-07 -1.3146241448734608e-07"/>
+    <mass value="1.3872095061007428"/>
+    <inertia ixx="0.003902" ixy="-0.0" ixz="-0.0" iyy="0.001962" iyz="-0.0" izz="0.001962"/>
+  </inertial>
+  <visual>
+    <origin rpy="0 0 0" xyz="0.144694 -0.019326 0.010978"/>
+    <geometry>
+      <mesh filename="package://arbie_description/meshes/tracks_right_wheel.stl"/>
+    </geometry>
+    <material name="tracks"/>
+  </visual>
+  <collision>
+    <origin rpy="0 0 0" xyz="0.144694 -0.019326 0.010978"/>
+    <geometry>
+      <mesh filename="package://arbie_description/meshes/tracks_right_wheel.stl"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="tracks_left_wheel_link">
+  <inertial>
+    <origin rpy="0 0 0" xyz="0.005000456411212495 2.9464888271282796e-07 -1.3940283523014574e-07"/>
+    <mass value="1.3872095061007428"/>
+    <inertia ixx="0.003902" ixy="0.0" ixz="0.0" iyy="0.001962" iyz="0.0" izz="0.001962"/>
+  </inertial>
+  <visual>
+    <origin rpy="0 0 0" xyz="-0.143306 -0.019326 0.010978"/>
+    <geometry>
+      <mesh filename="package://arbie_description/meshes/tracks_left_wheel.stl"/>
+    </geometry>
+    <material name="tracks"/>
+  </visual>
+  <collision>
+    <origin rpy="0 0 0" xyz="-0.143306 -0.019326 0.010978"/>
+    <geometry>
+      <mesh filename="package://arbie_description/meshes/tracks_left_wheel.stl"/>
+    </geometry>
+  </collision>
+</link>
+
+
+<!-- CAMERA LINKS -->
+
+<link name="camera_mount_leg_1_link">
+  <inertial>
+    <origin rpy="0 0 0" xyz="-0.003687719231986318 0.005710165082249932 -1.3429420225863353e-07"/>
+    <mass value="0.011972469965960587"/>
+    <inertia ixx="1e-06" ixy="0.0" ixz="-0.0" iyy="0.0" iyz="0.0" izz="1e-06"/>
+  </inertial>
+  <visual>
+    <origin rpy="0 0 0" xyz="-0.037807 -0.048101 -0.262572"/>
+    <geometry>
+      <mesh filename="package://arbie_description/meshes/camera_mount_leg_1.stl"/>
+    </geometry>
+    <material name="camera"/>
+  </visual>
+  <collision>
+    <origin rpy="0 0 0" xyz="-0.037807 -0.048101 -0.262572"/>
+    <geometry>
+      <mesh filename="package://arbie_description/meshes/camera_mount_leg_1.stl"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="camera_mount_leg_2_link">
+  <inertial>
+    <origin rpy="0 0 0" xyz="0.0036876320544024996 0.005710165082249995 -1.3429420259170044e-07"/>
+    <mass value="0.011972469965960601"/>
+    <inertia ixx="1e-06" ixy="-0.0" ixz="0.0" iyy="0.0" iyz="-0.0" izz="1e-06"/>
+  </inertial>
+  <visual>
+    <origin rpy="0 0 0" xyz="0.039194 -0.048101 -0.262572"/>
+    <geometry>
+      <mesh filename="package://arbie_description/meshes/camera_mount_leg_2.stl"/>
+    </geometry>
+    <material name="camera"/>
+  </visual>
+  <collision>
+    <origin rpy="0 0 0" xyz="0.039194 -0.048101 -0.262572"/>
+    <geometry>
+      <mesh filename="package://arbie_description/meshes/camera_mount_leg_2.stl"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="camera_mount_link">
+  <inertial>
+    <origin rpy="0 0 0" xyz="-0.03446385172095636 0.0015631569649731947 0.008958079682170272"/>
+    <mass value="0.10512980225278633"/>
+    <inertia ixx="1.6e-05" ixy="-2e-06" ixz="1e-06" iyy="5.6e-05" iyz="3e-06" izz="5.4e-05"/>
+  </inertial>
+  <visual>
+    <origin rpy="0 0 0" xyz="-0.033807 -0.073851 -0.262572"/>
+    <geometry>
+      <mesh filename="package://arbie_description/meshes/camera_mount.stl"/>
+    </geometry>
+    <material name="camera"/>
+  </visual>
+  <collision>
+    <origin rpy="0 0 0" xyz="-0.033807 -0.073851 -0.262572"/>
+    <geometry>
+      <mesh filename="package://arbie_description/meshes/camera_mount.stl"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="camera_d435_link">
+  <inertial>
+    <origin rpy="0 0 0" xyz="-0.019510973805073988 0.09028780766834578 0.300025146597877"/>
+    <mass value="0.3380578483539848"/>
+    <inertia ixx="3.1e-05" ixy="-0.0" ixz="2e-06" iyy="0.000212" iyz="-0.0" izz="0.000211"/>
+  </inertial>
+  <visual>
+    <origin rpy="0 0 0" xyz="-0.02125 0.0 0.025"/>
+    <geometry>
+      <mesh filename="package://arbie_description/meshes/camera_d435.stl"/>
+    </geometry>
+    <material name="camera"/>
+  </visual>
+  <collision>
+    <origin rpy="0 0 0" xyz="-0.02125 0.0 0.025"/>
+    <geometry>
+      <mesh filename="package://arbie_description/meshes/camera_d435.stl"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="camera_t265_link">
+  <inertial>
+    <origin rpy="0 0 0" xyz="-0.023753775255487577 1.0333193303339872e-05 0.0048840237534042985"/>
+    <mass value="0.11087104010777465"/>
+    <inertia ixx="7e-06" ixy="0.0" ixz="-1e-06" iyy="0.000103" iyz="-0.0" izz="0.000108"/>
+  </inertial>
+  <visual>
+    <origin rpy="0 0 0" xyz="-0.016177 -0.060351 -0.276572"/>
+    <geometry>
+      <mesh filename="package://arbie_description/meshes/camera_t265.stl"/>
+    </geometry>
+    <material name="camera"/>
+  </visual>
+  <collision>
+    <origin rpy="0 0 0" xyz="-0.016177 -0.060351 -0.276572"/>
+    <geometry>
+      <mesh filename="package://arbie_description/meshes/camera_t265.stl"/>
+    </geometry>
+  </collision>
+</link>
+
+
+<!-- FLIPPER LINKS -->
+
+<link name="flipper_front_right_link">
+  <inertial>
+    <origin rpy="0 0 0" xyz="0.019795020283170317 0.16537558379618636 -1.3146244423611897e-07"/>
+    <mass value="13.868020437393694"/>
+    <inertia ixx="0.085351" ixy="-0.004876" ixz="0.0" iyy="0.028555" iyz="-0.0" izz="0.07162"/>
+  </inertial>
+  <visual>
+    <origin rpy="0 0 0" xyz="0.174694 -0.024729 -0.219022"/>
+    <geometry>
+      <mesh filename="package://arbie_description/meshes/flipper_front_right.stl"/>
+    </geometry>
+    <material name="flipper"/>
+  </visual>
+  <collision>
+    <origin rpy="0 0 0" xyz="0.174694 -0.024729 -0.219022"/>
+    <geometry>
+      <mesh filename="package://arbie_description/meshes/flipper_front_right.stl"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="flipper_front_left_link">
+  <inertial>
+    <origin rpy="0 0 0" xyz="-0.019794107460748195 0.16537558379618633 -1.394028636692024e-07"/>
+    <mass value="13.868020437393678"/>
+    <inertia ixx="0.085351" ixy="0.004876" ixz="-0.0" iyy="0.028555" iyz="-0.0" izz="0.07162"/>
+  </inertial>
+  <visual>
+    <origin rpy="0 0 0" xyz="-0.173306 -0.024729 -0.219022"/>
+    <geometry>
+      <mesh filename="package://arbie_description/meshes/flipper_front_left.stl"/>
+    </geometry>
+    <material name="flipper"/>
+  </visual>
+  <collision>
+    <origin rpy="0 0 0" xyz="-0.173306 -0.024729 -0.219022"/>
+    <geometry>
+      <mesh filename="package://arbie_description/meshes/flipper_front_left.stl"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="flipper_rear_right_link">
+  <inertial>
+    <origin rpy="0 0 0" xyz="0.01979502028317115 0.16537558379618683 -1.3146242511252737e-07"/>
+    <mass value="13.868020437393698"/>
+    <inertia ixx="0.085351" ixy="-0.004876" ixz="0.0" iyy="0.028555" iyz="-0.0" izz="0.07162"/>
+  </inertial>
+  <visual>
+    <origin rpy="0 0 0" xyz="0.174694 -0.024729 0.240978"/>
+    <geometry>
+      <mesh filename="package://arbie_description/meshes/flipper_rear_right.stl"/>
+    </geometry>
+    <material name="flipper"/>
+  </visual>
+  <collision>
+    <origin rpy="0 0 0" xyz="0.174694 -0.024729 0.240978"/>
+    <geometry>
+      <mesh filename="package://arbie_description/meshes/flipper_rear_right.stl"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="flipper_rear_left_link">
+  <inertial>
+    <origin rpy="0 0 0" xyz="-0.019794107460749416 0.16537558379618675 -1.394028462664565e-07"/>
+    <mass value="13.868020437393671"/>
+    <inertia ixx="0.085351" ixy="0.004876" ixz="-0.0" iyy="0.028555" iyz="-0.0" izz="0.07162"/>
+  </inertial>
+  <visual>
+    <origin rpy="0 0 0" xyz="-0.173306 -0.024729 0.240978"/>
+    <geometry>
+      <mesh filename="package://arbie_description/meshes/flipper_rear_left.stl"/>
+    </geometry>
+    <material name="flipper"/>
+  </visual>
+  <collision>
+    <origin rpy="0 0 0" xyz="-0.173306 -0.024729 0.240978"/>
+    <geometry>
+      <mesh filename="package://arbie_description/meshes/flipper_rear_left.stl"/>
+    </geometry>
+  </collision>
+</link>
+
+<joint name="rigid_flipper_front_right_to_flipper_front_left" type="fixed">
+  <origin rpy="0 0 0" xyz="0.347996 0 0"/>
+  <parent link="flipper_front_right_link"/>
+  <child link="flipper_front_left_link"/>
+</joint>
+
+<joint name="rigid_flipper_rear_right_to_flipper_rear_left" type="fixed">
+  <origin rpy="0 0 0" xyz="0.347996 0 0"/>
+  <parent link="flipper_rear_right_link"/>
+  <child link="flipper_rear_left_link"/>
+</joint>
+
+<!-- RIGID JOINTS -->
+
+<joint name="rigid_body_to_camera_mount_leg_1_joint" type="fixed">
+  <origin rpy="0 0 0" xyz="0.037807 0.048101 0.262572"/>
+  <parent link="body_link"/>
+  <child link="camera_mount_leg_1_link"/>
+</joint>
+
+<joint name="rigid_body_to_camera_mount_leg_2_joint" type="fixed">
+  <origin rpy="0 0 0" xyz="-0.039194 0.048101 0.262572"/>
+  <parent link="body_link"/>
+  <child link="camera_mount_leg_2_link"/>
+</joint>
+
+<joint name="rigid_camera_mount_to_camera_d435_joint" type="fixed">
+  <origin rpy="0 0 0" xyz="-0.012557 -0.073851 -0.287572"/>
+  <parent link="camera_mount_link"/>
+  <child link="camera_d435_link"/>
+</joint>
+
+<joint name="rigid_camera_mount_to_camera_t265_joint" type="fixed">
+  <origin rpy="0 0 0" xyz="-0.01763 -0.0135 0.014"/>
+  <parent link="camera_mount_link"/>
+  <child link="camera_t265_link"/>
+</joint>
+
+<!-- CAMERA MOUNT JOINT -->
+
+<joint name="camera_mount_joint" type="continuous">
+  <origin rpy="0 0 0" xyz="-0.004 0.02575 0.0"/>
+  <parent link="camera_mount_leg_1_link"/>
+  <child link="camera_mount_link"/>
+  <axis xyz="1 0 0"/>
+</joint>
+
+<transmission name="camera_mount_transmission">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="camera_mount_joint">
+    <hardwareInterface>hardware_interface/${pos_interface}</hardwareInterface>
+  </joint>
+  <actuator name="camera_mount_actuator">
+    <hardwareInterface>${pos_interface}</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<!-- FLIPPER JOINTS -->
+
+<joint name="flipper_front_joint" type="continuous">
+  <origin rpy="0 0 0" xyz="-0.05 0.005403 0.23"/>
+  <parent link="tracks_right_link"/>
+  <child link="flipper_front_right_link"/>
+  <axis xyz="1 0 0"/>
+</joint>
+
+<transmission name="flipper_front_transmission">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="flipper_front_joint">
+    <hardwareInterface>hardware_interface/${vel_interface}</hardwareInterface>
+  </joint>
+  <actuator name="flipper_front_actuator">
+    <hardwareInterface>${vel_interface}</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<joint name="flipper_rear_joint" type="continuous">
+  <origin rpy="0 0 0" xyz="-0.05 0.005403 -0.23"/>
+  <parent link="tracks_right_link"/>
+  <child link="flipper_rear_right_link"/>
+  <axis xyz="1 0 0"/>
+</joint>
+
+<transmission name="flipper_rear_transmission">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="flipper_rear_joint">
+    <hardwareInterface>hardware_interface/${vel_interface}</hardwareInterface>
+  </joint>
+  <actuator name="flipper_rear_actuator">
+    <hardwareInterface>${vel_interface}</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+</xacro:macro>
+
+</to_include>

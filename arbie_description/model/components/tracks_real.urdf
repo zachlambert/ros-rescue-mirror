@@ -1,0 +1,144 @@
+<?xml version="1.0"?>
+<to_include xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<!-- BOUNDING MESH FOR TRACKS -->
+
+<link name="tracks_right_link">
+  <inertial>
+    <origin rpy="0 0 0" xyz="-0.02499954358879042 0.002120489076708521 -0.0007430080149572974"/>
+    <mass value="44.76242127990538"/>
+    <inertia ixx="1.472289" ixy="-0.0" ixz="-0.0" iyy="1.350001" iyz="0.000109" izz="0.140939"/>
+  </inertial>
+  <visual>
+    <origin rpy="0 0 0" xyz="0.124694 -0.019326 0.010978"/>
+    <geometry>
+      <mesh filename="package://arbie_description/meshes/tracks_right.stl"/>
+    </geometry>
+    <material name="tracks"/>
+  </visual>
+  <collision>
+    <origin rpy="0 0 0" xyz="0.124694 -0.019326 0.010978"/>
+    <geometry>
+      <mesh filename="package://arbie_description/meshes/tracks_right.stl"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="tracks_left_link">
+  <inertial>
+    <origin rpy="0 0 0" xyz="0.02500045641121243 0.00212048907670849 -0.000743015955378042"/>
+    <mass value="44.76242127990538"/>
+    <inertia ixx="1.472289" ixy="-0.0" ixz="-0.0" iyy="1.350001" iyz="0.000109" izz="0.140939"/>
+  </inertial>
+  <visual>
+    <origin rpy="0 0 0" xyz="-0.123306 -0.019326 0.010978"/>
+    <geometry>
+      <mesh filename="package://arbie_description/meshes/tracks_left.stl"/>
+    </geometry>
+    <material name="tracks"/>
+  </visual>
+  <collision>
+    <origin rpy="0 0 0" xyz="-0.123306 -0.019326 0.010978"/>
+    <geometry>
+      <mesh filename="package://arbie_description/meshes/tracks_left.stl"/>
+    </geometry>
+  </collision>
+</link>
+
+<!-- EQUIVALENT WHEELS FOR TRACKS - USED TO CALCULATE VELOCITY COMMANDS -->
+
+<link name="tracks_right_wheel_link">
+  <inertial>
+    <origin rpy="0 0 0" xyz="-0.004999543588790428 2.946488827579308e-07 -1.3146241448734608e-07"/>
+    <mass value="1.3872095061007428"/>
+    <inertia ixx="0.003902" ixy="-0.0" ixz="-0.0" iyy="0.001962" iyz="-0.0" izz="0.001962"/>
+  </inertial>
+  <visual>
+    <origin rpy="0 0 0" xyz="0.144694 -0.019326 0.010978"/>
+    <geometry>
+      <mesh filename="package://arbie_description/meshes/tracks_right_wheel.stl"/>
+    </geometry>
+    <material name="tracks"/>
+  </visual>
+  <collision>
+    <origin rpy="0 0 0" xyz="0.144694 -0.019326 0.010978"/>
+    <geometry>
+      <mesh filename="package://arbie_description/meshes/tracks_right_wheel.stl"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="tracks_left_wheel_link">
+  <inertial>
+    <origin rpy="0 0 0" xyz="0.005000456411212495 2.9464888271282796e-07 -1.3940283523014574e-07"/>
+    <mass value="1.3872095061007428"/>
+    <inertia ixx="0.003902" ixy="0.0" ixz="0.0" iyy="0.001962" iyz="0.0" izz="0.001962"/>
+  </inertial>
+  <visual>
+    <origin rpy="0 0 0" xyz="-0.143306 -0.019326 0.010978"/>
+    <geometry>
+      <mesh filename="package://arbie_description/meshes/tracks_left_wheel.stl"/>
+    </geometry>
+    <material name="tracks"/>
+  </visual>
+  <collision>
+    <origin rpy="0 0 0" xyz="-0.143306 -0.019326 0.010978"/>
+    <geometry>
+      <mesh filename="package://arbie_description/meshes/tracks_left_wheel.stl"/>
+    </geometry>
+  </collision>
+</link>
+
+<!-- RIGID JOINTS FOR TRACK BOUNDING MESHES -->
+
+<joint name="rigid_body_to_tracks_right_joint" type="fixed">
+  <origin rpy="0 0 0" xyz="-0.124694 0.019326 -0.010978"/>
+  <parent link="body_link"/>
+  <child link="tracks_right_link"/>
+</joint>
+
+<joint name="rigid_body_to_tracks_left_joint" type="fixed">
+  <origin rpy="0 0 0" xyz="0.123306 0.019326 -0.010978"/>
+  <parent link="body_link"/>
+  <child link="tracks_left_link"/>
+</joint>
+
+<!-- TRACK WHEEL JOINTS -->
+
+<joint name="tracks_right_joint" type="continuous">
+  <origin rpy="0 0 0" xyz="-0.02 0.0 0.0"/>
+  <parent link="tracks_right_link"/>
+  <child link="tracks_right_wheel_link"/>
+  <axis xyz="1 0 0"/>
+</joint>
+
+<joint name="tracks_left_joint" type="continuous">
+  <origin rpy="0 0 0" xyz="0.02 0.0 0.0"/>
+  <parent link="tracks_left_link"/>
+  <child link="tracks_left_wheel_link"/>
+  <axis xyz="1 0 0"/>
+</joint>
+
+<transmission name="tracks_right_transmission">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="tracks_left_joint">
+    <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="tracks_left_actuator">
+    <hardwareInterface>VelocityJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<transmission name="tracks_left_transmission">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="tracks_left_joint">
+    <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="tracks_left_actuator">
+    <hardwareInterface>VelocityJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+</to_include>
