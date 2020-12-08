@@ -4,9 +4,13 @@
 <!-- Materials for visualisation -->
 <xacro:include filename='materials.urdf'/>
 
-<!-- Base link, flippers, cameras -->
+<!-- Base link + cameras -->
 <xacro:include filename='components/base.urdf.xacro'/>
 <xacro:base pos_interface='PositionJointInterface' vel_interface='VelocityJointInterface'/>
+
+<!-- Flippers -->
+<xacro:include filename='components/flippers.urdf.xacro'/>
+<xacro:flippers pos_interface='PositionJointInterface' vel_interface='VelocityJointInterface'/>
 
 <!-- Bounding meshes for tracks, equiavalent wheels for control commands -->
 <xacro:include filename='components/tracks_real.urdf'/>

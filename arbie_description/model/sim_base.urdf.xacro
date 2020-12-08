@@ -4,7 +4,7 @@
 <!-- Materials for visualisation -->
 <xacro:include filename='materials.urdf'/>
 
-<!-- Base link, flippers, cameras -->
+<!-- Base link + cameras -->
 <xacro:include filename='components/base.urdf.xacro'/>
 <xacro:base pos_interface='EffortJointInterface' vel_interface='EffortJointInterface'/>
 

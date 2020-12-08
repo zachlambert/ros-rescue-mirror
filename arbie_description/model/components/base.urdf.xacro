@@ -145,92 +145,6 @@
 </link>
 
 
-<!-- FLIPPER LINKS -->
-
-<link name="flipper_front_right_link">
-  <inertial>
-    <origin rpy="0 0 0" xyz="0.019795020283170317 0.16537558379618636 -1.3146244423611897e-07"/>
-    <mass value="13.868020437393694"/>
-    <inertia ixx="0.085351" ixy="-0.004876" ixz="0.0" iyy="0.028555" iyz="-0.0" izz="0.07162"/>
-  </inertial>
-  <visual>
-    <origin rpy="0 0 0" xyz="0.174694 -0.024729 -0.219022"/>
-    <geometry>
-      <mesh filename="package://arbie_description/meshes/flipper_front_right.stl"/>
-    </geometry>
-    <material name="flipper"/>
-  </visual>
-  <collision>
-    <origin rpy="0 0 0" xyz="0.174694 -0.024729 -0.219022"/>
-    <geometry>
-      <mesh filename="package://arbie_description/meshes/flipper_front_right.stl"/>
-    </geometry>
-  </collision>
-</link>
-
-<link name="flipper_front_left_link">
-  <inertial>
-    <origin rpy="0 0 0" xyz="-0.019794107460748195 0.16537558379618633 -1.394028636692024e-07"/>
-    <mass value="13.868020437393678"/>
-    <inertia ixx="0.085351" ixy="0.004876" ixz="-0.0" iyy="0.028555" iyz="-0.0" izz="0.07162"/>
-  </inertial>
-  <visual>
-    <origin rpy="0 0 0" xyz="-0.173306 -0.024729 -0.219022"/>
-    <geometry>
-      <mesh filename="package://arbie_description/meshes/flipper_front_left.stl"/>
-    </geometry>
-    <material name="flipper"/>
-  </visual>
-  <collision>
-    <origin rpy="0 0 0" xyz="-0.173306 -0.024729 -0.219022"/>
-    <geometry>
-      <mesh filename="package://arbie_description/meshes/flipper_front_left.stl"/>
-    </geometry>
-  </collision>
-</link>
-
-<link name="flipper_rear_right_link">
-  <inertial>
-    <origin rpy="0 0 0" xyz="0.01979502028317115 0.16537558379618683 -1.3146242511252737e-07"/>
-    <mass value="13.868020437393698"/>
-    <inertia ixx="0.085351" ixy="-0.004876" ixz="0.0" iyy="0.028555" iyz="-0.0" izz="0.07162"/>
-  </inertial>
-  <visual>
-    <origin rpy="0 0 0" xyz="0.174694 -0.024729 0.240978"/>
-    <geometry>
-      <mesh filename="package://arbie_description/meshes/flipper_rear_right.stl"/>
-    </geometry>
-    <material name="flipper"/>
-  </visual>
-  <collision>
-    <origin rpy="0 0 0" xyz="0.174694 -0.024729 0.240978"/>
-    <geometry>
-      <mesh filename="package://arbie_description/meshes/flipper_rear_right.stl"/>
-    </geometry>
-  </collision>
-</link>
-
-<link name="flipper_rear_left_link">
-  <inertial>
-    <origin rpy="0 0 0" xyz="-0.019794107460749416 0.16537558379618675 -1.394028462664565e-07"/>
-    <mass value="13.868020437393671"/>
-    <inertia ixx="0.085351" ixy="0.004876" ixz="-0.0" iyy="0.028555" iyz="-0.0" izz="0.07162"/>
-  </inertial>
-  <visual>
-    <origin rpy="0 0 0" xyz="-0.173306 -0.024729 0.240978"/>
-    <geometry>
-      <mesh filename="package://arbie_description/meshes/flipper_rear_left.stl"/>
-    </geometry>
-    <material name="flipper"/>
-  </visual>
-  <collision>
-    <origin rpy="0 0 0" xyz="-0.173306 -0.024729 0.240978"/>
-    <geometry>
-      <mesh filename="package://arbie_description/meshes/flipper_rear_left.stl"/>
-    </geometry>
-  </collision>
-</link>
-
 <!-- BOUNDING MESH FOR TRACKS -->
 
 <link name="tracks_right_link">
@@ -289,18 +203,6 @@
   <child link="tracks_left_link"/>
 </joint>
 
-<joint name="rigid_flipper_front_right_to_flipper_front_left" type="fixed">
-  <origin rpy="0 0 0" xyz="0.347996 0 0"/>
-  <parent link="flipper_front_right_link"/>
-  <child link="flipper_front_left_link"/>
-</joint>
-
-<joint name="rigid_flipper_rear_right_to_flipper_rear_left" type="fixed">
-  <origin rpy="0 0 0" xyz="0.347996 0 0"/>
-  <parent link="flipper_rear_right_link"/>
-  <child link="flipper_rear_left_link"/>
-</joint>
-
 <joint name="rigid_body_to_camera_mount_leg_1_joint" type="fixed">
   <origin rpy="0 0 0" xyz="0.037807 0.048101 0.262572"/>
   <parent link="body_link"/>
@@ -341,44 +243,6 @@
   </joint>
   <actuator name="camera_mount_actuator">
     <hardwareInterface>${pos_interface}</hardwareInterface>
-    <mechanicalReduction>1</mechanicalReduction>
-  </actuator>
-</transmission>
-
-<!-- FLIPPER JOINTS -->
-
-<joint name="flipper_front_joint" type="continuous">
-  <origin rpy="0 0 0" xyz="-0.05 0.005403 0.23"/>
-  <parent link="tracks_right_link"/>
-  <child link="flipper_front_right_link"/>
-  <axis xyz="1 0 0"/>
-</joint>
-
-<transmission name="flipper_front_transmission">
-  <type>transmission_interface/SimpleTransmission</type>
-  <joint name="flipper_front_joint">
-    <hardwareInterface>hardware_interface/${vel_interface}</hardwareInterface>
-  </joint>
-  <actuator name="flipper_front_actuator">
-    <hardwareInterface>${vel_interface}</hardwareInterface>
-    <mechanicalReduction>1</mechanicalReduction>
-  </actuator>
-</transmission>
-
-<joint name="flipper_rear_joint" type="continuous">
-  <origin rpy="0 0 0" xyz="-0.05 0.005403 -0.23"/>
-  <parent link="tracks_right_link"/>
-  <child link="flipper_rear_right_link"/>
-  <axis xyz="1 0 0"/>
-</joint>
-
-<transmission name="flipper_rear_transmission">
-  <type>transmission_interface/SimpleTransmission</type>
-  <joint name="flipper_rear_joint">
-    <hardwareInterface>hardware_interface/${vel_interface}</hardwareInterface>
-  </joint>
-  <actuator name="flipper_rear_actuator">
-    <hardwareInterface>${vel_interface}</hardwareInterface>
     <mechanicalReduction>1</mechanicalReduction>
   </actuator>
 </transmission>

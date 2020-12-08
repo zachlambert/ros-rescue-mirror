@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<to_include xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<xacro:macro name="wheel" params="name radius length mass">
+<link name="${name}">
+<visual>
+    <origin xyz="0 0 0" rpy="0 ${pi/2} 0"/>
+    <geometry>
+        <cylinder length="${length}" radius="${radius}"/>
+    </geometry>
+    <material name="wheel"/>
+</visual>
+<collision>
+    <origin xyz="0 0 0" rpy="0 0 ${pi/2}"/>
+    <geometry>
+        <cylinder length="${length}" radius="${radius}"/>
+    </geometry>
+</collision>
+<inertial>
+    <origin xyz="0 0 0" rpy="0 0 ${pi/2}"/>
+    <mass value="${mass}"/>
+    <inertia
+        ixx="${mass*(radius**2/4 + length**2/12)}"
+        iyy="${mass*(radius**2/4 + length**2/12)}"
+        izz="${mass*(radius**2/2)}"
+        ixy="0" ixz="0" iyz="0"
+    />
+</inertial>
+</link>
+</xacro:macro>
+
+</to_include>

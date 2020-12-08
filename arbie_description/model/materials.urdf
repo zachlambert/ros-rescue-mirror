@@ -10,7 +10,7 @@
 <material name="tracks">
     <color rgba="0 0 0 0.5"/>
 </material>
-<material name="tracks_wheel">
+<material name="wheel">
     <color rgba="1 1 1 0.8"/>
 </material>
 <material name="arm">

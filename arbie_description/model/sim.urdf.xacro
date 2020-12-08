@@ -1,15 +1,11 @@
 <?xml version='1.0'?>
 <robot xmlns:xacro='http://www.ros.org/wiki/xacro' name='arbie'>
 
-<!-- Materials for visualisation -->
-<xacro:include filename='materials.urdf'/>
+<xacro:include filename='sim_base.urdf.xacro'/>
 
-<!-- Base link, flippers, cameras -->
-<xacro:include filename='components/base.urdf.xacro'/>
-<xacro:base pos_interface='EffortJointInterface' vel_interface='EffortJointInterface'/>
-
-<!-- Differential drive wheels and caster. Approximates track kinematics -->
-<xacro:include filename='components/tracks_sim.urdf'/>
+<!-- Flippers -->
+<xacro:include filename='components/flippers.urdf.xacro'/>
+<xacro:flippers pos_interface='PositionJointInterface' vel_interface='VelocityJointInterface'/>
 
 <!-- Arm, wrist, gripper -->
 <xacro:include filename='components/arm.urdf.xacro'/>
