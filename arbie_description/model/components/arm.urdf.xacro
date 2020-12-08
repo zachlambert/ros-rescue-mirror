@@ -179,7 +179,6 @@
   </collision>
 </link>
 
-<!--
 <link name="gripper_right_linkage_link">
   <inertial>
     <origin rpy="0 0 0" xyz="0.005348977862044579 0.00500022075444323 -0.01750042810563407"/>
@@ -244,7 +243,6 @@
   </collision>
 </link>
 
-<!--
 <link name="gripper_left_contact_link">
   <inertial>
     <origin rpy="0 0 0" xyz="-0.0049669191825520796 -0.01899661466926142 0.016466890477460527"/>
@@ -286,7 +284,6 @@
     </geometry>
   </collision>
 </link>
--->
 
 <!-- RIGID JOINTS -->
 
@@ -450,13 +447,12 @@
 
 <!-- GRIPPER DEPENDENT JOINTS -->
 
-<!--
 <joint name="gripper_right_contact_dependent_joint" type="continuous">
   <origin rpy="0 0.348 0" xyz="0.0 -0.0024 0.035"/>
   <parent link="gripper_right_driver_link"/>
   <child link="gripper_right_contact_link"/>
   <axis xyz="0 1 0"/>
-  <mimic joint="gripper_joint" multiplier="-1"/>
+  <mimic joint="gripper_right_joint" multiplier="-1"/>
 </joint>
 
 <joint name="gripper_left_contact_dependent_joint" type="continuous">
@@ -464,7 +460,7 @@
   <parent link="gripper_left_driver_link"/>
   <child link="gripper_left_contact_link"/>
   <axis xyz="0 1 0"/>
-  <mimic joint="gripper_joint" multiplier="1"/>
+  <mimic joint="gripper_left_joint" multiplier="-1"/>
 </joint>
 
 <joint name="gripper_right_linkage_dependent_joint" type="continuous">
@@ -472,7 +468,7 @@
   <parent link="gripper_base_link"/>
   <child link="gripper_right_linkage_link"/>
   <axis xyz="0 1 0"/>
-  <mimic joint="gripper_joint" multiplier="1"/>
+  <mimic joint="gripper_right_joint"/>
 </joint>
 
 <joint name="gripper_left_linkage_dependent_joint" type="continuous">
@@ -480,9 +476,26 @@
   <parent link="gripper_base_link"/>
   <child link="gripper_left_linkage_link"/>
   <axis xyz="0 1 0"/>
-  <mimic joint="gripper_joint" multiplier="-1"/>
+  <mimic joint="gripper_left_joint"/>
 </joint>
--->
+
+<!-- GAZEBO ONLY JOINTS - CLOSE LOOP -->
+
+<gazebo>
+<joint name="gripper_right_linkage_dependent_2_joint" type="revolute">
+  <pose>0 0 0 0 0 0</pose>
+  <parent>gripper_right_linkage_link</parent>
+  <child>gripper_right_contact_link"</child>
+  <axis><xyz>0 1 0</xyz></axis>
+</joint>
+
+<joint name="gripper_left_linkage_dependent_2_joint" type="revolute">
+  <pose>0 0 0 0 0 0</pose>
+  <parent>gripper_left_linkage_link</parent>
+  <child>gripper_left_contact_link"</child>
+  <axis><xyz>0 1 0</xyz></axis>
+</joint>
+</gazebo>
 
 </xacro:macro>
 
