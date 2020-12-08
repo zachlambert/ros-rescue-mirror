@@ -1,0 +1,35 @@
+<?xml version='1.0' ?>
+<sdf version='1.6'>
+  <model name='navigation_environment'>
+    <static>true</static>
+    <link name='base_link'>
+      <inertial>
+        <mass>1</mass>
+        <inertia>
+          <ixx>1</ixx>
+          <iyy>1</iyy>
+          <izz>1</izz>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <collision name='base_link_collision'>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://navigation_environment/meshes/mesh.dae</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name='base_link_visual'>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://navigation_environment/meshes/mesh.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+  </model>
+</sdf>

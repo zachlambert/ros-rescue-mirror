@@ -7,5 +7,9 @@
         <include>
             <uri>model://sun</uri>
         </include>
+        <include>
+            <uri>model://navigation_environment</uri>
+        </include>
+        <!-- Manually spawn model from urdf -->
     </world>
 </sdf>
