@@ -451,6 +451,7 @@ the other -->
 
 <!-- GRIPPER DEPENDENT JOINTS -->
 
+<!--
 <joint name="gripper_right_contact_dependent_joint" type="continuous">
   <origin rpy="0 0.348 0" xyz="0.0 -0.0024 0.035"/>
   <parent link="gripper_right_driver_link"/>
@@ -482,6 +483,7 @@ the other -->
   <axis xyz="0 1 0"/>
   <mimic joint="gripper_joint" multiplier="-1"/>
 </joint>
+-->
 
 </xacro:macro>
 

@@ -12,18 +12,10 @@
         output="screen">
     </node>
 
-    <group if="$(eval arg('sim') == 0)">
-        <rosparam
-            file="$(find arbie_bringup)/config/controllers_real.yaml"
-            command="load"
-        />
-    </group>
-    <group if="$(arg sim)">
-        <rosparam
-            file="$(find arbie_bringup)/config/controllers_sim.yaml"
-            command="load"
-        />
-    </group>
+    <rosparam
+        file="$(find arbie_bringup)/config/controllers_sim.yaml"
+        command="load"
+    />
 
     <node
         name="controller_spawner_common"

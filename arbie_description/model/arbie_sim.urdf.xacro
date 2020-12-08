@@ -1,7 +1,7 @@
 <?xml version='1.0'?>
 <robot xmlns:xacro='http://www.ros.org/wiki/xacro' name='arbie'>
 
-<xacro:include filename='sim_base.urdf.xacro'/>
+<xacro:include filename='arbie_base_sim.urdf.xacro'/>
 
 <!-- Flippers -->
 <xacro:include filename='components/flippers.urdf.xacro'/>
