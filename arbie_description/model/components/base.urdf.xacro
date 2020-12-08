@@ -102,48 +102,65 @@
   </collision>
 </link>
 
+<xacro:macro name="d435_moved" params="x y z">
 <link name="camera_d435_link">
   <inertial>
-    <origin rpy="0 0 0" xyz="-0.019510973805073988 0.09028780766834578 0.300025146597877"/>
+    <origin rpy="${-pi/2} ${-pi} ${-pi/2}" xyz="${0.300025146597877-z} ${-(-0.019510973805073988-x)} ${0.09028780766834578-y}"/>
     <mass value="0.3380578483539848"/>
     <inertia ixx="3.1e-05" ixy="-0.0" ixz="2e-06" iyy="0.000212" iyz="-0.0" izz="0.000211"/>
   </inertial>
   <visual>
-    <origin rpy="0 0 0" xyz="-0.02125 0.0 0.025"/>
+    <origin rpy="${-pi/2} ${-pi} ${-pi/2}" xyz="${0.025-z} ${-(-0.02125-x)} ${-y}"/>
     <geometry>
       <mesh filename="package://arbie_description/meshes/camera_d435.stl"/>
     </geometry>
     <material name="camera"/>
   </visual>
   <collision>
-    <origin rpy="0 0 0" xyz="-0.02125 0.0 0.025"/>
+    <origin rpy="${-pi/2} ${-pi} ${-pi/2}" xyz="${0.025-z} ${-(-0.02125-x)} ${-y}"/>
     <geometry>
       <mesh filename="package://arbie_description/meshes/camera_d435.stl"/>
     </geometry>
   </collision>
 </link>
 
+<joint name="rigid_camera_mount_to_camera_d435_joint" type="fixed">
+  <origin rpy="${-pi/2} ${-pi/2} 0" xyz="${-0.012557+x} ${-0.073851+y} ${-0.287572+z}"/>
+  <parent link="camera_mount_link"/>
+  <child link="camera_d435_link"/>
+</joint>
+</xacro:macro>
+<xacro:d435_moved x="-0.02" y="0.09" z="0.31"/>
+
+<xacro:macro name="t265_moved" params="x y z">
 <link name="camera_t265_link">
   <inertial>
-    <origin rpy="0 0 0" xyz="-0.023753775255487577 1.0333193303339872e-05 0.0048840237534042985"/>
+    <origin rpy="${-pi/2} ${-pi} ${-pi/2}" xyz="${0.0048840237534042985-z} ${-(-0.023753775255487577-x)} ${-y}"/>
     <mass value="0.11087104010777465"/>
     <inertia ixx="7e-06" ixy="0.0" ixz="-1e-06" iyy="0.000103" iyz="-0.0" izz="0.000108"/>
   </inertial>
   <visual>
-    <origin rpy="0 0 0" xyz="-0.016177 -0.060351 -0.276572"/>
+    <origin rpy="${-pi/2} ${-pi} ${-pi/2}" xyz="${-0.276572-z} ${-(-0.016177-x)} ${-0.060351-y} "/>
     <geometry>
       <mesh filename="package://arbie_description/meshes/camera_t265.stl"/>
     </geometry>
     <material name="camera"/>
   </visual>
   <collision>
-    <origin rpy="0 0 0" xyz="-0.016177 -0.060351 -0.276572"/>
+    <origin rpy="${-pi/2} ${-pi} ${-pi/2}" xyz="${-0.276572-z} ${-(-0.016177-x)} ${-0.060351-y} "/>
     <geometry>
       <mesh filename="package://arbie_description/meshes/camera_t265.stl"/>
     </geometry>
   </collision>
 </link>
 
+<joint name="rigid_camera_mount_to_camera_t265_joint" type="fixed">
+  <origin rpy="${-pi/2} ${-pi/2} 0" xyz="${-0.01763+x} ${-0.0135+y} ${0.014+z}"/>
+  <parent link="camera_mount_link"/>
+  <child link="camera_t265_link"/>
+</joint>
+</xacro:macro>
+<xacro:t265_moved x="-0.0165" y="0" z="0.01"/>
 
 <!-- BOUNDING MESH FOR TRACKS -->
 
@@ -215,18 +232,6 @@
   <child link="camera_mount_leg_2_link"/>
 </joint>
 
-<joint name="rigid_camera_mount_to_camera_d435_joint" type="fixed">
-  <origin rpy="0 0 0" xyz="-0.012557 -0.073851 -0.287572"/>
-  <parent link="camera_mount_link"/>
-  <child link="camera_d435_link"/>
-</joint>
-
-<joint name="rigid_camera_mount_to_camera_t265_joint" type="fixed">
-  <origin rpy="0 0 0" xyz="-0.01763 -0.0135 0.014"/>
-  <parent link="camera_mount_link"/>
-  <child link="camera_t265_link"/>
-</joint>
-
 <!-- CAMERA MOUNT JOINT -->
 
 <joint name="camera_tilt_joint" type="continuous">
@@ -249,7 +254,7 @@
 
 </xacro:macro>
 
-<!-- CAMERA PLUGINS -->
+<!-- CAMERA FRAMES AND PLUGINS PLUGINS -->
 
 <gazebo reference="camera_t265_link">
 <sensor type="multicamera" name="t265_camera">
@@ -316,20 +321,20 @@
     <topic>/t265/imu</topic>
     <plugin filename="libgazebo_ros_imu_sensor.so" name="t265_imu_controller">
         <topicName>/t265/imu</topicName>
-        <bodyName>t265_link</bodyName>
+        <bodyName>camera_t265_link</bodyName>
         <updateRateHZ>10.0</updateRateHZ>
         <gaussianNoise>0.0</gaussianNoise>
         <xyzOffset>0 0 0</xyzOffset>
         <rpyOffset>0 0 0</rpyOffset>
-        <frameName>t265_link</frameName>
+        <frameName>camera_t265_link</frameName>
         <initialOrientationAsReference>false</initialOrientationAsReference>
     </plugin>
     <pose>0 0 0 0 0 0</pose>
 </sensor>
 </gazebo>
 
-<gazebo reference="camera_d435i_link">
-<sensor name="d435i_camera" type="depth">
+<gazebo reference="camera_d435_link">
+<sensor name="d435_camera" type="depth">
     <update_rate>30.0</update_rate>
     <camera>
         <horizontal_fov>1.047198</horizontal_fov>
@@ -343,17 +348,17 @@
             <far>300</far>
         </clip>
     </camera>
-    <plugin name="d435i_camera_controller" filename="libgazebo_ros_openni_kinect.so">
+    <plugin name="d435_camera_controller" filename="libgazebo_ros_openni_kinect.so">
         <baseline>0.2</baseline>
         <alwaysOn>true</alwaysOn>
         <updateRate>1.0</updateRate>
-        <cameraName>d435i</cameraName>
-        <imageTopicName>/d435i/color/image_raw</imageTopicName>
-        <cameraInfoTopicName>/d435i/color/camera_info</cameraInfoTopicName>
-        <depthImageTopicName>/d435i/depth/image_raw</depthImageTopicName>
-        <depthImageInfoTopicName>/d435i/depth/camera_info</depthImageInfoTopicName>
-        <pointCloudTopicName>/d435i/depth/points</pointCloudTopicName>
-        <frameName>camera_d435i_link</frameName>
+        <cameraName>d435</cameraName>
+        <imageTopicName>/d435/color/image_raw</imageTopicName>
+        <cameraInfoTopicName>/d435/color/camera_info</cameraInfoTopicName>
+        <depthImageTopicName>/d435/depth/image_raw</depthImageTopicName>
+        <depthImageInfoTopicName>/d435/depth/camera_info</depthImageInfoTopicName>
+        <pointCloudTopicName>/d435/depth/points</pointCloudTopicName>
+        <frameName>camera_d435_link</frameName>
         <pointCloudCutoff>0.5</pointCloudCutoff>
         <pointCloudCutoffMax>3.0</pointCloudCutoffMax>
         <distortionK1>0.00000001</distortionK1>
@@ -370,21 +375,21 @@
 </sensor>
 </gazebo>
 
-<gazebo reference="camera_d435i_link">
+<gazebo reference="camera_d435_link">
 <gravity>true</gravity>
-<sensor name="d435i_imu" type="imu">
+<sensor name="d435_imu" type="imu">
     <always_on>true</always_on>
     <update_rate>30.0</update_rate>
     <visualize>true</visualize>
-    <topic>/d435i/imu</topic>
+    <topic>/d435/imu</topic>
     <plugin filename="libgazebo_ros_imu_sensor.so" name="d435_imu_controller">
-        <topicName>/D435i/imu</topicName>
-        <bodyName>D435i_link</bodyName>
+        <topicName>/d435/imu</topicName>
+        <bodyName>camera_d435_link</bodyName>
         <updateRateHZ>10.0</updateRateHZ>
         <gaussianNoise>0.0</gaussianNoise>
         <xyzOffset>0 0 0</xyzOffset>
         <rpyOffset>0 0 0</rpyOffset>
-        <frameName>D435i_link</frameName>
+        <frameName>camera_d435_link</frameName>
         <initialOrientationAsReference>false</initialOrientationAsReference>
     </plugin>
     <pose>0 0 0 0 0 0</pose>
