@@ -1,0 +1,29 @@
+<launch>
+    <arg name="joints" default="true"/>
+    <arg name="pcb" default="true"/>
+
+    <rosparam
+        file="$(find arbie_main)/config/usb.yaml"
+        command="load"
+    />
+
+    <group if="$(arg joints)">
+        <node name="odrives" pkg="arbie_hardware" type="odrives"/>
+        <node
+            name="hardware"
+            pkg="arbie_hardware"
+            type="hardware"
+            output="screen"
+        />
+    </group>
+
+    <group if="$(arg pcb)">
+    <node
+        name="power_board"
+        pkg="rosserial_python"
+        type="serial_node.py">
+        <remap from="~port" to="/usb/pcb"/>
+    </node>
+    </group>
+
+</launch>
