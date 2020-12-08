@@ -1,0 +1,8 @@
+flippers_controller:
+    type: velocity_controllers/JointGroupVelocityController
+    joints:
+        - flippers_front
+        - flippers_rear
+    pid_gains:
+        flippers_front: {p: 5.0, i: 1, d: 0.1}
+        flippers_rear: {p: 5.0, i: 1, d: 0.1}

@@ -1,4 +1,15 @@
 <launch>
+    <arg name="fake" default="false"/>
+
+    <group if="$(arg fake)">
+        <node
+            name="localisation_placeholder"
+            pkg="arbie_slam"
+            type="localisation_placeholder"
+        />
+    </group>
+
+    <group if="$(eval arg('fake') == 0)">
     <include file="$(find rtabmap_ros)/launch/rtabmap.launch">
         <arg name="rtabmap_args"
             value="--delete_db_on_start --Optimizer/GravitySigma 0.3"/>
@@ -12,4 +23,6 @@
         <arg name="visual_odometry" value="false"/>
         <arg name="odom_topic" value="/diff_drive_controller/odom"/>
     </include>
+    </group>
+
 </launch>

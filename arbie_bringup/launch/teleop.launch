@@ -1,0 +1,21 @@
+<launch>
+    <!-- Launch the webserver for visualisation and user input -->
+    <node
+        name="webserver"
+        pkg="roswww"
+        type="webserver.py"
+        respawn="true"
+    />
+    <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
+
+    <!-- Necessary for accessing tf information on web viewer -->
+    <node pkg="tf2_web_republisher" type="tf2_web_republisher" name="tf2_web_republisher"/>
+
+    <!-- Read and process gamepad values -->
+    <node
+        name="gamepad"
+        pkg="arbie_teleop"
+        type="gamepad">
+        <remap from="joy" to="gamepad/values"/>
+    </node>
+</launch>

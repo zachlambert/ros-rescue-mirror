@@ -1,0 +1,74 @@
+<launch>
+    <arg name="base" default="true"/>
+    <arg name="flippers" default="true"/>
+    <arg name="arm" default="true"/>
+
+    <node
+        name="robot_state_publisher"
+        pkg="robot_state_publisher"
+        type="robot_state_publisher"
+        respawn="false"
+        output="screen">
+    </node>
+
+    <rosparam
+        file="$(find arbie_bringup)/config/controllers_common.yaml"
+        command="load"
+    />
+    <node
+        name="controller_spawner_common"
+        pkg="controller_manager"
+        type="spawner"
+        respawn="false"
+        args="joint_state_controller"
+    />
+
+    <group if="$(arg base)">
+        <rosparam
+            file="$(find arbie_bringup)/config/controllers_base.yaml"
+            command="load"
+        />
+        <node
+            name="controller_spawner_base"
+            pkg="controller_manager"
+            type="spawner"
+            respawn="false"
+            args="base_controller"
+        />
+    </group>
+
+    <group if="$(arg flippers)">
+        <rosparam
+            file="$(find arbie_bringup)/config/controllers_flippers.yaml"
+            command="load"
+        />
+        <node
+            name="controller_spawner_flippers"
+            pkg="controller_manager"
+            type="spawner"
+            respawn="false"
+            args="flippers_controller"
+        />
+    </group>
+
+    <group if="$(arg arm)">
+        <rosparam
+            file="$(find arbie_bringup)/config/controllers_arm.yaml"
+            command="load"
+        />
+        <node
+            name="controller_spawner_arm"
+            pkg="controller_manager"
+            type="spawner"
+            respawn="false"
+            args="arm_1_controller arm_2_controller arm_3_controller wrist_pitch_controller wrist_yaw_controller wrist_roll_controller gripper_controller"
+        />
+        <node
+            name="controller_spawner_arm_trajectory"
+            pkg="controller_manager"
+            type="spawner"
+            respawn="false"
+            args="--stopped arm_trajectory_controller gripper_trajectory_controller"
+        />
+    </group>
+</launch>

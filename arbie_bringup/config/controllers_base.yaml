@@ -1,5 +1,4 @@
-# Track controller: Set velocity of joint group
-tracks_velocity_controller:
+base_controller:
     type: diff_drive_controller/DiffDriveController
     left_wheel: track_left
     right_wheel: track_right
@@ -7,13 +6,3 @@ tracks_velocity_controller:
     twist_covariance_diagonal: [0.001, 0.001, 1000000.0, 1000000.0, 1000000.0, 1000000.0]
     base_frame_id: base_link
     enable_odom_tf: false
-
-# Flippers controller: Set positions of joint group
-flippers_velocity_controller:
-    type: velocity_controllers/JointGroupVelocityController
-    joints:
-        - flippers_front
-        - flippers_rear
-    pid_gains:
-        flippers_front: {p: 5.0, i: 1, d: 0.1}
-        flippers_rear: {p: 5.0, i: 1, d: 0.1}
