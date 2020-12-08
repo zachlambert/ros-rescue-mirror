@@ -1,6 +1,0 @@
-<launch>
-    <node name="gzserver" pkg="gazebo_ros" type="gzserver"
-        respawn="true"
-        args="$(find exp_main)/worlds/navigation.world"
-    />
-</launch>
