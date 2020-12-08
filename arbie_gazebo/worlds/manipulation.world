@@ -8,8 +8,7 @@
             <uri>model://sun</uri>
         </include>
         <include>
-            <pose frame=''>-0.196272 0.000693 -0.1321 0 0 0</pose>
-            <uri>model://arbie_arm</uri>
+            <uri>model://arbie</uri>
         </include>
     </world>
 </sdf>
