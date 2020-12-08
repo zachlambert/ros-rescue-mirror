@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>arbie_gamepad</name>
+  <name>arbie_teleop</name>
   <version>0.0.0</version>
-  <description>The arbie_gamepad package</description>
+  <description>The arbie_teleop package</description>
   <maintainer email="zach@todo.todo">zach</maintainer>
   <license>TODO</license>
 

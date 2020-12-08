@@ -2,7 +2,7 @@
 <package format="2">
   <name>arbie_navigation</name>
   <version>0.0.0</version>
-  <description>The arbie_navigation package</description>
+  <description>The arbie_slam package</description>
   <maintainer email="zach@todo.todo">zach</maintainer>
   <license>TODO</license>
 

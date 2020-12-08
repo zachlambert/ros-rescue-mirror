@@ -1,7 +1,0 @@
-<launch>
-    <include file="$(find arbie_main)/launch/main.launch">
-    <arg name="simulated" value="true"/>
-    <arg name="joints_connected" value="false"/>
-    <arg name="pcb_connected" value="false"/>
-    </include>
-</launch>

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(arbie_gamepad)
+project(arbie_teleop)
 
 find_package(catkin REQUIRED COMPONENTS
     geometry_msgs
