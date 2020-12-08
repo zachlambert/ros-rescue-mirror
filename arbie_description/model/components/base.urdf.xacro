@@ -229,7 +229,7 @@
 
 <!-- CAMERA MOUNT JOINT -->
 
-<joint name="camera_mount_joint" type="continuous">
+<joint name="camera_tilt_joint" type="continuous">
   <origin rpy="0 0 0" xyz="-0.004 0.02575 0.0"/>
   <parent link="camera_mount_leg_1_link"/>
   <child link="camera_mount_link"/>
@@ -238,11 +238,11 @@
 
 <transmission name="camera_mount_transmission">
   <type>transmission_interface/SimpleTransmission</type>
-  <joint name="camera_mount_joint">
-    <hardwareInterface>hardware_interface/${pos_interface}</hardwareInterface>
+  <joint name="camera_tilt_joint">
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
   </joint>
   <actuator name="camera_mount_actuator">
-    <hardwareInterface>${pos_interface}</hardwareInterface>
+    <hardwareInterface>PositionJointInterface</hardwareInterface>
     <mechanicalReduction>1</mechanicalReduction>
   </actuator>
 </transmission>

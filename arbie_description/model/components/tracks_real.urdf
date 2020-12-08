@@ -25,10 +25,10 @@
 
 <transmission name="tracks_right_transmission">
   <type>transmission_interface/SimpleTransmission</type>
-  <joint name="tracks_left_joint">
+  <joint name="tracks_right_joint">
     <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
   </joint>
-  <actuator name="tracks_left_actuator">
+  <actuator name="tracks_right_actuator">
     <hardwareInterface>VelocityJointInterface</hardwareInterface>
     <mechanicalReduction>1</mechanicalReduction>
   </actuator>

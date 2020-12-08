@@ -4,20 +4,20 @@
 <!-- EQUIVALENT WHEELS FOR TRACKS - USED TO CALCULATE VELOCITY COMMANDS -->
 
 <xacro:include filename="wheel.urdf.xacro"/>
-<xacro:wheel name="tracks_right_wheel_link" radius="0.11" length="0.04" mass="0.5"/>
-<xacro:wheel name="tracks_left_wheel_link" radius="0.11" length="0.04" mass="0.5"/>
+<xacro:wheel name="tracks_right_wheel_link" radius="0.12" length="0.04" mass="0.5"/>
+<xacro:wheel name="tracks_left_wheel_link" radius="0.12" length="0.04" mass="0.5"/>
 
 <!-- TRACK WHEEL JOINTS -->
 
 <joint name="tracks_right_joint" type="continuous">
-  <origin rpy="0 0 0" xyz="-0.025 0.005 0.23"/>
+  <origin rpy="0 0 0" xyz="-0.025 0.005 0.1"/>
   <parent link="tracks_right_link"/>
   <child link="tracks_right_wheel_link"/>
   <axis xyz="1 0 0"/>
 </joint>
 
 <joint name="tracks_left_joint" type="continuous">
-  <origin rpy="0 0 0" xyz="0.025 0.005 0.23"/>
+  <origin rpy="0 0 0" xyz="0.025 0.005 0.1"/>
   <parent link="tracks_left_link"/>
   <child link="tracks_left_wheel_link"/>
   <axis xyz="1 0 0"/>
@@ -25,10 +25,10 @@
 
 <transmission name="tracks_right_transmission">
   <type>transmission_interface/SimpleTransmission</type>
-  <joint name="tracks_left_joint">
+  <joint name="tracks_right_joint">
     <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
   </joint>
-  <actuator name="tracks_left_actuator">
+  <actuator name="tracks_right_actuator">
     <hardwareInterface>VelocityJointInterface</hardwareInterface>
     <mechanicalReduction>1</mechanicalReduction>
   </actuator>
@@ -60,11 +60,11 @@
     </geometry>
 </collision>
 <inertial>
-    <mass value="10"/>
+    <mass value="1"/>
     <inertia
-        ixx="0.01"
-        iyy="0.01"
-        izz="0.01"
+        ixx="0.001"
+        iyy="0.001"
+        izz="0.001"
         ixy="0" ixz="0" iyz="0"
     />
 </inertial>
@@ -75,7 +75,7 @@
 </gazebo>
 
 <joint name="rigid_body_to_ball_joint" type="fixed">
-  <origin rpy="0 0 0" xyz="0 -0.04 -0.25"/>
+  <origin rpy="0 0 0" xyz="0 -0.05 -0.25"/>
   <parent link="body_link"/>
   <child link="ball_link"/>
 </joint>

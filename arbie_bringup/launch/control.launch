@@ -1,4 +1,5 @@
 <launch>
+    <arg name="sim" default="false"/>
     <arg name="base" default="true"/>
     <arg name="flippers" default="true"/>
     <arg name="arm" default="true"/>
@@ -11,10 +12,19 @@
         output="screen">
     </node>
 
-    <rosparam
-        file="$(find arbie_bringup)/config/controllers_common.yaml"
-        command="load"
-    />
+    <group if="$(eval arg('sim') == 0)">
+        <rosparam
+            file="$(find arbie_bringup)/config/controllers_real.yaml"
+            command="load"
+        />
+    </group>
+    <group if="$(arg sim)">
+        <rosparam
+            file="$(find arbie_bringup)/config/controllers_sim.yaml"
+            command="load"
+        />
+    </group>
+
     <node
         name="controller_spawner_common"
         pkg="controller_manager"
@@ -22,26 +32,16 @@
         respawn="false"
         args="joint_state_controller"
     />
-
     <group if="$(arg base)">
-        <rosparam
-            file="$(find arbie_bringup)/config/controllers_base.yaml"
-            command="load"
-        />
         <node
             name="controller_spawner_base"
             pkg="controller_manager"
             type="spawner"
             respawn="false"
-            args="base_controller"
+            args="base_controller camera_tilt_controller"
         />
     </group>
-
     <group if="$(arg flippers)">
-        <rosparam
-            file="$(find arbie_bringup)/config/controllers_flippers.yaml"
-            command="load"
-        />
         <node
             name="controller_spawner_flippers"
             pkg="controller_manager"
@@ -50,12 +50,7 @@
             args="flippers_controller"
         />
     </group>
-
     <group if="$(arg arm)">
-        <rosparam
-            file="$(find arbie_bringup)/config/controllers_arm.yaml"
-            command="load"
-        />
         <node
             name="controller_spawner_arm"
             pkg="controller_manager"
