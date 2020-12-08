@@ -179,6 +179,7 @@
   </collision>
 </link>
 
+<!--
 <link name="gripper_right_linkage_link">
   <inertial>
     <origin rpy="0 0 0" xyz="0.005348977862044579 0.00500022075444323 -0.01750042810563407"/>
@@ -187,7 +188,6 @@
   </inertial>
   <visual>
     <origin rpy="0 0 0" xyz="0.015 -0.485 -0.09"/>
-    <!--<origin rpy="0 0 0" xyz="0.03671 -0.238651 -0.153719"/>-->
     <geometry>
       <mesh filename="package://arbie_description/meshes/gripper_right_linkage.stl"/>
     </geometry>
@@ -221,6 +221,7 @@
     </geometry>
   </collision>
 </link>
+-->
 
 <link name="gripper_left_driver_link">
   <inertial>
@@ -243,6 +244,7 @@
   </collision>
 </link>
 
+<!--
 <link name="gripper_left_contact_link">
   <inertial>
     <origin rpy="0 0 0" xyz="-0.0049669191825520796 -0.01899661466926142 0.016466890477460527"/>
@@ -284,6 +286,7 @@
     </geometry>
   </collision>
 </link>
+-->
 
 <!-- RIGID JOINTS -->
 
@@ -409,7 +412,7 @@
 
 <!-- GRIPPER DRIVEN JOINTS -->
 
-<joint name="gripper_joint" type="continuous">
+<joint name="gripper_right_joint" type="continuous">
   <origin rpy="0 -0.348 0" xyz="0.016 0.019 0.0487"/>
   <parent link="gripper_base_link"/>
   <child link="gripper_right_driver_link"/>
@@ -418,33 +421,29 @@
 
 <transmission name="gripper_right_driver_transmission">
   <type>transmission_interface/SimpleTransmission</type>
-  <joint name="gripper_joint">
-    <hardwareInterface>hardware_interface/${pos_interface}</hardwareInterface>
+  <joint name="gripper_right_joint">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
   </joint>
   <actuator name="gripper_right_driver_actuator">
-    <hardwareInterface>${pos_interface}</hardwareInterface>
+    <hardwareInterface>EffortJointInterface</hardwareInterface>
     <mechanicalReduction>1</mechanicalReduction>
   </actuator>
 </transmission>
 
-<!-- Also driven, but treat these two joints as the same
-Controller drives them together. Make this joint mimic
-the other -->
-<joint name="gripper_mimic_joint" type="continuous">
+<joint name="gripper_left_joint" type="continuous">
   <origin rpy="0 0.348 0" xyz="-0.016 0.019 0.0487"/>
   <parent link="gripper_base_link"/>
   <child link="gripper_left_driver_link"/>
   <axis xyz="0 1 0"/>
-  <mimic joint="gripper_joint" multiplier="-1"/>
 </joint>
 
 <transmission name="gripper_left_driver_transmission">
   <type>transmission_interface/SimpleTransmission</type>
-  <joint name="gripper_mimic_joint">
-    <hardwareInterface>hardware_interface/${pos_interface}</hardwareInterface>
+  <joint name="gripper_left_joint">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
   </joint>
   <actuator name="gripper_left_driver_actuator">
-    <hardwareInterface>${pos_interface}</hardwareInterface>
+    <hardwareInterface>EffortJointInterface</hardwareInterface>
     <mechanicalReduction>1</mechanicalReduction>
   </actuator>
 </transmission>

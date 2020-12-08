@@ -105,37 +105,37 @@
 
 <!-- FLIPPER JOINTS -->
 
-<joint name="flipper_front_joint" type="continuous">
+<joint name="flippers_front_joint" type="continuous">
   <origin rpy="0 0 0" xyz="-0.05 0.005403 0.23"/>
   <parent link="tracks_right_link"/>
   <child link="flipper_front_right_link"/>
   <axis xyz="1 0 0"/>
 </joint>
 
-<transmission name="flipper_front_transmission">
+<transmission name="flippers_front_transmission">
   <type>transmission_interface/SimpleTransmission</type>
-  <joint name="flipper_front_joint">
+  <joint name="flippers_front_joint">
     <hardwareInterface>hardware_interface/${vel_interface}</hardwareInterface>
   </joint>
-  <actuator name="flipper_front_actuator">
+  <actuator name="flippers_front_actuator">
     <hardwareInterface>${vel_interface}</hardwareInterface>
     <mechanicalReduction>1</mechanicalReduction>
   </actuator>
 </transmission>
 
-<joint name="flipper_rear_joint" type="continuous">
+<joint name="flippers_rear_joint" type="continuous">
   <origin rpy="0 0 0" xyz="-0.05 0.005403 -0.23"/>
   <parent link="tracks_right_link"/>
   <child link="flipper_rear_right_link"/>
   <axis xyz="1 0 0"/>
 </joint>
 
-<transmission name="flipper_rear_transmission">
+<transmission name="flippers_rear_transmission">
   <type>transmission_interface/SimpleTransmission</type>
-  <joint name="flipper_rear_joint">
+  <joint name="flippers_rear_joint">
     <hardwareInterface>hardware_interface/${vel_interface}</hardwareInterface>
   </joint>
-  <actuator name="flipper_rear_actuator">
+  <actuator name="flippers_rear_actuator">
     <hardwareInterface>${vel_interface}</hardwareInterface>
     <mechanicalReduction>1</mechanicalReduction>
   </actuator>

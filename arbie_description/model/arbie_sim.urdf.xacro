@@ -5,7 +5,7 @@
 
 <!-- Flippers -->
 <xacro:include filename='components/flippers.urdf.xacro'/>
-<xacro:flippers pos_interface='PositionJointInterface' vel_interface='VelocityJointInterface'/>
+<xacro:flippers pos_interface='EffortJointInterface' vel_interface='EffortJointInterface'/>
 
 <!-- Arm, wrist, gripper -->
 <xacro:include filename='components/arm.urdf.xacro'/>
