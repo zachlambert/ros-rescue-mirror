@@ -1,0 +1,22 @@
+<launch>
+    <node
+        name="controller_spawner"
+        pkg="controller_manager"
+        type="spawner"
+        respawn="false"
+        args="diff_drive_controller joint_state_controller"
+    />
+
+    <node
+        name="robot_state_publisher"
+        pkg="robot_state_publisher"
+        type="robot_state_publisher"
+    />
+
+    <node
+        name="teleop_twist_keyboard"
+        pkg="teleop_twist_keyboard"
+        type="teleop_twist_keyboard.py"
+        args="cmd_vel:='/diff_drive_controller/cmd_vel' _speed:='0.5' _turn:='1.5'">
+    </node>
+</launch>
