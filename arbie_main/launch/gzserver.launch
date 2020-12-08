@@ -1,6 +1,0 @@
-<launch>
-    <node name="gzserver" pkg="gazebo_ros" type="gzserver"
-        respawn="true"
-        args="$(find arbie_gazebo)/worlds/basic.world"
-    />
-</launch>
