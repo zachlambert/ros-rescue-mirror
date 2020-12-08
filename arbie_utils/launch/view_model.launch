@@ -1,7 +1,7 @@
 <launch>
     <param
         name="robot_description"
-        command="xacro $(find arbie_description)/model/real.urdf.xacro"
+        command="xacro $(find arbie_description)/model/arbie_real.urdf.xacro"
     />
     <node
         name="robot_state_publisher"

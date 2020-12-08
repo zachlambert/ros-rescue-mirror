@@ -249,4 +249,146 @@
 
 </xacro:macro>
 
+<!-- CAMERA PLUGINS -->
+
+<gazebo reference="camera_t265_link">
+<sensor type="multicamera" name="t265_camera">
+    <update_rate>30.0</update_rate>
+    <camera name="left">
+        <pose>0 0.035 0 0 0 0</pose>
+        <horizontal_fov>1.3962634</horizontal_fov>
+        <image>
+            <width>800</width>
+            <height>800</height>
+            <format>R8G8B8</format>
+        </image>
+        <clip>
+            <near>0.02</near>
+            <far>300</far>
+        </clip>
+        <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.007</stddev>
+        </noise>
+    </camera>
+    <camera name="right">
+        <pose>0 -0.035 0 0 0 0</pose>
+        <horizontal_fov>1.3962634</horizontal_fov>
+        <image>
+            <width>800</width>
+            <height>800</height>
+            <format>R8G8B8</format>
+        </image>
+        <clip>
+            <near>0.02</near>
+            <far>300</far>
+        </clip>
+        <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.007</stddev>
+        </noise>
+    </camera>
+    <plugin name="t265_camera_controller" filename="libgazebo_ros_multicamera.so">
+        <alwaysOn>true</alwaysOn>
+        <updateRate>0.0</updateRate>
+        <cameraName>t265</cameraName>
+        <imageTopicName>image_raw</imageTopicName>
+        <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+        <frameName>camera_t265_link</frameName>
+        <hackBaseline>0.07</hackBaseline>
+        <distortionK1>0.0</distortionK1>
+        <distortionK2>0.0</distortionK2>
+        <distortionK3>0.0</distortionK3>
+        <distortionT1>0.0</distortionT1>
+        <distortionT2>0.0</distortionT2>
+    </plugin>
+</sensor>
+</gazebo>
+
+<gazebo reference="camera_t265_link">
+<gravity>true</gravity>
+<sensor name="t265_imu" type="imu">
+    <always_on>true</always_on>
+    <update_rate>30.0</update_rate>
+    <visualize>true</visualize>
+    <topic>/t265/imu</topic>
+    <plugin filename="libgazebo_ros_imu_sensor.so" name="t265_imu_controller">
+        <topicName>/t265/imu</topicName>
+        <bodyName>t265_link</bodyName>
+        <updateRateHZ>10.0</updateRateHZ>
+        <gaussianNoise>0.0</gaussianNoise>
+        <xyzOffset>0 0 0</xyzOffset>
+        <rpyOffset>0 0 0</rpyOffset>
+        <frameName>t265_link</frameName>
+        <initialOrientationAsReference>false</initialOrientationAsReference>
+    </plugin>
+    <pose>0 0 0 0 0 0</pose>
+</sensor>
+</gazebo>
+
+<gazebo reference="camera_d435i_link">
+<sensor name="d435i_camera" type="depth">
+    <update_rate>30.0</update_rate>
+    <camera>
+        <horizontal_fov>1.047198</horizontal_fov>
+        <image>
+            <width>640</width>
+            <height>480</height>
+            <format>R8G8B8</format>
+        </image>
+        <clip>
+            <near>0.05</near>
+            <far>300</far>
+        </clip>
+    </camera>
+    <plugin name="d435i_camera_controller" filename="libgazebo_ros_openni_kinect.so">
+        <baseline>0.2</baseline>
+        <alwaysOn>true</alwaysOn>
+        <updateRate>1.0</updateRate>
+        <cameraName>d435i</cameraName>
+        <imageTopicName>/d435i/color/image_raw</imageTopicName>
+        <cameraInfoTopicName>/d435i/color/camera_info</cameraInfoTopicName>
+        <depthImageTopicName>/d435i/depth/image_raw</depthImageTopicName>
+        <depthImageInfoTopicName>/d435i/depth/camera_info</depthImageInfoTopicName>
+        <pointCloudTopicName>/d435i/depth/points</pointCloudTopicName>
+        <frameName>camera_d435i_link</frameName>
+        <pointCloudCutoff>0.5</pointCloudCutoff>
+        <pointCloudCutoffMax>3.0</pointCloudCutoffMax>
+        <distortionK1>0.00000001</distortionK1>
+        <distortionK2>0.00000001</distortionK2>
+        <distortionK3>0.00000001</distortionK3>
+        <distortionT1>0.00000001</distortionT1>
+        <distortionT2>0.00000001</distortionT2>
+        <CxPrime>0</CxPrime>
+        <Cx>0</Cx>
+        <Cy>0</Cy>
+        <focalLength>0</focalLength>
+        <hackBaseline>0</hackBaseline>
+    </plugin>
+</sensor>
+</gazebo>
+
+<gazebo reference="camera_d435i_link">
+<gravity>true</gravity>
+<sensor name="d435i_imu" type="imu">
+    <always_on>true</always_on>
+    <update_rate>30.0</update_rate>
+    <visualize>true</visualize>
+    <topic>/d435i/imu</topic>
+    <plugin filename="libgazebo_ros_imu_sensor.so" name="d435_imu_controller">
+        <topicName>/D435i/imu</topicName>
+        <bodyName>D435i_link</bodyName>
+        <updateRateHZ>10.0</updateRateHZ>
+        <gaussianNoise>0.0</gaussianNoise>
+        <xyzOffset>0 0 0</xyzOffset>
+        <rpyOffset>0 0 0</rpyOffset>
+        <frameName>D435i_link</frameName>
+        <initialOrientationAsReference>false</initialOrientationAsReference>
+    </plugin>
+    <pose>0 0 0 0 0 0</pose>
+</sensor>
+</gazebo>
+
 </to_include>
