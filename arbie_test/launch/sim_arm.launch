@@ -25,4 +25,6 @@
         type="rqt_gui"
         args="--perspective-file $(find arbie_test)/config/test_arm_control.perspective"
     />
+
+    <include file="$(find arbie_bringup)/launch/teleop.launch"/>
 </launch>

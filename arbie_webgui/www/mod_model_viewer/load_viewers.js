@@ -28,7 +28,7 @@ function init() {
     // Setup a client to listen to global TFs.
     var global_tf_client = new ROSLIB.TFClient({
         ros : ros,
-        fixedFrame : 'world',
+        fixedFrame : 'base_link',
         angularThres : 0.01,
         transThres : 0.01,
         rate : 10.0

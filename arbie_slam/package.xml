@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>arbie_navigation</name>
+  <name>arbie_slam</name>
   <version>0.0.0</version>
   <description>The arbie_slam package</description>
   <maintainer email="zach@todo.todo">zach</maintainer>
