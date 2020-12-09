@@ -419,10 +419,10 @@
 <transmission name="gripper_right_driver_transmission">
   <type>transmission_interface/SimpleTransmission</type>
   <joint name="gripper_right_joint">
-    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
   </joint>
   <actuator name="gripper_right_driver_actuator">
-    <hardwareInterface>EffortJointInterface</hardwareInterface>
+    <hardwareInterface>PositionJointInterface</hardwareInterface>
     <mechanicalReduction>1</mechanicalReduction>
   </actuator>
 </transmission>
@@ -437,10 +437,10 @@
 <transmission name="gripper_left_driver_transmission">
   <type>transmission_interface/SimpleTransmission</type>
   <joint name="gripper_left_joint">
-    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
   </joint>
   <actuator name="gripper_left_driver_actuator">
-    <hardwareInterface>EffortJointInterface</hardwareInterface>
+    <hardwareInterface>PositionJointInterface</hardwareInterface>
     <mechanicalReduction>1</mechanicalReduction>
   </actuator>
 </transmission>

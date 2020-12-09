@@ -6,11 +6,11 @@
 
 <!-- Base link + cameras -->
 <xacro:include filename='components/base.urdf.xacro'/>
-<xacro:base pos_interface='EffortJointInterface' vel_interface='EffortJointInterface'/>
+<xacro:base pos_interface='PositionJointInterface' vel_interface='VelocityJointInterface'/>
 
 <!-- Arm, wrist, gripper -->
 <xacro:include filename='components/arm.urdf.xacro'/>
-<xacro:arm pos_interface='EffortJointInterface' vel_interface='EffortJointInterface'/>
+<xacro:arm pos_interface='PositionJointInterface' vel_interface='VelocityJointInterface'/>
 
 <gazebo>
     <self_collide>true</self_collide>
