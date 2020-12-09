@@ -1,0 +1,24 @@
+<?xml version='1.0'?>
+<robot xmlns:xacro='http://www.ros.org/wiki/xacro' name='arbie'>
+
+<!-- Materials for visualisation -->
+<xacro:include filename='materials.urdf'/>
+
+<!-- Base link + cameras -->
+<xacro:include filename='components/base.urdf.xacro'/>
+<xacro:base pos_interface='EffortJointInterface' vel_interface='EffortJointInterface'/>
+
+<!-- Arm, wrist, gripper -->
+<xacro:include filename='components/arm.urdf.xacro'/>
+<xacro:arm pos_interface='EffortJointInterface' vel_interface='EffortJointInterface'/>
+
+<gazebo>
+    <self_collide>true</self_collide>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so"/>
+    <joint name="fixed_base_joint" type="rigid">
+        <parent>world</parent>
+        <child>base_link</child>
+    </joint>
+</gazebo>
+
+</robot>
