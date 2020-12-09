@@ -3,16 +3,12 @@
         name="robot_description"
         command="xacro $(find arbie_description)/model/arbie_sim.urdf.xacro"
     />
-    <param
-        name="robot_description_sdf"
-        command="xacro $(find arbie_description)/model/generated/arbie_sim.sdf"
-    />
 
     <node
         name="spawn_model"
         pkg="gazebo_ros"
         type="spawn_model"
-        args="-param robot_description_sdf -sdf -x 0 -y 0 -z 0 -model arbie -b -gazebo_namespace gzserver"
+        args="-param robot_description -urdf -x 0 -y 0 -z 0 -model arbie -b -gazebo_namespace gzserver"
     />
 
     <include file="$(find arbie_bringup)/launch/control.launch">
