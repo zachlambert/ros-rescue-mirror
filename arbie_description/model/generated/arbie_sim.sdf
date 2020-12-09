@@ -1229,7 +1229,7 @@
     <plugin name='gazebo_ros_control' filename='libgazebo_ros_control.so'/>
     <static>0</static>
     <joint name='gripper_right_linkage_dependent_2_joint' type='revolute'>
-      <pose frame=''>0 0 0 0 -0 0</pose>
+      <pose frame=''>0.0235 -0.0225 -0.0185 0 -0 0</pose>
       <parent>gripper_right_linkage_link</parent>
       <child>gripper_right_contact_link"</child>
       <axis>
@@ -1242,7 +1242,7 @@
       </axis>
     </joint>
     <joint name='gripper_left_linkage_dependent_2_joint' type='revolute'>
-      <pose frame=''>0 0 0 0 -0 0</pose>
+      <pose frame=''>0.0235 -0.0225 -0.0185 0 -0 0</pose>
       <parent>gripper_left_linkage_link</parent>
       <child>gripper_left_contact_link"</child>
       <axis>
