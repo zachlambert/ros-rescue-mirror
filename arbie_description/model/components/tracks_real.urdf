@@ -1,11 +1,13 @@
 <?xml version="1.0"?>
 <to_include xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-<!-- EQUIVALENT WHEELS FOR TRACKS - USED TO CALCULATE VELOCITY COMMANDS -->
+<!-- EQUIVALENT WHEELS FOR TRACKS -->
+<!-- Used for differential drive controller for kinematics -->
 
 <xacro:include filename="wheel.urdf.xacro"/>
 <xacro:wheel name="tracks_right_wheel_link" radius="0.1" length="0.04" mass="0.5"/>
 <xacro:wheel name="tracks_left_wheel_link" radius="0.1" length="0.04" mass="0.5"/>
+
 
 <!-- TRACK WHEEL JOINTS -->
 

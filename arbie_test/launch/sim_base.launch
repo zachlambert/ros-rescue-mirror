@@ -1,7 +1,7 @@
 <launch>
     <param
         name="robot_description"
-        command="xacro $(find arbie_description)/model/arbie_base_sim.urdf.xacro"
+        command="xacro $(find arbie_description)/model/arbie_sim_base.urdf.xacro"
     />
 
     <rosparam

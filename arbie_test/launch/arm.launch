@@ -1,7 +1,7 @@
 <launch>
     <param
         name="robot_description"
-        command="cat $(find arbie_description)/model/arbie.urdf"
+        command="xacro $(find arbie_description)/model/arbie.urdf.xacro"
     />
 
     <include file="$(find arbie_bringup)/launch/hardware.launch">

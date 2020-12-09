@@ -12,7 +12,7 @@
     </node>
 
     <rosparam
-        file="$(find arbie_bringup)/config/controllers_real.yaml"
+        file="$(find arbie_bringup)/config/controllers.yaml"
         command="load"
     />
 
@@ -43,7 +43,6 @@
             args="flippers_front_controller flippers_rear_controller"
         />
     </group>
-
     <group if="$(arg arm)">
         <node
             name="controller_spawner_arm"

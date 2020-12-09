@@ -1,8 +1,6 @@
 <?xml version="1.0"?>
 <to_include xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-<xacro:macro name="flippers" params="pos_interface vel_interface">
-
 <!-- FLIPPER LINKS -->
 
 <link name="flipper_front_right_link">
@@ -89,7 +87,8 @@
   </collision>
 </link>
 
-<!-- RIGID LINKS BETWEEN OPPOSITE FLIPPERS -->
+
+<!-- RIGID JOINTS -->
 
 <joint name="rigid_flipper_front_right_to_flipper_front_left" type="fixed">
   <origin rpy="0 0 0" xyz="0.347996 0 0"/>
@@ -103,6 +102,7 @@
   <child link="flipper_rear_left_link"/>
 </joint>
 
+
 <!-- FLIPPER JOINTS -->
 
 <joint name="flippers_front_joint" type="continuous">
@@ -115,10 +115,10 @@
 <transmission name="flippers_front_transmission">
   <type>transmission_interface/SimpleTransmission</type>
   <joint name="flippers_front_joint">
-    <hardwareInterface>hardware_interface/${vel_interface}</hardwareInterface>
+    <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
   </joint>
   <actuator name="flippers_front_actuator">
-    <hardwareInterface>${vel_interface}</hardwareInterface>
+    <hardwareInterface>VelocityJointInterface</hardwareInterface>
     <mechanicalReduction>1</mechanicalReduction>
   </actuator>
 </transmission>
@@ -133,13 +133,12 @@
 <transmission name="flippers_rear_transmission">
   <type>transmission_interface/SimpleTransmission</type>
   <joint name="flippers_rear_joint">
-    <hardwareInterface>hardware_interface/${vel_interface}</hardwareInterface>
+    <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
   </joint>
   <actuator name="flippers_rear_actuator">
-    <hardwareInterface>${vel_interface}</hardwareInterface>
+    <hardwareInterface>VelocityJointInterface</hardwareInterface>
     <mechanicalReduction>1</mechanicalReduction>
   </actuator>
 </transmission>
 
-</xacro:macro>
 </to_include>

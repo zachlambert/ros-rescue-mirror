@@ -1,16 +1,10 @@
 <?xml version='1.0'?>
 <robot xmlns:xacro='http://www.ros.org/wiki/xacro' name='arbie'>
 
-<!-- Materials for visualisation -->
 <xacro:include filename='materials.urdf'/>
-
-<!-- Base link + cameras -->
-<xacro:include filename='components/base.urdf.xacro'/>
-<xacro:base pos_interface='PositionJointInterface' vel_interface='VelocityJointInterface'/>
-
-<!-- Arm, wrist, gripper -->
-<xacro:include filename='components/arm.urdf.xacro'/>
-<xacro:arm pos_interface='PositionJointInterface' vel_interface='VelocityJointInterface'/>
+<xacro:include filename='components/base.urdf'/>
+<xacro:include filename='components/flippers.urdf'/>
+<xacro:include filename='components/arm.urdf'/>
 
 <gazebo>
     <self_collide>true</self_collide>

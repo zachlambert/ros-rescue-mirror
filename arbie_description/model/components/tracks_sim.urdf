@@ -1,13 +1,16 @@
 <?xml version="1.0"?>
 <to_include xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-<!-- EQUIVALENT WHEELS FOR TRACKS - USED TO CALCULATE VELOCITY COMMANDS -->
+<!-- WHEELS -->
+<!-- Actual wheels, to allow the simulated robot to drive around. -->
+<!-- Not sensible to try simulating tracks -->
 
 <xacro:include filename="wheel.urdf.xacro"/>
 <xacro:wheel name="tracks_right_wheel_link" radius="0.12" length="0.04" mass="0.5"/>
 <xacro:wheel name="tracks_left_wheel_link" radius="0.12" length="0.04" mass="0.5"/>
 
-<!-- TRACK WHEEL JOINTS -->
+
+<!-- WHEEL JOINTS -->
 
 <joint name="tracks_right_joint" type="continuous">
   <origin rpy="0 0 0" xyz="-0.025 0.005 0.1"/>
@@ -45,9 +48,11 @@
   </actuator>
 </transmission>
 
-<!-- BALL -->
 
-<link name="ball_link">
+<!-- SKID -->
+<!-- Frictionless contact at back of robot -->
+
+<link name="skid_link">
 <visual>
     <geometry>
         <sphere radius="0.05"/>
@@ -69,15 +74,15 @@
     />
 </inertial>
 </link>
-<gazebo reference="ball_link">
+<gazebo reference="skid_link">
     <mu1>0</mu1>
     <mu2>0</mu2>
 </gazebo>
 
-<joint name="rigid_body_to_ball_joint" type="fixed">
+<joint name="rigid_body_to_skid_joint" type="fixed">
   <origin rpy="0 0 0" xyz="0 -0.05 -0.25"/>
   <parent link="body_link"/>
-  <child link="ball_link"/>
+  <child link="skid_link"/>
 </joint>
 
 </to_include>

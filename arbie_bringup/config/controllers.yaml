@@ -11,14 +11,13 @@ base_controller:
     base_frame_id: base_link
     enable_odom_tf: false
 
-flippers_controller:
-    type: velocity_controllers/JointGroupVelocityController
-    joints:
-        - flippers_front
-        - flippers_rear
-    pid_gains:
-        flippers_front: {p: 5.0, i: 1, d: 0.1}
-        flippers_rear: {p: 5.0, i: 1, d: 0.1}
+flippers_front_controller:
+    type: velocity_controllers/JointVelocityController
+    joint: flippers_front_joint
+
+flippers_rear_controller:
+    type: velocity_controllers/JointVelocityController
+    joint: flippers_rear_joint
 
 camera_tilt_controller:
     type: position_controllers/JointPositionController

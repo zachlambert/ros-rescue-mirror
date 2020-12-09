@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 <to_include xmlns:xacro="http://www.ros.org/wiki/xacro">
 
+<!-- Macro to create wheel link with appropriate inertia -->
+
 <xacro:macro name="wheel" params="name radius length mass">
 <link name="${name}">
 <visual>

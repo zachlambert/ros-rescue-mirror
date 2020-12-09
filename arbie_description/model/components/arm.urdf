@@ -1,8 +1,6 @@
 <?xml version='1.0'?>
 <to_include xmlns:xacro="https://www.ros.org/wiki/xacro">
 
-<xacro:macro name="arm" params="pos_interface vel_interface">
-
 <!-- ARM LINKS -->
 
 <link name="arm_base_link">
@@ -305,10 +303,10 @@
 <transmission name="arm_1_tran">
   <type>transmission_interface/SimpleTransmission</type>
   <joint name="arm_1_joint">
-    <hardwareInterface>hardware_interface/${pos_interface}</hardwareInterface>
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
   </joint>
   <actuator name="arm_1_actuator">
-    <hardwareInterface>${pos_interface}</hardwareInterface>
+    <hardwareInterface>PositionJointInterface</hardwareInterface>
     <mechanicalReduction>1</mechanicalReduction>
   </actuator>
 </transmission>
@@ -323,10 +321,10 @@
 <transmission name="arm_2_transmission">
   <type>transmission_interface/SimpleTransmission</type>
   <joint name="arm_2_joint">
-    <hardwareInterface>${pos_interface}</hardwareInterface>
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
   </joint>
   <actuator name="arm_2_actuator">
-    <hardwareInterface>${pos_interface}</hardwareInterface>
+    <hardwareInterface>PositionJointInterface</hardwareInterface>
     <mechanicalReduction>1</mechanicalReduction>
   </actuator>
 </transmission>
@@ -341,10 +339,10 @@
 <transmission name="arm_3_transmission">
   <type>transmission_interface/SimpleTransmission</type>
   <joint name="arm_3_joint">
-    <hardwareInterface>hardware_interface/${pos_interface}</hardwareInterface>
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
   </joint>
   <actuator name="arm_3_actuator">
-    <hardwareInterface>${pos_interface}</hardwareInterface>
+    <hardwareInterface>PositionJointInterface</hardwareInterface>
     <mechanicalReduction>1</mechanicalReduction>
   </actuator>
 </transmission>
@@ -362,10 +360,10 @@
 <transmission name="wrist_pitch_transmission">
   <type>transmission_interface/SimpleTransmission</type>
   <joint name="wrist_pitch_joint">
-    <hardwareInterface>hardware_interface/${pos_interface}</hardwareInterface>
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
   </joint>
   <actuator name="wrist_pitch_actuator">
-    <hardwareInterface>${pos_interface}</hardwareInterface>
+    <hardwareInterface>PositionJointInterface</hardwareInterface>
     <mechanicalReduction>1</mechanicalReduction>
   </actuator>
 </transmission>
@@ -380,10 +378,10 @@
 <transmission name="wrist_yaw_transmsission">
   <type>transmission_interface/SimpleTransmission</type>
   <joint name="wrist_yaw_joint">
-    <hardwareInterface>hardware_interface/${pos_interface}</hardwareInterface>
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
   </joint>
   <actuator name="wrist_yaw_actuator">
-    <hardwareInterface>${pos_interface}</hardwareInterface>
+    <hardwareInterface>PositionJointInterface</hardwareInterface>
     <mechanicalReduction>1</mechanicalReduction>
   </actuator>
 </transmission>
@@ -398,10 +396,10 @@
 <transmission name="wrist_roll_transmission">
   <type>transmission_interface/SimpleTransmission</type>
   <joint name="wrist_roll_joint">
-    <hardwareInterface>hardware_interface/${pos_interface}</hardwareInterface>
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
   </joint>
   <actuator name="wrist_roll_actuator">
-    <hardwareInterface>${pos_interface}</hardwareInterface>
+    <hardwareInterface>PositionJointInterface</hardwareInterface>
     <mechanicalReduction>1</mechanicalReduction>
   </actuator>
 </transmission>
@@ -518,7 +516,5 @@
   </axis>
 </joint>
 </gazebo>
-
-</xacro:macro>
 
 </to_include>
