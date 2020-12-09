@@ -53,17 +53,17 @@ wrist_yaw_controller:
 wrist_roll_controller:
     type: effort_controllers/JointPositionController
     joint: wrist_roll_joint
-    pid: {p: 10, i: 0, d: 0.1}
+    pid: {p: 200, i: 0, d: 10}
 
 gripper_right_controller:
     type: effort_controllers/JointPositionController
     joint: gripper_right_joint
-    pid: {p: 0.1, i: 0, d: 0.0005}
+    pid: {p: 1, i: 0, d: 0.001}
 
 gripper_left_controller:
     type: effort_controllers/JointPositionController
     joint: gripper_left_joint
-    pid: {p: 0.1, i: 0, d: 0.0005}
+    pid: {p: 1, i: 0, d: 0.001}
 
 arm_trajectory_controller:
     type: effort_controllers/JointTrajectoryController

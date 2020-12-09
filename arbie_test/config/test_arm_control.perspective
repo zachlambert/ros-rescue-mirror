@@ -5,7 +5,7 @@
       "keys": {
         "running-plugins": {
           "type": "repr",
-          "repr": "{u'rqt_publisher/Publisher': [1]}"
+          "repr": "{u'rqt_reconfigure/Param': [1], u'rqt_publisher/Publisher': [1]}"
         }
       },
       "groups": {
@@ -80,7 +80,7 @@
               "keys": {
                 "publishers": {
                   "type": "repr",
-                  "repr": "u\"[{'type_name': 'std_msgs/Float64', 'topic_name': '/arm_1_controller/command', 'enabled': False, 'rate': 1.0, 'expressions': {}, 'publisher_id': 0, 'counter': 217}, {'type_name': 'std_msgs/Float64', 'topic_name': '/arm_2_controller/command', 'enabled': False, 'rate': 1.0, 'expressions': {u'/arm_2_controller/command/data': '1'}, 'publisher_id': 1, 'counter': 217}, {'type_name': 'std_msgs/Float64', 'topic_name': '/arm_3_controller/command', 'enabled': False, 'rate': 1.0, 'expressions': {u'/arm_3_controller/command/data': '1'}, 'publisher_id': 2, 'counter': 217}, {'type_name': 'std_msgs/Float64', 'topic_name': '/wrist_pitch_controller/command', 'enabled': False, 'rate': 1.0, 'expressions': {}, 'publisher_id': 3, 'counter': 216}, {'type_name': 'std_msgs/Float64', 'topic_name': '/wrist_roll_controller/command', 'enabled': False, 'rate': 1.0, 'expressions': {}, 'publisher_id': 4, 'counter': 216}, {'type_name': 'std_msgs/Float64', 'topic_name': '/wrist_yaw_controller/command', 'enabled': False, 'rate': 1.0, 'expressions': {}, 'publisher_id': 5, 'counter': 216}, {'type_name': 'std_msgs/Float64', 'topic_name': '/gripper_right_controller/command', 'enabled': False, 'rate': 1.0, 'expressions': {}, 'publisher_id': 6, 'counter': 158}, {'type_name': 'std_msgs/Float64', 'topic_name': '/gripper_left_controller/command', 'enabled': False, 'rate': 1.0, 'expressions': {u'/gripper_left_controller/command/data': '-0.5'}, 'publisher_id': 7, 'counter': 158}, {'type_name': 'std_msgs/Float64', 'topic_name': '/flippers_rear_controller/command', 'enabled': False, 'rate': 1.0, 'expressions': {}, 'publisher_id': 8, 'counter': 144}, {'type_name': 'std_msgs/Float64', 'topic_name': '/flippers_front_controller/command', 'enabled': False, 'rate': 1.0, 'expressions': {u'/flippers_front_controller/command/data': '-0.5'}, 'publisher_id': 9, 'counter': 136}, {'type_name': 'geometry_msgs/Twist', 'topic_name': '/base_controller/cmd_vel', 'enabled': False, 'rate': 1.0, 'expressions': {u'/base_controller/cmd_vel/linear/x': '0'}, 'publisher_id': 11, 'counter': 17}]\""
+                  "repr": "u\"[{'topic_name': '/arm_1_controller/command', 'type_name': 'std_msgs/Float64', 'enabled': False, 'rate': 1.0, 'expressions': {}, 'publisher_id': 0, 'counter': 115}, {'topic_name': '/arm_2_controller/command', 'type_name': 'std_msgs/Float64', 'enabled': False, 'rate': 1.0, 'expressions': {u'/arm_2_controller/command/data': '1'}, 'publisher_id': 1, 'counter': 115}, {'topic_name': '/arm_3_controller/command', 'type_name': 'std_msgs/Float64', 'enabled': False, 'rate': 1.0, 'expressions': {u'/arm_3_controller/command/data': '1'}, 'publisher_id': 2, 'counter': 115}, {'topic_name': '/wrist_pitch_controller/command', 'type_name': 'std_msgs/Float64', 'enabled': False, 'rate': 1.0, 'expressions': {}, 'publisher_id': 3, 'counter': 115}, {'topic_name': '/wrist_roll_controller/command', 'type_name': 'std_msgs/Float64', 'enabled': False, 'rate': 1.0, 'expressions': {}, 'publisher_id': 4, 'counter': 114}, {'topic_name': '/wrist_yaw_controller/command', 'type_name': 'std_msgs/Float64', 'enabled': False, 'rate': 1.0, 'expressions': {}, 'publisher_id': 5, 'counter': 113}, {'topic_name': '/gripper_right_controller/command', 'type_name': 'std_msgs/Float64', 'enabled': False, 'rate': 1.0, 'expressions': {}, 'publisher_id': 6, 'counter': 81}, {'topic_name': '/gripper_left_controller/command', 'type_name': 'std_msgs/Float64', 'enabled': False, 'rate': 1.0, 'expressions': {u'/gripper_left_controller/command/data': '0'}, 'publisher_id': 7, 'counter': 81}, {'topic_name': '/flippers_rear_controller/command', 'type_name': 'std_msgs/Float64', 'enabled': False, 'rate': 1.0, 'expressions': {u'/flippers_rear_controller/command/data': '0'}, 'publisher_id': 8, 'counter': 55}, {'topic_name': '/flippers_front_controller/command', 'type_name': 'std_msgs/Float64', 'enabled': False, 'rate': 1.0, 'expressions': {u'/flippers_front_controller/command/data': '0'}, 'publisher_id': 9, 'counter': 55}, {'topic_name': '/base_controller/cmd_vel', 'type_name': 'geometry_msgs/Twist', 'enabled': False, 'rate': 1.0, 'expressions': {u'/base_controller/cmd_vel/angular/z': '0', u'/base_controller/cmd_vel/linear/x': '0'}, 'publisher_id': 10, 'counter': 64}]\""
                 }
               },
               "groups": {}
@@ -94,7 +94,7 @@
               "keys": {
                 "dockable": {
                   "type": "repr",
-                  "repr": "u'true'"
+                  "repr": "True"
                 },
                 "parent": {
                   "type": "repr",
@@ -161,13 +161,13 @@
       "keys": {
         "geometry": {
           "type": "repr(QByteArray.hex)",
-          "repr(QByteArray.hex)": "QtCore.QByteArray('01d9d0cb000200000000000e0000022e000003b8000004290000001000000230000003b60000042700000000000000000780')",
-          "pretty-print": "       .   )   0   '     "
+          "repr(QByteArray.hex)": "QtCore.QByteArray('01d9d0cb000200000000050700000025000007710000042900000509000000270000076f0000042700000000000000000780')",
+          "pretty-print": "       % q )   ' o '     "
         },
         "state": {
           "type": "repr(QByteArray.hex)",
-          "repr(QByteArray.hex)": "QtCore.QByteArray('000000ff00000000fd0000000100000003000003a7000001cefc0100000003fb00000058007200710074005f007000750062006c00690073006800650072005f005f005000750062006c00690073006800650072005f005f0031005f005f005000750062006c006900730068006500720057006900640067006500740100000000000003a70000023000fffffffb0000006c007200710074005f007200650063006f006e006600690067007500720065005f005f0050006100720061006d005f005f0031005f005f005f0070006c007500670069006e0063006f006e007400610069006e00650072005f0074006f0070005f0077006900640067006500740100000236000001710000000000000000fb00000072007200710074005f0073006500720076006900630065005f00630061006c006c00650072005f005f005300650072007600690063006500430061006c006c00650072005f005f0031005f005f005300650072007600690063006500430061006c006c006500720057006900640067006500740100000000000003070000000000000000000003a70000000000000004000000040000000800000008fc00000001000000030000000100000036004d0069006e0069006d0069007a006500640044006f0063006b00570069006400670065007400730054006f006f006c0062006100720000000000ffffffff0000000000000000')",
-          "pretty-print": "                 Xrqt_publisher__Publisher__1__PublisherWidget          lrqt_reconfigure__Param__1___plugincontainer_top_widget          rrqt_service_caller__ServiceCaller__1__ServiceCallerWidget                            6MinimizedDockWidgetsToolbar        "
+          "repr(QByteArray.hex)": "QtCore.QByteArray('000000ff00000000fd000000010000000300000267000003d7fc0100000002fc00000000000002670000023000fffffffc0200000002fb00000058007200710074005f007000750062006c00690073006800650072005f005f005000750062006c00690073006800650072005f005f0031005f005f005000750062006c006900730068006500720057006900640067006500740100000014000001960000008a00fffffffb0000006c007200710074005f007200650063006f006e006600690067007500720065005f005f0050006100720061006d005f005f0031005f005f005f0070006c007500670069006e0063006f006e007400610069006e00650072005f0074006f0070005f00770069006400670065007401000001b00000023b0000010e00fffffffb00000072007200710074005f0073006500720076006900630065005f00630061006c006c00650072005f005f005300650072007600690063006500430061006c006c00650072005f005f0031005f005f005300650072007600690063006500430061006c006c006500720057006900640067006500740100000000000003070000000000000000000002670000000000000004000000040000000800000008fc00000001000000030000000100000036004d0069006e0069006d0069007a006500640044006f0063006b00570069006400670065007400730054006f006f006c0062006100720000000000ffffffff0000000000000000')",
+          "pretty-print": "                   g 0                                                                                                                        ;                                                                         g                                                      "
         }
       },
       "groups": {

@@ -11,4 +11,8 @@
 <xacro:include filename='components/arm.urdf.xacro'/>
 <xacro:arm pos_interface='EffortJointInterface' vel_interface='EffortJointInterface'/>
 
+<gazebo>
+    <self_collide>true</self_collide>
+</gazebo>
+
 </robot>
