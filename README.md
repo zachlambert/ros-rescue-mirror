@@ -1,48 +1,39 @@
-# ARBIE ros packages
+# Starting the robot
 
-ROS packages for the actual robot.  
-Packages are named `arbie_<package>`. 
+`roslaunch arbie_bringup bringup.launch`
 
-## Running with hardware connected
+`arbie_bringup` contains the main launch file and launch files for subsystems.  
+For testing individual systems in isolation, the `arbie_test` package has various launch files.
 
-`roslaunch arbie_main real.launch`
+# Testing the robot with hardware
 
-## Running in simulation
+Test basic arm control:  
+`roslaunch arbie_test arm.launch`
 
-Start the simulation server: `roslaunch arbie_main gzserver.launch`
+Todo: Tests for MoveIt, base control, slam.
 
-Then run the robot code: `roslaunch arbie_main simulation.launch`
+# Testing the robot in simulation
 
-To view the simulation, launch the gazebo client with: `rosrun gazebo_ros gzclient`
+Must first start `gzserver` with an appropriate world:  
+`roslaunch arbie_gazebo navigation.launch` which has checkered obstacles.  
+`roslaunch arbie_gazebo manipulation.launch` (currently just empty, but may add objects to pick up).  
 
-## Viewing the web gui
+To view the simulation:  
+`rosrun gazebo_ros gzclient`
 
-Visit `localhost:8000/arbie_webgui`
+Test basic arm control:  
+`roslaunch arbie_test sim_arm.launch`
 
-ROS starts a webserver on localhost at port 8000.  
-Visiting `localhost:8000/<ros-package>` accesses the `www` folder for the given ros package.  
+Test base control on its own, or with slam:  
+`roslaunch arbie_test sim_base.launch`  
+`roslaunch arbie_test sim_base_slam.launch`
 
-# EXP ros packages
+Todo: Test for MoveIt.
 
-A minimal set of packages for testing the perception and navigation tasks in a basic simulation.  
-Packages are named `exp_<package>`.
+# Viewing the web gui
 
-## Start the simulation
+The final robot and some tests will start the webgui for monitoring and user input.  
+Hosts the `www` folders within ros packages.  
 
-Start the simulation server: `roslaunch exp_main gzserver.launch`
-
-(Optionally) Start the simulation client: `rosrun gazebo_ros gzclient`  
-This allows you to view the simulation environment, add objects, move things around.
-
-Spawn the robot model: `roslaunch exp_main main.launch`
-
-To control the robot: `roslaunch exp_main control.launch`  
-This starts a teleoperation node in the current terminal with the controls specified [here](https://github.com/ros-teleop/teleop_twist_keyboard)
-
-The robot simulation outputs imu and camera data. The camera information can be viewed with:  
-`roslaunch exp_main cameras.launch`
-
-## Run SLAM (work in progress)
-
-After the simulation is started:  
-`roslaunch exp_main slam.launch`
+The web gui content is in `arbie_webgui/www`, view at the url:  
+`localhost:8000/arbie_webgui`
