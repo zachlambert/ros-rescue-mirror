@@ -13,14 +13,14 @@
 <!-- WHEEL JOINTS -->
 
 <joint name="tracks_right_joint" type="continuous">
-  <origin rpy="0 0 0" xyz="-0.025 0.005 0.1"/>
+  <origin rpy="0 0 0" xyz="-0.025 0.005 0"/>
   <parent link="tracks_right_link"/>
   <child link="tracks_right_wheel_link"/>
   <axis xyz="1 0 0"/>
 </joint>
 
 <joint name="tracks_left_joint" type="continuous">
-  <origin rpy="0 0 0" xyz="0.025 0.005 0.1"/>
+  <origin rpy="0 0 0" xyz="0.025 0.005 0"/>
   <parent link="tracks_left_link"/>
   <child link="tracks_left_wheel_link"/>
   <axis xyz="1 0 0"/>

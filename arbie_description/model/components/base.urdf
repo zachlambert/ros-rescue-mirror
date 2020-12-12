@@ -2,17 +2,15 @@
 <to_include xmlns:xacro="https://www.ros.org/wiki/xacro">
 
 <!-- BASE LINK -->
-<!-- At centre of robot on floor -->
+<!-- At rotational centre of robot -->
 
 <link name="base_link">
 </link>
-
 <joint name="base_joint" type="fixed">
   <origin rpy="1.5708 0 1.5708" xyz="0.01 0 0.075"/>
   <parent link="base_link"/>
   <child link="body_link"/>
 </joint>
-
 
 <!-- BODY LINK -->
 

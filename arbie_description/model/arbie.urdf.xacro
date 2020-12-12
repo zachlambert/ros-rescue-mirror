@@ -4,8 +4,8 @@
 <xacro:include filename='materials.urdf'/>
 <xacro:include filename='components/base.urdf'/>
 <xacro:include filename='components/cameras.urdf'/>
-<xacro:include filename='components/flippers.urdf.xacro'/>
+<xacro:include filename='components/flippers.urdf'/>
 <xacro:include filename='components/tracks_real.urdf'/>
-<xacro:include filename='components/arm.urdf.xacro'/>
+<xacro:include filename='components/arm.urdf'/>
 
 </robot>

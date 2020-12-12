@@ -12,15 +12,15 @@
         args="image:=/t265/left/image_raw"
     />
     <node
-        name="image_view_d435_color"
+        name="image_view_d400_color"
         pkg="image_view"
         type="image_view"
-        args="image:=/d435/color/image_raw"
+        args="image:=/d400/color/image_raw"
     />
     <node
-        name="image_view_d435_depth"
+        name="image_view_d400_depth"
         pkg="image_view"
         type="image_view"
-        args="image:=/d435/depth/image_raw"
+        args="image:=/d400/depth/image_raw"
     />
 </launch>

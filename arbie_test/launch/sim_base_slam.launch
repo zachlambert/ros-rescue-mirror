@@ -1,0 +1,4 @@
+<launch>
+    <include file="$(find arbie_test)/launch/sim_base.launch"/>
+    <include file="$(find arbie_slam)/launch/slam.launch"/>
+</launch>

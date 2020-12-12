@@ -66,8 +66,8 @@
   </collision>
 </link>
 
-<xacro:macro name="d435_moved" params="x y z">
-<link name="camera_d435_link">
+<xacro:macro name="d400_moved" params="x y z">
+<link name="camera_d400_link">
   <inertial>
     <origin rpy="${-pi/2} ${-pi} ${-pi/2}" xyz="${0.300025146597877-z} ${-(-0.019510973805073988-x)} ${0.09028780766834578-y}"/>
     <mass value="0.3380578483539848"/>
@@ -76,25 +76,25 @@
   <visual>
     <origin rpy="${-pi/2} ${-pi} ${-pi/2}" xyz="${0.025-z} ${-(-0.02125-x)} ${-y}"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/camera_d435.stl"/>
+      <mesh filename="package://arbie_description/meshes/camera_d400.stl"/>
     </geometry>
     <material name="camera"/>
   </visual>
   <collision>
     <origin rpy="${-pi/2} ${-pi} ${-pi/2}" xyz="${0.025-z} ${-(-0.02125-x)} ${-y}"/>
     <geometry>
-      <mesh filename="package://arbie_description/meshes/camera_d435.stl"/>
+      <mesh filename="package://arbie_description/meshes/camera_d400.stl"/>
     </geometry>
   </collision>
 </link>
 
-<joint name="rigid_camera_mount_to_camera_d435_joint" type="fixed">
+<joint name="rigid_camera_mount_to_camera_d400_joint" type="fixed">
   <origin rpy="${-pi/2} ${-pi/2} 0" xyz="${-0.012557+x} ${-0.073851+y} ${-0.287572+z}"/>
   <parent link="camera_mount_link"/>
-  <child link="camera_d435_link"/>
+  <child link="camera_d400_link"/>
 </joint>
 </xacro:macro>
-<xacro:d435_moved x="-0.02" y="0.09" z="0.31"/>
+<xacro:d400_moved x="-0.02" y="0.09" z="0.31"/>
 
 <xacro:macro name="t265_moved" params="x y z">
 <link name="camera_t265_link">
@@ -162,9 +162,38 @@
   </actuator>
 </transmission>
 
+<!-- CAMERA FRAMES FOR ROS -->
+<!-- Different to those given to Gazebo, since different
+conventions are used for the frame orientation -->
+
+<link name="camera_d400_frame"/>
+<joint name="camera_d400_frame_joint" type="fixed">
+  <origin rpy="${pi/2} ${pi} ${pi/2}" xyz="0 0 0"/>
+  <parent link="camera_d400_link"/>
+  <child link="camera_d400_frame"/>
+</joint>
+
+<link name="camera_t265_frame"/>
+<joint name="camera_t265_frame_joint" type="fixed">
+  <origin rpy="${pi/2} ${pi} ${pi/2}" xyz="0 0 0"/>
+  <parent link="camera_t265_link"/>
+  <child link="camera_t265_frame"/>
+</joint>
+
 
 <!-- CAMERA SENSORS AND PLUGINS  -->
 
+<xacro:include filename="$(find realsense_ros_gazebo)/xacro/depthcam.xacro"/>
+<xacro:realsense_d435 sensor_name="d435" parent_link="camera_d400_link" rate="10">
+  <origin rpy="0 0 0" xyz="0 0 0"/>
+</xacro:realsense_d435>
+
+<xacro:include filename="$(find realsense_ros_gazebo)/xacro/tracker.xacro"/>
+<xacro:realsense_T265 sensor_name="t265" parent_link="camera_t265_link" rate="10">
+  <origin rpy="0 0 0" xyz="0 0 0"/>
+</xacro:realsense_T265>
+
+<!--
 <gazebo reference="camera_t265_link">
 <sensor type="multicamera" name="t265_camera">
     <update_rate>30.0</update_rate>
@@ -210,7 +239,7 @@
         <cameraName>t265</cameraName>
         <imageTopicName>image_raw</imageTopicName>
         <cameraInfoTopicName>camera_info</cameraInfoTopicName>
-        <frameName>camera_t265_link</frameName>
+        <frameName>camera_t265_frame</frameName>
         <hackBaseline>0.07</hackBaseline>
         <distortionK1>0.0</distortionK1>
         <distortionK2>0.0</distortionK2>
@@ -242,8 +271,8 @@
 </sensor>
 </gazebo>
 
-<gazebo reference="camera_d435_link">
-<sensor name="d435_camera" type="depth">
+<gazebo reference="camera_d400_link">
+<sensor name="d400_camera" type="depth">
     <update_rate>30.0</update_rate>
     <camera>
         <horizontal_fov>1.047198</horizontal_fov>
@@ -257,17 +286,17 @@
             <far>300</far>
         </clip>
     </camera>
-    <plugin name="d435_camera_controller" filename="libgazebo_ros_openni_kinect.so">
+    <plugin name="d400_camera_controller" filename="libgazebo_ros_openni_kinect.so">
         <baseline>0.2</baseline>
         <alwaysOn>true</alwaysOn>
         <updateRate>1.0</updateRate>
-        <cameraName>d435</cameraName>
-        <imageTopicName>/d435/color/image_raw</imageTopicName>
-        <cameraInfoTopicName>/d435/color/camera_info</cameraInfoTopicName>
-        <depthImageTopicName>/d435/depth/image_raw</depthImageTopicName>
-        <depthImageInfoTopicName>/d435/depth/camera_info</depthImageInfoTopicName>
-        <pointCloudTopicName>/d435/depth/points</pointCloudTopicName>
-        <frameName>camera_d435_link</frameName>
+        <cameraName>d400</cameraName>
+        <imageTopicName>/d400/color/image_raw</imageTopicName>
+        <cameraInfoTopicName>/d400/color/camera_info</cameraInfoTopicName>
+        <depthImageTopicName>/d400/depth/image_raw</depthImageTopicName>
+        <depthImageInfoTopicName>/d400/depth/camera_info</depthImageInfoTopicName>
+        <pointCloudTopicName>/d400/depth/points</pointCloudTopicName>
+        <frameName>camera_d400_frame</frameName>
         <pointCloudCutoff>0.5</pointCloudCutoff>
         <pointCloudCutoffMax>3.0</pointCloudCutoffMax>
         <distortionK1>0.00000001</distortionK1>
@@ -284,25 +313,26 @@
 </sensor>
 </gazebo>
 
-<gazebo reference="camera_d435_link">
+<gazebo reference="camera_d400_link">
 <gravity>true</gravity>
-<sensor name="d435_imu" type="imu">
+<sensor name="d400_imu" type="imu">
     <always_on>true</always_on>
     <update_rate>30.0</update_rate>
     <visualize>true</visualize>
-    <topic>/d435/imu</topic>
-    <plugin filename="libgazebo_ros_imu_sensor.so" name="d435_imu_controller">
-        <topicName>/d435/imu</topicName>
-        <bodyName>camera_d435_link</bodyName>
+    <topic>/d400/imu</topic>
+    <plugin filename="libgazebo_ros_imu_sensor.so" name="d400_imu_controller">
+        <topicName>/d400/imu</topicName>
+        <bodyName>camera_d400_link</bodyName>
         <updateRateHZ>10.0</updateRateHZ>
         <gaussianNoise>0.0</gaussianNoise>
         <xyzOffset>0 0 0</xyzOffset>
         <rpyOffset>0 0 0</rpyOffset>
-        <frameName>camera_d435_link</frameName>
+        <frameName>camera_d400_link</frameName>
         <initialOrientationAsReference>false</initialOrientationAsReference>
     </plugin>
     <pose>0 0 0 0 0 0</pose>
 </sensor>
 </gazebo>
+-->
 
 </to_include>

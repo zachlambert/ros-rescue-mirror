@@ -17,7 +17,7 @@
       <collision name='base_link_collision'>
         <geometry>
           <mesh>
-            <scale>1 1 1</scale>
+            <scale>0.4 0.4 0.4</scale>
             <uri>model://navigation_environment/meshes/mesh.dae</uri>
           </mesh>
         </geometry>
@@ -25,7 +25,7 @@
       <visual name='base_link_visual'>
         <geometry>
           <mesh>
-            <scale>1 1 1</scale>
+            <scale>0.4 0.4 0.4</scale>
             <uri>model://navigation_environment/meshes/mesh.dae</uri>
           </mesh>
         </geometry>
