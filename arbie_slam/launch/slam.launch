@@ -2,16 +2,6 @@
     <arg name="fake" default="false"/>
     <arg name="sim" default="false"/>
 
-    <!-- Rtabmap_ros seems to publish map->world for localistion.
-    Need to look into this a bit more once I have a better understanding of
-    what is going on -->
-    <node
-        name="world_to_base_link_broadcaster"
-        pkg="tf"
-        type="static_transform_publisher"
-    args="0 0 0 0 0 0 world base_link 100"
-    />
-
     <group if="$(arg fake)">
         <node
             name="localisation_placeholder"
@@ -26,13 +16,13 @@
     <include file="$(find rtabmap_ros)/launch/rtabmap.launch">
         <arg name="rtabmap_args" value="--delete_db_n_start --Optimizer/GravitySigma 0.3"/>
         <arg name="odom_topic" value="/t265/odom/sample"/>
-        <arg name="frame_id" value="camera_t265_link"/>
+        <arg name="frame_id" value="t265_link"/>
         <arg name="rgbd_sync" value="true"/>
         <arg name="depth_topic" value="/d435/depth/image_raw"/>
         <arg name="rgb_topic" value="/d435/color/image_raw"/>
         <arg name="camera_info_topic" value="/d435/color/camera_info"/>
-        <arg name="approx_rgbd_sync" value="true"/>
-        <arg name="visual_odometry" value="false"/>
+        <arg name="approx_rgbd_sync" value="false"/>
+        <arg name="visual_odometry" value="true"/>
     </include>
     </group>
 
@@ -40,13 +30,13 @@
     <include file="$(find rtabmap_ros)/launch/rtabmap.launch">
         <arg name="rtabmap_args" value="--delete_db_n_start --Optimizer/GravitySigma 0.3"/>
         <arg name="odom_topic" value="/t265/odom/sample"/>
-        <arg name="frame_id" value="camera_t265_link"/>
+        <arg name="frame_id" value="t265_pose_frame"/>
         <arg name="rgbd_sync" value="true"/>
         <arg name="depth_topic" value="/d400/aligned_depth_to_color/image_raw"/>
         <arg name="rgb_topic" value="/d400/color/image_raw"/>
         <arg name="camera_info_topic" value="/d400/color/camera_info"/>
-        <arg name="approx_rgbd_sync" value="true"/>
-        <arg name="visual_odometry" value="false"/>
+        <arg name="approx_rgbd_sync" value="false"/>
+        <arg name="visual_odometry" value="true"/>
     </include>
     </group>
 

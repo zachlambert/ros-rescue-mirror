@@ -1,0 +1,9 @@
+<launch>
+    <include file="$(find arbie_slam)/launch/cameras.launch"/>
+    <node
+        name="rviz"
+        pkg="rviz"
+        type="rviz"
+        args="-d $(find arbie_utils)/config/test_cameras.rviz"
+    />
+</launch>

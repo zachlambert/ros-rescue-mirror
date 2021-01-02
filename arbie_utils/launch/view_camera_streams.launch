@@ -1,17 +1,5 @@
 <launch>
     <node
-        name="image_view_t265_right"
-        pkg="image_view"
-        type="image_view"
-        args="image:=/t265/right/image_raw"
-    />
-    <node
-        name="image_view_t265_left"
-        pkg="image_view"
-        type="image_view"
-        args="image:=/t265/left/image_raw"
-    />
-    <node
         name="image_view_d400_color"
         pkg="image_view"
         type="image_view"
