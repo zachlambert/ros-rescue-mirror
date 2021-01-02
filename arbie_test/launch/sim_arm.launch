@@ -8,6 +8,7 @@
         file="$(find arbie_test)/config/gazebo_control_gains.yaml"
         command="load"
     />
+
     <node
         name="spawn_model"
         pkg="gazebo_ros"
@@ -26,5 +27,5 @@
         args="--perspective-file $(find arbie_test)/config/test_arm_control.perspective"
     />
 
-    <include file="$(find arbie_bringup)/launch/teleop.launch"/>
+    <!--<include file="$(find arbie_bringup)/launch/teleop.launch"/>-->
 </launch>

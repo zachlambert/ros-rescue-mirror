@@ -3,6 +3,9 @@ gazebo_ros_control:
         # Used by gazebo to simulate controller dynamics.
         # If omitted, joint is set without dynamics, so snaps to desired
         # position or velocity.
+        # Only model arm dynamics, since it is useful to test arm control when
+        # it takes some time for the joint to respond to the command.
+        # For all other joints, modelling joint dynamics is unecessary.
 
         #tracks_right_joint: {p: 0.1, i: 0, d: 0.01}
         #tracks_left_joint: {p: 0.1, i: 0, d: 0.01}
@@ -11,13 +14,13 @@ gazebo_ros_control:
         # flippers_front_joint: {p: 400, i: 200, d: 0}
         # flippers_rear_joint: {p: 400, i: 200, d: 0}
 
-        arm_1_joint: {p: 400.0, i: 0, d: 20}
-        arm_2_joint: {p: 400.0, i: 0, d: 20}
-        arm_3_joint: {p: 400.0, i: 0, d: 20}
+        arm_1_joint: {p: 200.0, i: 0, d: 10}
+        arm_2_joint: {p: 200.0, i: 0, d: 10}
+        arm_3_joint: {p: 200.0, i: 0, d: 10}
 
-        # wrist_pitch_joint: {p: 200, i: 0, d: 10}
-        # wrist_yaw_joint: {p: 200, i: 0, d: 10}
-        # wrist_roll_joint: {p: 40, i: 0, d: 10}
+        wrist_pitch_joint: {p: 20, i: 0, d: 0.1}
+        wrist_yaw_joint: {p: 20, i: 0, d: 0.1}
+        wrist_roll_joint: {p: 10, i: 0, d: 0.1}
 
-        # gripper_right_joint: {p: 20, i: 0, d: 1}
-        # gripper_left_joint: {p: 20, i: 0, d: 1}
+        # gripper_right_joint: {p: 0.5, i: 0, d: 0.01}
+        # gripper_left_joint: {p: 0.5, i: 0, d: 0.01}

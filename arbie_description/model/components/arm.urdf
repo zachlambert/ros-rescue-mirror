@@ -133,7 +133,12 @@
 </link>
 
 
-<!-- GRIPPER LINKS -->
+<!-- GRIPPER LINKS
+<inertial> for gripper contact and linkage links are commented out.
+Only the driver link of the gripper is included. It is possible to add in the
+whole parallel linkage, but it is difficult to get right and is unstable,
+so am just omitting it for now. It's not that important to simulate this.
+-->
 
 <link name="gripper_base_link">
   <inertial>
@@ -178,11 +183,11 @@
 </link>
 
 <link name="gripper_right_linkage_link">
-  <inertial>
+  <!--<inertial>
     <origin rpy="0 0 0" xyz="0.005348977862044579 0.00500022075444323 -0.01750042810563407"/>
     <mass value="0.00386409068463368"/>
     <inertia ixx="1e-06" ixy="0.0" ixz="0.0" iyy="1e-06" iyz="-0.0" izz="0.0"/>
-  </inertial>
+  </inertial>-->
   <visual>
     <origin rpy="0 0 0" xyz="0.015 -0.485 -0.09"/>
     <geometry>
@@ -191,7 +196,7 @@
     <material name="gripper"/>
   </visual>
   <collision>
-    <origin rpy="0 0 0" xyz="-0.03671 -0.238651 0.153719"/>
+    <origin rpy="0 0 0" xyz="0.015 -0.485 -0.09"/>
     <geometry>
       <mesh filename="package://arbie_description/meshes/gripper_right_linkage.stl"/>
     </geometry>
@@ -199,11 +204,11 @@
 </link>
 
 <link name="gripper_right_contact_link">
-  <inertial>
+  <!--<inertial>
     <origin rpy="0 0 0" xyz="0.004967829686739981 -0.01899661466926142 0.016466890477460472"/>
     <mass value="0.023712538812289255"/>
     <inertia ixx="7e-06" ixy="1e-06" ixz="2e-06" iyy="7e-06" iyz="-1e-06" izz="4e-06"/>
-  </inertial>
+  </inertial>-->
   <visual>
     <origin rpy="0 0 0" xyz="-0.018906 -0.261251 -0.207219"/>
     <geometry>
@@ -242,11 +247,11 @@
 </link>
 
 <link name="gripper_left_contact_link">
-  <inertial>
+  <!--<inertial>
     <origin rpy="0 0 0" xyz="-0.0049669191825520796 -0.01899661466926142 0.016466890477460527"/>
     <mass value="0.023712538812289255"/>
     <inertia ixx="7e-06" ixy="-1e-06" ixz="-2e-06" iyy="7e-06" iyz="-1e-06" izz="4e-06"/>
-  </inertial>
+  </inertial>-->
   <visual>
     <origin rpy="0 0 0" xyz="0.013094 -0.261251 -0.207219"/>
     <geometry>
@@ -263,11 +268,11 @@
 </link>
 
 <link name="gripper_left_linkage_link">
-  <inertial>
+  <!--<inertial>
     <origin rpy="0 0 0" xyz="-0.005348977862044579 0.00500022075444323 0.01750042810563407"/>
     <mass value="0.00386409068463368"/>
     <inertia ixx="1e-06" ixy="0.0" ixz="0.0" iyy="1e-06" iyz="-0.0" izz="0.0"/>
-  </inertial>
+  </inertial>-->
   <visual>
     <origin rpy="0 0 0" xyz="0.03671 -0.238651 -0.153719"/>
     <geometry>
@@ -443,15 +448,12 @@
   </actuator>
 </transmission>
 
-<!-- GRIPPER DEPENDENT JOINTS -->
 
-<joint name="gripper_right_contact_dependent_joint" type="continuous">
-  <origin rpy="0 0.348 0" xyz="0.0 -0.0024 0.035"/>
-  <parent link="gripper_right_driver_link"/>
-  <child link="gripper_right_contact_link"/>
-  <axis xyz="0 1 0"/>
-  <mimic joint="gripper_right_joint" multiplier="-1"/>
-</joint>
+<!-- GRIPPER DEPENDENT JOINTS
+Links aren't driven. Set by the gripper parallel linkage.
+The <mimic> elements tell ROS how to set the joint values, used for setting the
+robot state.
+-->
 
 <joint name="gripper_left_contact_dependent_joint" type="continuous">
   <origin rpy="0 -0.348 0" xyz="0.0 -0.0024 0.035"/>
@@ -461,12 +463,12 @@
   <mimic joint="gripper_left_joint" multiplier="-1"/>
 </joint>
 
-<joint name="gripper_right_linkage_dependent_joint" type="continuous">
-  <origin rpy="0 -0.348 0" xyz="0.039616 -0.006 0.0302"/>
-  <parent link="gripper_base_link"/>
-  <child link="gripper_right_linkage_link"/>
+<joint name="gripper_right_contact_dependent_joint" type="continuous">
+  <origin rpy="0 0.348 0" xyz="0.0 -0.0024 0.035"/>
+  <parent link="gripper_right_driver_link"/>
+  <child link="gripper_right_contact_link"/>
   <axis xyz="0 1 0"/>
-  <mimic joint="gripper_right_joint"/>
+  <mimic joint="gripper_right_joint" multiplier="-1"/>
 </joint>
 
 <joint name="gripper_left_linkage_dependent_joint" type="continuous">
@@ -477,9 +479,65 @@
   <mimic joint="gripper_left_joint"/>
 </joint>
 
-<!-- GAZEBO ONLY JOINTS - CLOSE LOOP -->
+<joint name="gripper_right_linkage_dependent_joint" type="continuous">
+  <origin rpy="0 -0.348 0" xyz="0.039616 -0.006 0.0302"/>
+  <parent link="gripper_base_link"/>
+  <child link="gripper_right_linkage_link"/>
+  <axis xyz="0 1 0"/>
+  <mimic joint="gripper_right_joint"/>
+</joint>
 
+
+<!-- GAZEBO GRIPPER LINKAGE
+Currently not used, since neither option works particularly well
+-->
+
+<!-- OPTION 1: Use mimic joints plugin
+Will drive the dependent angles with the correct angles.
+Problem: The contact links seem to drift for some reason.
+-->
+
+<xacro:macro name="mimic_joint_plugin_gazebo" params="parent_joint mimic_joint multiplier:=1.0">
+<plugin name="${mimic_joint}_mimic_joint_plugin" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
+  <joint>${parent_joint}</joint>
+  <mimicJoint>${mimic_joint}</mimicJoint>
+  <multiplier>${multiplier}</multiplier>
+</plugin>
+</xacro:macro>
+
+
+<!--
 <gazebo>
+<xacro:mimic_joint_plugin_gazebo
+    parent_joint="gripper_left_joint" mimic_joint="gripper_left_contact_dependent_joint"
+    multiplier="-1.0"/>
+
+<xacro:mimic_joint_plugin_gazebo
+    parent_joint="gripper_right_joint" mimic_joint="gripper_right_contact_dependent_joint"
+    multiplier="-1.0"/>
+
+<xacro:mimic_joint_plugin_gazebo
+    parent_joint="gripper_left_joint" mimic_joint="gripper_left_linkage_dependent_joint"
+    multiplier="1.0"/>
+
+<xacro:mimic_joint_plugin_gazebo
+    parent_joint="gripper_right_joint" mimic_joint="gripper_right_linkage_dependent_joint"
+    multiplier="1.0"/>
+</gazebo>
+-->
+
+
+<!-- OPTION 2: Add joints to close the parallel linkages
+Can't include these in the standard model, since ROS doesn't support parallel linkages.
+However, Gazebo implements joints as a list of constraints that must be satisfied,
+so you can add whatever joints you want.
+Problem: Can close the parallel linkage, but doesn't respond to angle
+commands and just stays stuck or becomes unstable.
+-->
+
+<!--
+<gazebo>
+
 <joint name='gripper_left_linkage_dependent_joint2' type='revolute'>
   <pose>-0.0235 -0.0225 -0.0185 0 0 0</pose>
   <child>gripper_left_contact_link</child>
@@ -515,6 +573,8 @@
     <use_parent_model_frame>1</use_parent_model_frame>
   </axis>
 </joint>
+
 </gazebo>
+-->
 
 </to_include>
