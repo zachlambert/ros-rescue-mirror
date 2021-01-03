@@ -31,7 +31,7 @@
             name="teleop_twist_keyboard"
             pkg="teleop_twist_keyboard"
             type="teleop_twist_keyboard.py"
-            args="cmd_vel:='/base_controller/cmd_vel' _speed:='0.5' _turn:='4'">
+            args="cmd_vel:='/base_controller/cmd_vel' _speed:='0.25' _turn:='2'">
         </node>
     </group>
 </launch>

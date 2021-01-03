@@ -8,11 +8,12 @@
 
 <gazebo>
     <self_collide>true</self_collide>
-    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so"/>
+    <!-- Fix the robot to the world -->
     <joint name="fixed_base_joint" type="rigid">
         <parent>world</parent>
         <child>base_link</child>
     </joint>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so"/>
 </gazebo>
 
 </robot>
