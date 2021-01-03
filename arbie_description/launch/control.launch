@@ -12,7 +12,7 @@
     </node>
 
     <rosparam
-        file="$(find arbie_bringup)/config/controllers.yaml"
+        file="$(find arbie_description)/config/controllers.yaml"
         command="load"
     />
 

@@ -3,7 +3,7 @@
     <arg name="pcb" default="true"/>
 
     <rosparam
-        file="$(find arbie_main)/config/usb.yaml"
+        file="$(find arbie_hardware)/config/usb.yaml"
         command="load"
     />
 

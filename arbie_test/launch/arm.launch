@@ -1,23 +1,26 @@
 <launch>
+    <!-- Load robot description and start the hardware -->
     <param
         name="robot_description"
         command="xacro $(find arbie_description)/model/arbie.urdf.xacro"
     />
-
-    <include file="$(find arbie_bringup)/launch/hardware.launch">
+    <include file="$(find arbie_hardware)/launch/hardware.launch">
         <arg name="pcb" value="false"/>
     </include>
 
-    <include file="$(find arbie_bringup)/launch/control.launch">
+    <!-- Start controllers -->
+    <include file="$(find arbie_description)/launch/control.launch">
         <arg name="base" value="false"/>
         <arg name="flippers" value="false"/>
     </include>
 
+    <!-- Start a window for viewing the robot model, and a window for setting
+    the arm joint commands -->
     <node
         name="rviz"
         pkg="rviz"
         type="rviz"
-        args="-d $(find arbie_utils)/config/view_model.rviz"
+        args="-d $(find arbie_test)/config/view_model.rviz"
     />
     <node
         name="rqt_gui"

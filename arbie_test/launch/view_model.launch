@@ -17,6 +17,6 @@
         name="rviz"
         pkg="rviz"
         type="rviz"
-        args="-d $(find arbie_utils)/config/view_model.rviz"
+        args="-d $(find arbie_test)/config/view_model.rviz"
     />
 </launch>

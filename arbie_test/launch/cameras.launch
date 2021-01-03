@@ -1,0 +1,17 @@
+<launch>
+    <!-- Start the realsense cameras -->
+    <include file="$(find arbie_slam)/launch/cameras.launch"/>
+    <!-- View the robot model and depth camera input -->
+    <node
+        name="rviz"
+        pkg="rviz"
+        type="rviz"
+        args="-d $(find arbie_test)/config/base.rviz"
+    />
+    <!-- Command the camera tilt angle manually -->
+    <node
+        name="joint_state_publisher_gui"
+        pkg="joint_state_publisher_gui"
+        type="joint_state_publisher_gui"
+    />
+</launch>

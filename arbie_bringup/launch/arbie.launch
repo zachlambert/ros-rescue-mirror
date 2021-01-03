@@ -3,8 +3,8 @@
         name="robot_description"
         command="cat $(find arbie_description)/model/arbie.urdf"
     />
-    <include file="$(find arbie_bringup)/launch/hardware.launch"/>
-    <include file="$(find arbie_bringup)/launch/control.launch"/>
-    <include file="$(find arbie_bringup)/launch/teleop.launch"/>
+    <include file="$(find arbie_hardware)/launch/hardware.launch"/>
+    <include file="$(find arbie_description)/launch/control.launch"/>
+    <include file="$(find arbie_teleop)/launch/teleop.launch"/>
     <include file="$(find arbie_slam)/launch/slam.launch"/>
 </launch>

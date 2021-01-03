@@ -3,4 +3,8 @@
         respawn="true"
         args="$(find arbie_gazebo)/worlds/manipulation.world"
     />
+    <rosparam
+        file="$(find arbie_gazebo)/config/gazebo_control_gains.yaml"
+        command="load"
+    />
 </launch>

@@ -1,12 +1,8 @@
 <launch>
+    <!-- Load robot description and spawn gazebo model from this -->
     <param
         name="robot_description"
         command="xacro $(find arbie_description)/model/arbie_sim_base.urdf.xacro"
-    />
-
-    <rosparam
-        file="$(find arbie_test)/config/gazebo_control_gains.yaml"
-        command="load"
     />
     <node
         name="spawn_model"
@@ -15,14 +11,29 @@
         args="-param robot_description -urdf -x 0 -y 0 -z 0 -model arbie -b -gazebo_namespace gzserver"
     />
 
-    <include file="$(find arbie_bringup)/launch/control.launch">
+    <!-- Start controllers -->
+    <include file="$(find arbie_description)/launch/control.launch">
         <arg name="arm" value="false"/>
         <arg name="flippers" value="false"/>
     </include>
 
-    <include file="$(find arbie_bringup)/launch/teleop.launch">
-        <arg name="webgui" value="false"/>
-        <arg name="xbox" value="false"/>
-        <arg name="keyboard_base" value="true"/>
-    </include>
+    <!-- Command base velocity -->
+    <node
+        name="teleop_twist_keyboard"
+        pkg="teleop_twist_keyboard"
+        type="teleop_twist_keyboard.py"
+        args="cmd_vel:='/base_controller/cmd_vel' _speed:='0.3' _turn:='3'">
+    </node>
+    <!-- View the robot model and depth camera input -->
+    <node
+        name="rviz"
+        pkg="rviz"
+        type="rviz"
+        args="-d $(find arbie_test)/config/base.rviz"
+    />
+    <node
+        name="joint_state_publisher_gui"
+        pkg="joint_state_publisher_gui"
+        type="joint_state_publisher_gui"
+    />
 </launch>
