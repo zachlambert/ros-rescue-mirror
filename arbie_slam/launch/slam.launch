@@ -1,18 +1,4 @@
 <launch>
-    <arg name="fake" default="false"/>
-    <arg name="sim" default="false"/>
-
-    <group if="$(arg fake)">
-        <node
-            name="localisation_placeholder"
-            pkg="arbie_slam"
-            type="localisation_placeholder"
-        />
-    </group>
-
-    <group if="$(eval arg('fake') == 0)">
-
-    <group if="$(arg sim)">
     <include file="$(find rtabmap_ros)/launch/rtabmap.launch">
         <arg name="rtabmap_args" value="--delete_db_n_start --Optimizer/GravitySigma 0.3"/>
         <arg name="odom_topic" value="/t265/odom/sample"/>
@@ -24,21 +10,4 @@
         <arg name="approx_rgbd_sync" value="false"/>
         <arg name="visual_odometry" value="true"/>
     </include>
-    </group>
-
-    <group if="$(eval arg('sim') == 0)">
-    <include file="$(find rtabmap_ros)/launch/rtabmap.launch">
-        <arg name="rtabmap_args" value="--delete_db_n_start --Optimizer/GravitySigma 0.3"/>
-        <arg name="odom_topic" value="/t265/odom/sample"/>
-        <arg name="frame_id" value="t265_pose_frame"/>
-        <arg name="rgbd_sync" value="true"/>
-        <arg name="depth_topic" value="/d400/aligned_depth_to_color/image_raw"/>
-        <arg name="rgb_topic" value="/d400/color/image_raw"/>
-        <arg name="camera_info_topic" value="/d400/color/camera_info"/>
-        <arg name="approx_rgbd_sync" value="false"/>
-        <arg name="visual_odometry" value="true"/>
-    </include>
-    </group>
-
-    </group>
 </launch>
