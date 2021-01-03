@@ -31,9 +31,4 @@
         type="rviz"
         args="-d $(find arbie_test)/config/base.rviz"
     />
-    <node
-        name="joint_state_publisher_gui"
-        pkg="joint_state_publisher_gui"
-        type="joint_state_publisher_gui"
-    />
 </launch>

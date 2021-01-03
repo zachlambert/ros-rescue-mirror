@@ -9,17 +9,16 @@ rospy.init_node("localisation_placeholder")
 
 tf_broadcaster = TransformBroadcaster()
 tf_msg = TransformStamped()
-tf_msg.header.frame_id = "map"
-tf_msg.child_frame_id = "base_link"
-tf_msg.transform.rotation.w = 1
 
 def odom_callback(msg):
-    tf_msg.header.stamp = rospy.time.now()
-    tf_msg.transform.translation = msg.translation
-    tf_msg.transform.orientation = msg.orientation
-    tf_broadcaster.send_transform(tf_msg)
+    tf_msg.header.stamp = rospy.Time.now()
+    tf_msg.transform.translation = msg.pose.pose.position
+    tf_msg.transform.rotation = msg.pose.pose.orientation
+    tf_msg.header.frame_id = msg.header.frame_id
+    tf_msg.child_frame_id = msg.child_frame_id
+    tf_broadcaster.sendTransform(tf_msg)
 
 odom_sub = rospy.Subscriber(
-    "tracks_velocity_controller/odom", Odometry, odom_callback)
+    "t265/odom/sample", Odometry, odom_callback)
 
 rospy.spin()

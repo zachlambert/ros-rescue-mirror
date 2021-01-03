@@ -8,4 +8,10 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
+  <exec_depend>arbie_description</exec_depend>
+  <exec_depend>arbie_hardware</exec_depend>
+  <exec_depend>arbie_teleop</exec_depend>
+  <exec_depend>arbie_manipulation</exec_depend>
+  <exec_depend>arbie_slam</exec_depend>
+
 </package>

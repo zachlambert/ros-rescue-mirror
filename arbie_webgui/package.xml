@@ -8,4 +8,7 @@
 
     <buildtool_depend>catkin</buildtool_depend>
 
+    <exec_depend>roswww</exec_depend>
+    <exec_depend>rosbridge_server</exec_depend>
+    <exec_depend>tf2_web_republisher</exec_depend>
 </package>

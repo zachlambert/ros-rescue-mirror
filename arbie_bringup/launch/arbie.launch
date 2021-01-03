@@ -5,6 +5,8 @@
     />
     <include file="$(find arbie_hardware)/launch/hardware.launch"/>
     <include file="$(find arbie_description)/launch/control.launch"/>
+    <include file="$(find arbie_webgui)/launch/webgui.launch"/>
     <include file="$(find arbie_teleop)/launch/teleop.launch"/>
+    <include file="$(find arbie_manipulation)/launch/manipulation.launch"/>
     <include file="$(find arbie_slam)/launch/slam.launch"/>
 </launch>

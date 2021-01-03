@@ -66,69 +66,6 @@
   </collision>
 </link>
 
-<!--
-<xacro:macro name="d400_moved" params="x y z">
-<link name="camera_d400_link">
-  <inertial>
-    <origin rpy="${-pi/2} ${-pi} ${-pi/2}" xyz="${0.300025146597877-z} ${-(-0.019510973805073988-x)} ${0.09028780766834578-y}"/>
-    <mass value="0.3380578483539848"/>
-    <inertia ixx="3.1e-05" ixy="-0.0" ixz="2e-06" iyy="0.000212" iyz="-0.0" izz="0.000211"/>
-  </inertial>
-  <visual>
-    <origin rpy="${-pi/2} ${-pi} ${-pi/2}" xyz="${0.025-z} ${-(-0.02125-x)} ${-y}"/>
-    <geometry>
-      <mesh filename="package://arbie_description/meshes/camera_d400.stl"/>
-    </geometry>
-    <material name="camera"/>
-  </visual>
-  <collision>
-    <origin rpy="${-pi/2} ${-pi} ${-pi/2}" xyz="${0.025-z} ${-(-0.02125-x)} ${-y}"/>
-    <geometry>
-      <mesh filename="package://arbie_description/meshes/camera_d400.stl"/>
-    </geometry>
-  </collision>
-</link>
-
-<joint name="rigid_camera_mount_to_camera_d400_joint" type="fixed">
-  <origin rpy="${-pi/2} ${-pi/2} 0" xyz="${-0.012557+x} ${-0.073851+y} ${-0.287572+z}"/>
-  <parent link="camera_mount_link"/>
-  <child link="camera_d400_link"/>
-</joint>
-</xacro:macro>
-<xacro:d400_moved x="-0.02" y="0.09" z="0.31"/>
-
-<xacro:macro name="t265_moved" params="x y z">
-<link name="camera_t265_link">
-  <inertial>
-    <origin rpy="${-pi/2} ${-pi} ${-pi/2}" xyz="${0.0048840237534042985-z} ${-(-0.023753775255487577-x)} ${-y}"/>
-    <mass value="0.11087104010777465"/>
-    <inertia ixx="7e-06" ixy="0.0" ixz="-1e-06" iyy="0.000103" iyz="-0.0" izz="0.000108"/>
-  </inertial>
-  <visual>
-    <origin rpy="${-pi/2} ${-pi} ${-pi/2}" xyz="${-0.276572-z} ${-(-0.016177-x)} ${-0.060351-y} "/>
-    <geometry>
-      <mesh filename="package://arbie_description/meshes/camera_t265.stl"/>
-    </geometry>
-    <material name="camera"/>
-  </visual>
-  <collision>
-    <origin rpy="${-pi/2} ${-pi} ${-pi/2}" xyz="${-0.276572-z} ${-(-0.016177-x)} ${-0.060351-y} "/>
-    <geometry>
-      <mesh filename="package://arbie_description/meshes/camera_t265.stl"/>
-    </geometry>
-  </collision>
-</link>
-
-<joint name="rigid_camera_mount_to_camera_t265_joint" type="fixed">
-  <origin rpy="${-pi/2} ${-pi/2} 0" xyz="${-0.01763+x} ${-0.0135+y} ${0.014+z}"/>
-  <parent link="camera_mount_link"/>
-  <child link="camera_t265_link"/>
-</joint>
-</xacro:macro>
-<xacro:t265_moved x="-0.0165" y="0" z="0.01"/>
--->
-
-
 <!-- RIGID JOINTS -->
 
 <joint name="rigid_body_to_camera_mount_leg_1_joint" type="fixed">
@@ -160,15 +97,6 @@
   <child link="base_link"/>
 </joint>
 
-<!--
-<joint name="camera_tilt_joint" type="continuous">
-  <origin rpy="0 0 0" xyz="-0.004 0.02575 0.0"/>
-  <parent link="camera_mount_leg_1_link"/>
-  <child link="camera_mount_link"/>
-  <axis xyz="1 0 0"/>
-</joint>
--->
-
 <transmission name="camera_mount_transmission">
   <type>transmission_interface/SimpleTransmission</type>
   <joint name="camera_tilt_joint">
@@ -180,36 +108,15 @@
   </actuator>
 </transmission>
 
-<!-- CAMERA FRAMES FOR ROS -->
-<!-- Different to those given to Gazebo, since different
-conventions are used for the frame orientation -->
-
-<!--
-<link name="camera_d400_frame"/>
-<joint name="camera_d400_frame_joint" type="fixed">
-  <origin rpy="${pi/2} ${pi} ${pi/2}" xyz="0 0 0"/>
-  <parent link="camera_d400_link"/>
-  <child link="camera_d400_frame"/>
-</joint>
-
-<link name="camera_t265_frame"/>
-<joint name="camera_t265_frame_joint" type="fixed">
-  <origin rpy="${pi/2} ${pi} ${pi/2}" xyz="0 0 0"/>
-  <parent link="camera_t265_link"/>
-  <child link="camera_t265_frame"/>
-</joint>
--->
-
-
 <!-- CAMERA SENSORS AND PLUGINS  -->
 
 <xacro:include filename="$(find realsense_ros_gazebo)/xacro/depthcam.xacro"/>
-<xacro:realsense_d435 sensor_name="d400" parent_link="camera_mount_link" rate="10">
+<xacro:realsense_d435 sensor_name="d400" parent_link="camera_mount_link" rate="50">
   <origin rpy="${-pi/2} ${-pi/2} 0" xyz="-0.0345 0.004 0.011"/>
 </xacro:realsense_d435>
 
 <xacro:include filename="$(find realsense_ros_gazebo)/xacro/tracker.xacro"/>
-<xacro:realsense_T265 sensor_name="t265" rate="10">
+<xacro:realsense_T265 sensor_name="t265" rate="50">
   <origin rpy="${-pi/2} ${-pi/2} 0" xyz="-0.044 -0.0135 0.02"/>
 </xacro:realsense_T265>
 
@@ -218,147 +125,5 @@ conventions are used for the frame orientation -->
   <child link="camera_mount_link"/>
   <origin rpy="${pi/2} 0 ${pi/2}" xyz="-0.02 0.044 0.0135"/>
 </joint>
-
-<!--
-<gazebo reference="camera_t265_link">
-<sensor type="multicamera" name="t265_camera">
-    <update_rate>30.0</update_rate>
-    <camera name="left">
-        <pose>0 0.035 0 0 0 0</pose>
-        <horizontal_fov>1.3962634</horizontal_fov>
-        <image>
-            <width>800</width>
-            <height>800</height>
-            <format>R8G8B8</format>
-        </image>
-        <clip>
-            <near>0.02</near>
-            <far>300</far>
-        </clip>
-        <noise>
-            <type>gaussian</type>
-            <mean>0.0</mean>
-            <stddev>0.007</stddev>
-        </noise>
-    </camera>
-    <camera name="right">
-        <pose>0 -0.035 0 0 0 0</pose>
-        <horizontal_fov>1.3962634</horizontal_fov>
-        <image>
-            <width>800</width>
-            <height>800</height>
-            <format>R8G8B8</format>
-        </image>
-        <clip>
-            <near>0.02</near>
-            <far>300</far>
-        </clip>
-        <noise>
-            <type>gaussian</type>
-            <mean>0.0</mean>
-            <stddev>0.007</stddev>
-        </noise>
-    </camera>
-    <plugin name="t265_camera_controller" filename="libgazebo_ros_multicamera.so">
-        <alwaysOn>true</alwaysOn>
-        <updateRate>0.0</updateRate>
-        <cameraName>t265</cameraName>
-        <imageTopicName>image_raw</imageTopicName>
-        <cameraInfoTopicName>camera_info</cameraInfoTopicName>
-        <frameName>camera_t265_frame</frameName>
-        <hackBaseline>0.07</hackBaseline>
-        <distortionK1>0.0</distortionK1>
-        <distortionK2>0.0</distortionK2>
-        <distortionK3>0.0</distortionK3>
-        <distortionT1>0.0</distortionT1>
-        <distortionT2>0.0</distortionT2>
-    </plugin>
-</sensor>
-</gazebo>
-
-<gazebo reference="camera_t265_link">
-<gravity>true</gravity>
-<sensor name="t265_imu" type="imu">
-    <always_on>true</always_on>
-    <update_rate>30.0</update_rate>
-    <visualize>true</visualize>
-    <topic>/t265/imu</topic>
-    <plugin filename="libgazebo_ros_imu_sensor.so" name="t265_imu_controller">
-        <topicName>/t265/imu</topicName>
-        <bodyName>camera_t265_link</bodyName>
-        <updateRateHZ>10.0</updateRateHZ>
-        <gaussianNoise>0.0</gaussianNoise>
-        <xyzOffset>0 0 0</xyzOffset>
-        <rpyOffset>0 0 0</rpyOffset>
-        <frameName>camera_t265_link</frameName>
-        <initialOrientationAsReference>false</initialOrientationAsReference>
-    </plugin>
-    <pose>0 0 0 0 0 0</pose>
-</sensor>
-</gazebo>
-
-<gazebo reference="camera_d400_link">
-<sensor name="d400_camera" type="depth">
-    <update_rate>30.0</update_rate>
-    <camera>
-        <horizontal_fov>1.047198</horizontal_fov>
-        <image>
-            <width>640</width>
-            <height>480</height>
-            <format>R8G8B8</format>
-        </image>
-        <clip>
-            <near>0.05</near>
-            <far>300</far>
-        </clip>
-    </camera>
-    <plugin name="d400_camera_controller" filename="libgazebo_ros_openni_kinect.so">
-        <baseline>0.2</baseline>
-        <alwaysOn>true</alwaysOn>
-        <updateRate>1.0</updateRate>
-        <cameraName>d400</cameraName>
-        <imageTopicName>/d400/color/image_raw</imageTopicName>
-        <cameraInfoTopicName>/d400/color/camera_info</cameraInfoTopicName>
-        <depthImageTopicName>/d400/depth/image_raw</depthImageTopicName>
-        <depthImageInfoTopicName>/d400/depth/camera_info</depthImageInfoTopicName>
-        <pointCloudTopicName>/d400/depth/points</pointCloudTopicName>
-        <frameName>camera_d400_frame</frameName>
-        <pointCloudCutoff>0.5</pointCloudCutoff>
-        <pointCloudCutoffMax>3.0</pointCloudCutoffMax>
-        <distortionK1>0.00000001</distortionK1>
-        <distortionK2>0.00000001</distortionK2>
-        <distortionK3>0.00000001</distortionK3>
-        <distortionT1>0.00000001</distortionT1>
-        <distortionT2>0.00000001</distortionT2>
-        <CxPrime>0</CxPrime>
-        <Cx>0</Cx>
-        <Cy>0</Cy>
-        <focalLength>0</focalLength>
-        <hackBaseline>0</hackBaseline>
-    </plugin>
-</sensor>
-</gazebo>
-
-<gazebo reference="camera_d400_link">
-<gravity>true</gravity>
-<sensor name="d400_imu" type="imu">
-    <always_on>true</always_on>
-    <update_rate>30.0</update_rate>
-    <visualize>true</visualize>
-    <topic>/d400/imu</topic>
-    <plugin filename="libgazebo_ros_imu_sensor.so" name="d400_imu_controller">
-        <topicName>/d400/imu</topicName>
-        <bodyName>camera_d400_link</bodyName>
-        <updateRateHZ>10.0</updateRateHZ>
-        <gaussianNoise>0.0</gaussianNoise>
-        <xyzOffset>0 0 0</xyzOffset>
-        <rpyOffset>0 0 0</rpyOffset>
-        <frameName>camera_d400_link</frameName>
-        <initialOrientationAsReference>false</initialOrientationAsReference>
-    </plugin>
-    <pose>0 0 0 0 0 0</pose>
-</sensor>
-</gazebo>
--->
 
 </to_include>

@@ -1,6 +1,5 @@
 <launch>
-  <!-- Copied from realsense2_camera/launch/rs_d400_and_t265.launch,
-       with edited static transform between the two cameras -->
+  <!-- Copied from realsense2_camera/launch/rs_d400_and_t265.launch, wit some changes -->
 
   <arg name="device_type_camera1"    		default="t265"/>
   <arg name="device_type_camera2"    		default="d4.5"/> <!-- Note: using regular expression. match D435, D435i, D415... -->
@@ -9,6 +8,15 @@
   <arg name="camera1"              			default="t265"/>
   <arg name="camera2"              			default="d400"/>
   <arg name="tf_prefix_camera1"         default="$(arg camera1)"/>
+
+<!--
+<joint name="camera_tilt_joint" type="continuous">
+  <origin rpy="0 0 0" xyz="-0.004 0.02575 0.0"/>
+  <parent link="camera_mount_leg_1_link"/>
+  <child link="camera_mount_link"/>
+  <axis xyz="1 0 0"/>
+</joint>
+-->
   <arg name="tf_prefix_camera2"         default="$(arg camera2)"/>
   <arg name="initial_reset"             default="false"/>
   <arg name="enable_fisheye"            default="false"/>
@@ -31,6 +39,7 @@
       <arg name="topic_odom_in"         value="$(arg topic_odom_in)"/>
       <arg name="calib_odom_file"       value="$(arg calib_odom_file)"/>
       <arg name="enable_pose"           value="true"/>
+      <arg name="publish_odom_tf"            value="false"/>
     </include>
   </group>
 
@@ -49,14 +58,6 @@
       <arg name="clip_distance"         value="$(arg clip_distance)"/>
     </include>
   </group>
-
-  <!--<node pkg="tf" type="static_transform_publisher" name="t265_to_d400" args="0 0 0.031 0 0 0 /$(arg tf_prefix_camera1)_link /$(arg tf_prefix_camera2)_link 100"/>-->
-
-  <param
-    name="robot_description"
-    command="xacro $(find arbie_description)/model/arbie_sim_base.urdf.xacro"
-  />
-  <node name="robot_state_publisher" type="robot_state_publisher" pkg="robot_state_publisher"/>
 
 </launch>
 

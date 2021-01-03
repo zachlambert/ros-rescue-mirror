@@ -7,8 +7,12 @@
     <license>TODO</license>
 
     <buildtool_depend>catkin</buildtool_depend>
+
+    <exec_depend>robot_state_publisher</exec_depend>
+    <exec_depend>controller_manager</exec_depend>
+
+    <!-- Required for gazebo to access meshes -->
     <export>
-        <!-- Required for gazebo to access meshes -->
         <gazebo_ros
             gazebo_plugin_path="${prefix}/lib"
             gazebo_model_path="${prefix}/.."

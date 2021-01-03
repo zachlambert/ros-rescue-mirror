@@ -1,27 +1,8 @@
 <launch>
-    <arg name="webgui" default="true"/>
-    <arg name="xbox" default="true"/>
-
-    <!-- Launch the webserver for visualisation and user input -->
-    <group if="$(arg webgui)">
     <node
-        name="webserver"
-        pkg="roswww"
-        type="webserver.py"
-        respawn="true"
-    />
-    <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
-
-    <!-- Necessary for accessing tf information on web viewer -->
-    <node pkg="tf2_web_republisher" type="tf2_web_republisher" name="tf2_web_republisher"/>
-
-    <group if="$(arg xbox)">
-        <node
-            name="gamepad"
-            pkg="arbie_teleop"
-            type="gamepad">
-            <remap from="joy" to="gamepad/values"/>
-        </node>
-    </group>
-    </group>
+        name="gamepad"
+        pkg="arbie_teleop"
+        type="gamepad">
+        <remap from="joy" to="gamepad/values"/>
+    </node>
 </launch>
