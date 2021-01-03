@@ -7,11 +7,11 @@ Panels:
         - /Global Options1
         - /Status1
         - /DepthCloud1
+        - /DepthCloud1/Status1
         - /DepthCloud1/Auto Size1
         - /Odometry1
         - /Odometry1/Shape1
         - /TF1
-        - /TF1/Status1
       Splitter Ratio: 0.5
     Tree Height: 734
   - Class: rviz/Selection
@@ -137,7 +137,19 @@ Visualization Manager:
         All Enabled: true
         base_link:
           Value: true
+        body_link:
+          Value: true
+        camera_mount_aligned_frame:
+          Value: true
+        camera_mount_leg_1_link:
+          Value: true
+        camera_mount_leg_2_link:
+          Value: true
+        camera_mount_link:
+          Value: true
         d400_aligned_depth_to_color_frame:
+          Value: true
+        d400_bottom_screw_frame:
           Value: true
         d400_color_frame:
           Value: true
@@ -147,11 +159,29 @@ Visualization Manager:
           Value: true
         d400_depth_optical_frame:
           Value: true
+        d400_left_ir_frame:
+          Value: true
+        d400_left_ir_optical_frame:
+          Value: true
         d400_link:
           Value: true
-        map:
+        d400_right_ir_frame:
           Value: true
-        t265/odom/sample:
+        d400_right_ir_optical_frame:
+          Value: true
+        skid_link:
+          Value: true
+        t265_accel_frame:
+          Value: true
+        t265_fisheye1_frame:
+          Value: true
+        t265_fisheye1_optical_frame:
+          Value: true
+        t265_fisheye2_frame:
+          Value: true
+        t265_fisheye2_optical_frame:
+          Value: true
+        t265_gyro_frame:
           Value: true
         t265_link:
           Value: true
@@ -159,36 +189,219 @@ Visualization Manager:
           Value: true
         t265_pose_frame:
           Value: true
-        world:
+        tracks_left_link:
+          Value: true
+        tracks_left_wheel_link:
+          Value: true
+        tracks_right_link:
+          Value: true
+        tracks_right_wheel_link:
           Value: true
       Marker Scale: 1
       Name: TF
       Show Arrows: true
       Show Axes: true
-      Show Names: true
+      Show Names: false
       Tree:
-        map:
-          t265/odom/sample:
-            {}
         t265_odom_frame:
           t265_pose_frame:
             t265_link:
-              d400_link:
-                d400_aligned_depth_to_color_frame:
-                  d400_color_optical_frame:
-                    {}
-                d400_color_frame:
+              camera_mount_link:
+                camera_mount_aligned_frame:
+                  base_link:
+                    body_link:
+                      camera_mount_leg_1_link:
+                        {}
+                      camera_mount_leg_2_link:
+                        {}
+                      skid_link:
+                        {}
+                      tracks_left_link:
+                        tracks_left_wheel_link:
+                          {}
+                      tracks_right_link:
+                        tracks_right_wheel_link:
+                          {}
+                d400_bottom_screw_frame:
+                  d400_link:
+                    d400_aligned_depth_to_color_frame:
+                      {}
+                    d400_depth_frame:
+                      d400_color_frame:
+                        d400_color_optical_frame:
+                          {}
+                      d400_depth_optical_frame:
+                        {}
+                      d400_left_ir_frame:
+                        d400_left_ir_optical_frame:
+                          {}
+                      d400_right_ir_frame:
+                        d400_right_ir_optical_frame:
+                          {}
+              t265_accel_frame:
+                {}
+              t265_fisheye1_frame:
+                t265_fisheye1_optical_frame:
                   {}
-                d400_depth_frame:
-                  d400_depth_optical_frame:
-                    {}
+              t265_fisheye2_frame:
+                t265_fisheye2_optical_frame:
+                  {}
+              t265_gyro_frame:
+                {}
       Update Interval: 0
       Value: true
+    - Alpha: 1
+      Class: rviz/RobotModel
+      Collision Enabled: false
+      Enabled: true
+      Links:
+        All Links Enabled: true
+        Expand Joint Details: false
+        Expand Link Details: false
+        Expand Tree: false
+        Link Tree Style: Links in Alphabetic Order
+        base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        body_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        camera_mount_aligned_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        camera_mount_leg_1_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        camera_mount_leg_2_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        camera_mount_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        d400_bottom_screw_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d400_color_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d400_color_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d400_depth_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d400_depth_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d400_left_ir_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d400_left_ir_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d400_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        d400_right_ir_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d400_right_ir_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        skid_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        t265_accel_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        t265_fisheye1_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        t265_fisheye1_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        t265_fisheye2_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        t265_fisheye2_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        t265_gyro_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        t265_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        t265_odom_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        t265_pose_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        tracks_left_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        tracks_left_wheel_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        tracks_right_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        tracks_right_wheel_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+      Name: RobotModel
+      Robot Description: robot_description
+      TF Prefix: ""
+      Update Interval: 0
+      Value: true
+      Visual Enabled: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
     Default Light: true
-    Fixed Frame: t265_odom_frame
+    Fixed Frame: base_link
     Frame Rate: 30
   Name: root
   Tools:
@@ -212,33 +425,33 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 6.5725998878479
+      Distance: 18.17703628540039
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -0.39510199427604675
-        Y: 0.06192213296890259
-        Z: 0.055547308176755905
+        X: -0.20752273499965668
+        Y: -0.7442376017570496
+        Z: 0.32127130031585693
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.8753980398178101
+      Pitch: 0.36539846658706665
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 3.435404062271118
+      Yaw: 4.680408477783203
     Saved: ~
 Window Geometry:
   Displays:
-    collapsed: false
+    collapsed: true
   Height: 1025
-  Hide Left Dock: false
+  Hide Left Dock: true
   Hide Right Dock: false
-  QMainWindow State: 000000ff00000000fd00000004000000000000015600000367fc0200000008fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000003b00000367000000c700fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261000000010000010f00000367fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073010000003b00000367000000a000fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000003a70000003efc0100000002fb0000000800540069006d00650100000000000003a70000024400fffffffb0000000800540069006d00650100000000000004500000000000000000000001360000036700000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd00000004000000000000015600000367fc0200000008fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073000000003b00000367000000c700fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261000000010000010f00000367fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073010000003b00000367000000a000fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000003a70000003efc0100000002fb0000000800540069006d00650100000000000003a70000024400fffffffb0000000800540069006d00650100000000000004500000000000000000000002920000036700000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Selection:
     collapsed: false
   Time:

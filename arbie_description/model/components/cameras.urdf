@@ -147,11 +147,27 @@
 <!-- CAMERA MOUNT JOINT -->
 
 <joint name="camera_tilt_joint" type="continuous">
+  <origin rpy="0 0 0" xyz="0 -0.01 0"/>
+  <parent link="camera_mount_link"/>
+  <child link="camera_mount_aligned_frame"/>
+  <axis xyz="1 0 0"/>
+</joint>
+
+<link name="camera_mount_aligned_frame"/>
+<joint name="camera_mount_aligned_frame_to_base_joint" type="fixed">
+  <origin rpy="${-pi/2} ${-pi/2} 0" xyz="-0.034 -0.139 -0.2725"/>
+  <parent link="camera_mount_aligned_frame"/>
+  <child link="base_link"/>
+</joint>
+
+<!--
+<joint name="camera_tilt_joint" type="continuous">
   <origin rpy="0 0 0" xyz="-0.004 0.02575 0.0"/>
   <parent link="camera_mount_leg_1_link"/>
   <child link="camera_mount_link"/>
   <axis xyz="1 0 0"/>
 </joint>
+-->
 
 <transmission name="camera_mount_transmission">
   <type>transmission_interface/SimpleTransmission</type>
@@ -193,9 +209,15 @@ conventions are used for the frame orientation -->
 </xacro:realsense_d435>
 
 <xacro:include filename="$(find realsense_ros_gazebo)/xacro/tracker.xacro"/>
-<xacro:realsense_T265 sensor_name="t265" parent_link="camera_mount_link" rate="10">
+<xacro:realsense_T265 sensor_name="t265" rate="10">
   <origin rpy="${-pi/2} ${-pi/2} 0" xyz="-0.044 -0.0135 0.02"/>
 </xacro:realsense_T265>
+
+<joint name="t265_to_camera_mount_fixed_joint" type="fixed">
+  <parent link="t265_link"/>
+  <child link="camera_mount_link"/>
+  <origin rpy="${pi/2} 0 ${pi/2}" xyz="-0.02 0.044 0.0135"/>
+</joint>
 
 <!--
 <gazebo reference="camera_t265_link">
