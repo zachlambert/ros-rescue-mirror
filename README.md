@@ -6,16 +6,31 @@ Start the full robot:
 This uses a webserver for teleoperation, which can be viewed at:  
 `localhost:8000/arbie_webgui`
 
-The `arbie_test` package contains launch files for running specific subsystems and testing in simulation, eg:  
-`roslaunch arbie_test arm.launch` -> Starts arm control only  
-`roslaunch arbie_test sim_arm.launch` -> Starts arm control only in simulation
+# Testing subsystems
 
-If testing in simulation, the gazebo server must be started for a given world:  
-`roslaunch arbie_gazebo manipulation.launch` -> World for testing arm control. (Currently empty, but could add objects to interact with)  
-`roslaunch arbie_gazebo navigation.launch` -> World for testing navigation. Has walls and obstacles.
+The `arbie_test` package contains launch files for running specific subsystems and testing in simulation.  
 
-The gazebo client isn't necessary, but can be useful for directly interacting with the simulation. Start with:  
-`rosrun gazebo_ros gzclient`
+Testing arm control:  
+`roslaunch arbie_test arm.launch`
+
+Testing arm control in simulation:   
+`roslaunch arbie_gazebo manipulation.launch`  
+`roslaunch arbie_test sim_arm.launch`
+
+Testing base control in simulation with slam:  
+`roslaunch arbie_gazebo navigation.launch`  
+`roslaunch arbie_test sim_base.launch`  
+`roslaunch arbie_slam slam.launch`
+
+Testing the realsense cameras with slam:  
+`roslaunch arbie_test test_cameras.launch`  
+`roslaunch arbie_slam slam.launch`
+
+When testing in simulation, the `arbie_gazebo` launch file will start the gazebo server with a specific world.  
+When restarting the robot, this can be left open. Stopping and starting the other nodes will make the robot despawn then spawn back in.
+
+The gazebo client isn't necessary, but can be useful for directly interacting with the simulation.  
+Start with: `rosrun gazebo_ros gzclient`
 
 # Overview of packages
 
@@ -64,6 +79,7 @@ The gazebo client isn't necessary, but can be useful for directly interacting wi
 **arbie_slam**:
 - Contains a launch file for starting the realsense cameras.
 - Contains a launch file for starting rtabmap_ros, which performs slam and can also plan trajectories.
+- Provides a node for setting the odometry transform.
 
 ## Dependencies
 
