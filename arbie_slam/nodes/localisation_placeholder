@@ -2,20 +2,56 @@
 
 import rospy
 from nav_msgs.msg import Odometry
-from tf2_ros import TransformBroadcaster
-from geometry_msgs.msg import TransformStamped
+from tf2_ros import TransformListener, TransformBroadcaster, Buffer
+from tf.transformations import quaternion_multiply, quaternion_conjugate
+from geometry_msgs.msg import TransformStamped, Vector3, Quaternion
 
 rospy.init_node("localisation_placeholder")
 
+tf_buffer = Buffer()
+tf_listener = TransformListener(tf_buffer)
 tf_broadcaster = TransformBroadcaster()
 tf_msg = TransformStamped()
 
 def odom_callback(msg):
+    try:
+        transform2 = tf_buffer.lookup_transform("base_link", "t265_link", rospy.Time())
+    except:
+        return
+
+    trans2 = transform2.transform.translation
+    trans2 = [trans2.x, trans2.y, trans2.z]
+    rot2 = transform2.transform.rotation
+    rot2 = (rot2.x, rot2.y, rot2.z, rot2.w)
+
+    trans = msg.pose.pose.position
+    trans = [trans.x, trans.y, trans.z]
+    rot = msg.pose.pose.orientation
+    rot = (rot.x, rot.y, rot.z, rot.w)
+
+    # q = q1*q2
+    # So q1 = q * ~q2
+    rot1 = quaternion_multiply(rot, quaternion_conjugate(rot2))
+
+    # trans = trans1 + rotate(trans2, rot1)
+    # trans1 = trans - rotate(trans2, rot1)
+    # To rotate a vector v, with quaternion q:
+    # u' = q*u*~q, where u is [x, y, z, 0]
+    trans2_q = trans2 + [0] # Pure quaternion [x, y, z, 0]
+    trans2_q_rotated = quaternion_multiply(
+        rot1, quaternion_multiply(trans2_q, quaternion_conjugate(rot1)))
+    trans1 = [trans[i] - trans2_q_rotated[i] for i in range(3)]
+
     tf_msg.header.stamp = rospy.Time.now()
-    tf_msg.transform.translation = msg.pose.pose.position
-    tf_msg.transform.rotation = msg.pose.pose.orientation
-    tf_msg.header.frame_id = msg.header.frame_id
-    tf_msg.child_frame_id = msg.child_frame_id
+    tf_msg.transform.translation.x = trans1[0]
+    tf_msg.transform.translation.y = trans1[1]
+    tf_msg.transform.translation.z = trans1[2]
+    tf_msg.transform.rotation.w = rot1[3]
+    tf_msg.transform.rotation.x = rot1[0]
+    tf_msg.transform.rotation.y = rot1[1]
+    tf_msg.transform.rotation.z = rot1[2]
+    tf_msg.header.frame_id = "world"
+    tf_msg.child_frame_id = "base_link"
     tf_broadcaster.sendTransform(tf_msg)
 
 odom_sub = rospy.Subscriber(

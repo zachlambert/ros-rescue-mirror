@@ -1,8 +1,8 @@
 <launch>
     <include file="$(find rtabmap_ros)/launch/rtabmap.launch">
         <arg name="rtabmap_args" value="--delete_db_n_start --Optimizer/GravitySigma 0.3 --publish_tf true"/>
-        <arg name="odom_topic" value="/t265/odom/sample"/>
-        <arg name="frame_id" value="t265_base_link"/>
+        <arg name="frame_id" value="t265_link"/>
+        <arg name="odom_frame_id" value="world"/>
         <arg name="rgbd_sync" value="true"/>
         <arg name="depth_topic" value="/d400/aligned_depth_to_color/image_raw"/>
         <arg name="rgb_topic" value="/d400/color/image_raw"/>

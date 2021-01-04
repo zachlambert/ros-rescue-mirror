@@ -40,6 +40,7 @@
       <arg name="calib_odom_file"       value="$(arg calib_odom_file)"/>
       <arg name="enable_pose"           value="true"/>
       <arg name="publish_odom_tf"            value="false"/>
+      <arg name="publish_tf" value = "false"/>
     </include>
   </group>
 
