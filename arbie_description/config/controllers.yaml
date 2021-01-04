@@ -10,6 +10,10 @@ base_controller:
     twist_covariance_diagonal: [0.001, 0.001, 1000000.0, 1000000.0, 1000000.0, 1000000.0]
     base_frame_id: base_link
     enable_odom_tf: false
+    # This publishes an odometry message under
+    # base_controller/odom
+    # This odometrty isn't useful since it is too inaccurate.
+    # Instead, the T265 camera gives much better odometry.
 
 flippers_front_controller:
     type: velocity_controllers/JointVelocityController
@@ -54,6 +58,10 @@ gripper_right_controller:
 gripper_left_controller:
     type: position_controllers/JointPositionController
     joint: gripper_left_joint
+
+# Moveit requires trajectory controllers in order to execute
+# trajectories. Therefore, need individual joint controllers above
+# and the trajectory controllers.
 
 arm_trajectory_controller:
     type: position_controllers/JointTrajectoryController

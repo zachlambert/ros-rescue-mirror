@@ -1,8 +1,30 @@
 <launch>
+    <!-- Start rtabmap_ros
+    Builds a 3d map from the d435 camera point cloud.
+
+    Looks up odometry from TF, by finding the transform between the "odom"
+    and "base_link" frames.
+    The odometry frame is set by integrating velocity, so is accurate for tracking
+    motion over a short time period, but will drift.
+    The origin of the odometry frame has no significant meaning.
+
+    The robot is positioned in the map by defining a transform between the
+    "map" and "odom" frames, which is essentially a correction for the 
+    drift of the odometry.
+
+    rtabmap_ros sets the map->odom transform
+    -->
+
+    <!-- Note: visual_odometry is set to false. Although visual odometry IS used
+    by the t265 camera, it combines this with IMU measurements and does all the
+    processing itself. We would set visual_odometry=true, if the camera only
+    outputted a stereo camera stream, and we need to do the visual_odometry
+    ourselves -->
+
     <include file="$(find rtabmap_ros)/launch/rtabmap.launch">
         <arg name="rtabmap_args" value="--delete_db_n_start --Optimizer/GravitySigma 0.3 --publish_tf true"/>
-        <arg name="frame_id" value="t265_link"/>
-        <arg name="odom_frame_id" value="world"/>
+        <arg name="frame_id" value="base_link"/>
+        <arg name="odom_frame_id" value="odom"/>
         <arg name="rgbd_sync" value="true"/>
         <arg name="depth_topic" value="/d400/aligned_depth_to_color/image_raw"/>
         <arg name="rgb_topic" value="/d400/color/image_raw"/>
@@ -10,4 +32,7 @@
         <arg name="approx_rgbd_sync" value="false"/>
         <arg name="visual_odometry" value="false"/>
     </include>
+
+    <!-- Sets the odom->base_link transform, from the /t265/odom/sample topic -->
+    <node name="odometry_tf" pkg="arbie_slam" type="odometry_tf"/>
 </launch>

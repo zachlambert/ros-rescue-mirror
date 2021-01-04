@@ -1,5 +1,14 @@
 <launch>
-  <!-- Copied from realsense2_camera/launch/rs_d400_and_t265.launch, wit some changes -->
+  <!-- Copied from realsense2_camera/launch/rs_d400_and_t265.launch -->
+  <!-- Mostly the same, but with some important changes:
+      - Removed the static_transform_publisher node, which provides the TF between
+        the two cameras. Instead, this is set by the model
+      - For the t265 camera (camera1):
+        - Disable tf publishing (publish_odom_tf, publish_tf = false)
+          Instead, we only listen to the odometry topic, and manually
+          publish the transform for this.
+        - Change the odometry frame name to "odom"
+  -->
 
   <arg name="device_type_camera1"    		default="t265"/>
   <arg name="device_type_camera2"    		default="d4.5"/> <!-- Note: using regular expression. match D435, D435i, D415... -->
@@ -9,14 +18,6 @@
   <arg name="camera2"              			default="d400"/>
   <arg name="tf_prefix_camera1"         default="$(arg camera1)"/>
 
-<!--
-<joint name="camera_tilt_joint" type="continuous">
-  <origin rpy="0 0 0" xyz="-0.004 0.02575 0.0"/>
-  <parent link="camera_mount_leg_1_link"/>
-  <child link="camera_mount_link"/>
-  <axis xyz="1 0 0"/>
-</joint>
--->
   <arg name="tf_prefix_camera2"         default="$(arg camera2)"/>
   <arg name="initial_reset"             default="false"/>
   <arg name="enable_fisheye"            default="false"/>
@@ -32,15 +33,16 @@
     <include file="$(find realsense2_camera)/launch/includes/nodelet.launch.xml">
       <arg name="device_type"           value="$(arg device_type_camera1)"/>
       <arg name="serial_no"             value="$(arg serial_no_camera1)"/>
-      <arg name="tf_prefix"         		value="$(arg tf_prefix_camera1)"/>
+      <arg name="tf_prefix"         	value="$(arg tf_prefix_camera1)"/>
       <arg name="initial_reset"         value="$(arg initial_reset)"/>
       <arg name="enable_fisheye1"       value="$(arg enable_fisheye)"/>
       <arg name="enable_fisheye2"       value="$(arg enable_fisheye)"/>
       <arg name="topic_odom_in"         value="$(arg topic_odom_in)"/>
       <arg name="calib_odom_file"       value="$(arg calib_odom_file)"/>
       <arg name="enable_pose"           value="true"/>
-      <arg name="publish_odom_tf"            value="false"/>
-      <arg name="publish_tf" value = "false"/>
+      <arg name="publish_odom_tf"       value="false"/>
+      <arg name="publish_tf"            value ="false"/>
+      <arg name="odom_frame_id"         value="odom"/>
     </include>
   </group>
 
@@ -48,7 +50,7 @@
     <include file="$(find realsense2_camera)/launch/includes/nodelet.launch.xml">
       <arg name="device_type"           value="$(arg device_type_camera2)"/>
       <arg name="serial_no"             value="$(arg serial_no_camera2)"/>
-      <arg name="tf_prefix"		          value="$(arg tf_prefix_camera2)"/>
+      <arg name="tf_prefix"		        value="$(arg tf_prefix_camera2)"/>
       <arg name="initial_reset"         value="$(arg initial_reset)"/>
       <arg name="align_depth"           value="true"/>
       <arg name="filters"               value="pointcloud"/>
