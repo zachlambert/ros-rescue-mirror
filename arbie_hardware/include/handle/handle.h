@@ -76,12 +76,12 @@ public:
             ros::NodeHandle &n):
         Handle(name, interface, handle_type)
     {
-        std::stringstream write_name(service_name);
-        write_name << "/write";
+        std::stringstream write_name;
+        write_name << service_name << "/write";
         write_client = n.serviceClient<arbie_msgs::WriteHardware>(write_name.str());
 
-        std::stringstream read_name(service_name);
-        read_name << "/read";
+        std::stringstream read_name;
+        read_name << service_name << "/read";
         read_client = n.serviceClient<arbie_msgs::ReadHardware>(read_name.str());
     }
 

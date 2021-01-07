@@ -8,7 +8,7 @@
     />
 
     <group if="$(arg joints)">
-        <node name="odrives" pkg="arbie_hardware" type="odrives"/>
+        <node name="odrives" pkg="arbie_hardware" type="odrives" output="screen"/>
         <node
             name="hardware"
             pkg="arbie_hardware"

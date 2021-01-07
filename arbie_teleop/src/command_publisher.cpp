@@ -23,14 +23,16 @@ CommandPublisher::CommandPublisher(ros::NodeHandle &n)
 
     // Tracks command
     tracks_command_pub = n.advertise<geometry_msgs::Twist>(
-        "tracks_velocity_controller/cmd_vel", 1000
+        "base_controller/cmd_vel", 1000
     );
 
-    // Flippers command
-    flippers_command_pub = n.advertise<std_msgs::Float64MultiArray>(
-        "flippers_velocity_controller/command", 1000
+    // Flippers commands
+    flippers_front_command_pub = n.advertise<std_msgs::Float64>(
+        "flippers_front_controller/command", 1000
     );
-    flippers_command_msg = create_command_msg(2);
+    flippers_rear_command_pub = n.advertise<std_msgs::Float64>(
+        "flippers_rear_controller/command", 1000
+    );
 
     // Gripper command service
     gripper_command_service = n.serviceClient<arbie_msgs::GripperCommand>(
@@ -56,15 +58,16 @@ void CommandPublisher::set_tracks_command(double linear_velocity, double angular
 
 void CommandPublisher::set_flippers_command(double flippers_rear, double flippers_front)
 {
-    flippers_command_msg.data[0] = flippers_rear;
-    flippers_command_msg.data[1] = flippers_front;
+    flippers_front_msg.data = flippers_front;
+    flippers_rear_msg.data = flippers_rear;
 }
 
 void CommandPublisher::publish_all()
 {
     gripper_velocity_pub.publish(gripper_velocity_msg);
     tracks_command_pub.publish(tracks_command_msg);
-    flippers_command_pub.publish(flippers_command_msg);
+    flippers_front_command_pub.publish(flippers_front_msg);
+    flippers_rear_command_pub.publish(flippers_rear_msg);
 }
 
 bool CommandPublisher::send_gripper_command(std::string pose_name)
