@@ -23,35 +23,50 @@ public:
         uint32_t id):
             dxl::BaseController(commHandler, protocol, id) {}
 
-    void enable()
+    bool enable()
     {
-        write1Byte(ADDR_TORQUE_ENABLE, 1);
+        return write1Byte(ADDR_TORQUE_ENABLE, 1);
     }
 
-    void disable()
+    bool disable()
     {
-        write1Byte(ADDR_TORQUE_ENABLE, 0);
+        return write1Byte(ADDR_TORQUE_ENABLE, 0);
     }
 
-    double readPosition()
-    {
-        int32_t value;
-        read4Byte(ADDR_PRESENT_POSITION, (uint32_t*)&value);
-        return ((double)value / 4096) * 2*M_PI;
-    }
-
-    double readVelocity()
+    bool readPosition(double &result)
     {
         int32_t value;
-        read4Byte(ADDR_PRESENT_VELOCITY, (uint32_t*)&value);
-        return (double)value * 0.02398;
+        if (read4Byte(ADDR_PRESENT_POSITION, (uint32_t*)&value)) {
+            result = ((double)value / 4096) * 2*M_PI;
+            return true;
+        } else {
+            result = 0;
+            return false;
+        }
     }
 
-    double readLoad()
+    double readVelocity(double &result)
+    {
+        int32_t value;
+        if (read4Byte(ADDR_PRESENT_VELOCITY, (uint32_t*)&value)) {
+            result = (double)value * 0.02398;
+            return true;
+        } else {
+            result = 0;
+            return false;
+        }
+    }
+
+    bool readLoad(double &result)
     {
         int16_t value;
-        read2Byte(ADDR_PRESENT_LOAD, (uint16_t*)&value);
-        return (double)value * 0.1;
+        if (read2Byte(ADDR_PRESENT_LOAD, (uint16_t*)&value)) {
+            result = (double)value * 0.1;
+            return true;
+        } else {
+            result = 0;
+            return false;
+        }
     }
 };
 
@@ -68,10 +83,10 @@ public:
         write1Byte(ADDR_OPERATING_MODE, 1);
     }
 
-    void writeGoalVelocity(double velocity)
+    bool writeGoalVelocity(double velocity)
     {
         uint32_t value = velocity / 0.02398;
-        write4Byte(ADDR_GOAL_VELOCITY, value);
+        return write4Byte(ADDR_GOAL_VELOCITY, value);
     }
 };
 
@@ -88,12 +103,12 @@ public:
         write1Byte(ADDR_OPERATING_MODE, 16);
     }
 
-    void writeGoalPwm(double pwm)
+    bool writeGoalPwm(double pwm)
     {
         // pwm: -1 -> 1
         // value: -885 -> 885 signed
         int16_t value = 885*pwm;
-        write2Byte(100, pwm);
+        return write2Byte(100, pwm);
     }
 };
 
@@ -108,14 +123,14 @@ public:
             BaseController(commHandler, protocol, id)
     {
         write1Byte(ADDR_OPERATING_MODE, 4);
-        initial_pos = readPosition();
+        readPosition(initial_pos);
         std::cout << "Initial pos: " << initial_pos << std::endl;
     }
 
-    void writeGoalPosition(double pos)
+    bool writeGoalPosition(double pos)
     {
         uint32_t value = 4096 * pos/(2*M_PI);
-        write4Byte(ADDR_GOAL_POSITION, value);
+        return write4Byte(ADDR_GOAL_POSITION, value);
     }
 
 private:

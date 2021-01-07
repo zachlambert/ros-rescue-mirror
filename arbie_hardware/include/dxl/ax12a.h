@@ -21,14 +21,14 @@ public:
         uint32_t id):
             dxl::BaseController(commHandler, protocol, id) {}
 
-    void enable()
+    bool enable()
     {
-        write1Byte(ADDR_TORQUE_ENABLE, 1);
+        return write1Byte(ADDR_TORQUE_ENABLE, 1);
     }
 
-    void disable()
+    bool disable()
     {
-        write1Byte(ADDR_TORQUE_ENABLE, 0);
+        return write1Byte(ADDR_TORQUE_ENABLE, 0);
     }
 };
 
@@ -62,40 +62,52 @@ public:
         write2Byte(ADDR_CCW_ANGLE_LIMIT, ccw_angle_limit_value);
     }
 
-    void writeGoalPosition(double angle)
+    bool writeGoalPosition(double angle)
     {
         // Should be given in radians, but convert to degrees here for simplicity
         angle *= 180/M_PI;
         if (angle > 150) angle = 150;
         if (angle < -150) angle = -150;
         uint16_t value = floor((angle + 150)/300 * 1024);
-        write2Byte(ADDR_GOAL_POSITION, value);
+        return write2Byte(ADDR_GOAL_POSITION, value);
     }
 
-    double readPosition()
+    bool readPosition(double &result)
     {
         uint16_t value;
-        read2Byte(ADDR_PRESENT_POSITION, &value);
-        return (((double)value - 512) / 1024) * 300 * M_PI/180;
-    }
-
-    double readVelocity()
-    {
-        uint16_t value;
-        read2Byte(ADDR_PRESENT_VELOCITY, &value);
-        if (value < 1024) {
-            return ((double)value / 1024) * 0.01162;
+        if (read2Byte(ADDR_PRESENT_POSITION, &value)) {
+            result = (((double)value - 512) / 1024) * 300 * M_PI/180;
+            return true;
         } else {
-            return -((double)(value-1024) / 1024) * 0.01162;
+            result = 0;
+            return false;
         }
     }
 
-    void writeComplianceSlope(uint8_t slope)
+    bool readVelocity(double &result)
+    {
+        uint16_t value;
+        if (read2Byte(ADDR_PRESENT_VELOCITY, &value)) {
+            if (value < 1024) {
+                result =  ((double)value / 1024) * 0.01162;
+            } else {
+                result = -((double)(value-1024) / 1024) * 0.01162;
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    bool writeComplianceSlope(uint8_t slope)
     {
         // Slope value must be even
         uint8_t value = slope - slope%2;
-        write1Byte(ADDR_CW_COMPLIANCE_SLOPE, value);
-        write1Byte(ADDR_CCW_COMPLIANCE_SLOPE, value);
+        if (!write1Byte(ADDR_CW_COMPLIANCE_SLOPE, value))
+            return false;
+        if (!write1Byte(ADDR_CCW_COMPLIANCE_SLOPE, value))
+            return false;
+        return true;
     }
 };
 

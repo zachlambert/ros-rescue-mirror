@@ -26,9 +26,10 @@ public:
             scale(scale),
             eff2_threshold(eff2_threshold),
             zero_pos(zero_pos){
+
         controller.disable(); // If already enabled
         controller.enable();
-        origin = controller.readPosition();
+        controller.readPosition(origin);
     }
     ~Velocity(){
         controller.disable();
@@ -40,30 +41,45 @@ public:
         ros::Duration(0.25).sleep();
         static constexpr std::size_t N = 10;
         std::array<double, N> eff2;
+        double result;
+
         for (std::size_t i = 0; i < N; i++) {
-            eff2[i] = pow(controller.readLoad(), 2);
+            controller.readLoad(eff2[i]);
+            eff2[i] = pow(result, 2);
             ros::Duration(0.1).sleep();
         }
         double mean_eff2;
         std::size_t i = 0;
         do {
-            eff2[i] = pow(controller.readLoad(), 2);
+            controller.readLoad(result);
+            eff2[i] = pow(result, 2);
             i = (i+1)%N;
             mean_eff2 = std::accumulate(eff2.begin(), eff2.end(), 0.0f)/N;
             ROS_INFO("Load2: %f", mean_eff2);
             ros::Duration(0.1).sleep();
         } while(mean_eff2 < eff2_threshold);
         write(0);
-        origin = controller.readPosition();
+        controller.readPosition(origin);
     }
 
     void write(double cmd) {
         controller.writeGoalVelocity(cmd*scale);
     }
     void read(double &pos, double &vel, double &eff) {
-        pos = zero_pos + (controller.readPosition() - origin)/scale;
-        vel = controller.readVelocity()/scale;
-        eff = controller.readLoad(); // Don't convert, just use as is
+        // The controller reads back the position, velocity, effort
+        // of the motor.
+        // However, if there is a gearbox, this needs to be converted
+        // to the actual joint position and velocity.
+
+        double pos_reading;
+        controller.readPosition(pos_reading);
+        pos = zero_pos + (pos_reading - origin)/scale;
+
+        double vel_reading;
+        controller.readVelocity(vel_reading);
+        vel = vel_reading/scale;
+
+        controller.readLoad(eff); // Don't convert, just use as is
     }
 private:
     dxl::xl430::VelocityController controller;
@@ -90,9 +106,13 @@ public:
         controller.writeGoalPwm(cmd);
     }
     void read(double &pos, double &vel, double &eff) {
-        pos = controller.readPosition();
-        vel = controller.readVelocity();
-        eff = controller.readLoad();
+        // TODO: Currently, this handle doesn't take into account
+        // the motor->joint transmission.
+        // Currently this handle isn't being used, but add in the
+        // gear ratio stuff if it is needed.
+        pos = controller.readPosition(pos);
+        vel = controller.readVelocity(vel);
+        eff = controller.readLoad(eff);
     }
 private:
     dxl::xl430::PwmController controller;
@@ -121,8 +141,8 @@ public:
         controller.writeGoalPosition(cmd);
     }
     void read(double &pos, double &vel, double &eff) {
-        pos = controller.readPosition();
-        vel = controller.readVelocity();
+        controller.readPosition(pos);
+        controller.readVelocity(vel);
         // eff not implemented
     }
 private:
@@ -159,11 +179,26 @@ public:
         }
     }
     void read(double &pos, double &vel, double &eff) {
-        // Assume positions are consistent
-        pos = (controller1.readPosition() - origin1)/scale1;
-        vel = controller1.readVelocity()/scale1;
-        // If not consistent, disable controller
-        double pos2 = (controller2.readPosition() - origin2)/scale2;
+        // With a PositionPair controller, both positions have
+        // the same cmd, pos, vel
+        // The scale and origin determine how these correspond
+        // to the actual cmd, pos, vel of both joints
+
+        // Assume positions and velocities are consistent
+        // so only read one joint
+        double pos_reading;
+        controller1.readPosition(pos_reading);
+        pos = (pos_reading - origin1)/scale1;
+
+        double vel_reading;
+        controller1.readVelocity(vel_reading);
+        vel = vel_reading/scale1;
+
+        // If positions not consistent, disable controller
+        double pos2_reading, pos2;
+        controller2.readPosition(pos2_reading);
+        pos2 = (pos2_reading - origin2)/scale2;
+
         if (fabs(pos2 - pos) > pos_diff_allowance) {
             // controller1.disable();
             // controller2.disable();
