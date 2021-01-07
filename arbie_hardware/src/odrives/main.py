@@ -44,7 +44,6 @@ def flippers_front_read(req):
     return flippers_front_res
 
 def flippers_front_write(req):
-    print("Flippers front = ", req.cmd.data)
     if flippers.is_connected():
         # WRITE AXIS0
         flippers.write_velocity_axis0(req.cmd.data)
@@ -61,7 +60,6 @@ def flippers_rear_read(req):
     return flippers_rear_res
 
 def flippers_rear_write(req):
-    print("Flippers rear = ", req.cmd.data)
     if flippers.is_connected():
         # WRITE AXIS1
         flippers.write_velocity_axis1(req.cmd.data)
@@ -78,7 +76,6 @@ def tracks_left_read(req):
     return tracks_left_res
 
 def tracks_left_write(req):
-    print("Tracks left = ", req.cmd.data)
     if tracks.is_connected():
         # WRITE AXIS0
         tracks.write_velocity_axis0(req.cmd.data)
@@ -96,7 +93,6 @@ def tracks_right_read(req):
     return tracks_right_res
 
 def tracks_right_write(req):
-    print("Tracks right = ", req.cmd.data)
     if tracks.is_connected():
         # WRITE AXIS1
         tracks.write_velocity_axis1(req.cmd.data)
@@ -117,7 +113,6 @@ def set_flippers_rear_position(raw_value):
 
 
 def main():
-    print("starting odrives node")
     rospy.init_node("odrives")
 
     # Used by ros_control to read and write joints
