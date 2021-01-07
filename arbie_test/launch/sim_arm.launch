@@ -14,6 +14,7 @@
     <!-- Start controllers -->
     <include file="$(find arbie_description)/launch/control.launch">
         <arg name="base" value="false"/>
+        <arg name="camera" value="false"/>
     </include>
 
     <!-- Start a window for viewing the robot model, and a window for setting

@@ -107,6 +107,28 @@ private:
     arbie_msgs::ReadHardware read_msg;
 };
 
+class PosDummy: public Handle {
+public:
+    PosDummy(const std::string &name, Interfaces &interface):
+        Handle(name, interface, Type::POS)
+    {}
+
+    void write(double cmd)
+    {
+        pos = cmd;
+    }
+
+    void read(double &pos, double &vel, double &eff)
+    {
+        pos = this->pos;
+        vel = 0;
+        eff = 0;
+    }
+
+private:
+    double pos;
+};
+
 } // namespace handle
 
 #endif

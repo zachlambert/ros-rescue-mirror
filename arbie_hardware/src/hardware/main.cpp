@@ -70,7 +70,7 @@ public:
 
         // Gripper
         handles.push_back(std::make_unique<handle::ax12a::PositionPair>(
-            "gripper_joint",
+            "gripper_left_joint",
             interfaces,
             dxl::ax12a::JointController(commHandler, commHandler.PROTOCOL_1, 8),
             dxl::ax12a::JointController(commHandler, commHandler.PROTOCOL_1, 9),
@@ -110,6 +110,12 @@ public:
             handle::Type::VEL,
             "tracks/right",
             n
+        ));
+
+        // Camera (for now, placeholder handle)
+
+        handles.push_back(std::make_unique<handle::PosDummy>(
+            "camera_tilt_joint", interfaces
         ));
 
         registerInterface(&interfaces.state);

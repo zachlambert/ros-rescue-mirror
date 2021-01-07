@@ -11,12 +11,11 @@
 
     <include file="$(find arbie_description)/launch/control.launch">
         <arg name="arm" value="false"/>
-        <arg name="flippers" value="true"/>
     </include>
 
-    <!--
     <include file="$(find arbie_webgui)/launch/webgui.launch"/>
     <include file="$(find arbie_teleop)/launch/teleop.launch"/>
+    <!--
     <include file="$(find arbie_manipulation)/launch/manipulation.launch"/>
     <include file="$(find arbie_slam)/launch/slam.launch"/>
     -->

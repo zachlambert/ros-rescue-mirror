@@ -2,6 +2,7 @@
     <arg name="base" default="true"/>
     <arg name="flippers" default="true"/>
     <arg name="arm" default="true"/>
+    <arg name="camera" default="true"/>
 
     <node
         name="robot_state_publisher"
@@ -15,6 +16,11 @@
         file="$(find arbie_description)/config/controllers.yaml"
         command="load"
     />
+
+    <!-- Later on, replace everything below with a controller_spawner that
+    spawns everything. For the time being, splitting it up is more useful for
+    testing. (Could also write a custom controller spawner node, which accepts
+    arguments for what to start -->
 
     <node
         name="controller_spawner_common"
@@ -30,7 +36,17 @@
             pkg="controller_manager"
             type="spawner"
             respawn="false"
-            args="base_controller camera_tilt_controller"
+            args="base_controller"
+        />
+    </group>
+
+    <group if="$(arg camera)">
+        <node
+            name="controller_spawner_camera"
+            pkg="controller_manager"
+            type="spawner"
+            respawn="false"
+            args="camera_tilt_controller"
         />
     </group>
 
