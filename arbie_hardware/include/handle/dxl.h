@@ -10,7 +10,136 @@
 
 namespace handle {
 
+/* For the xl430 controllers, since it needs to support gear reductions, the
+ * handles need calibration.
+ * With all controllers type (except non-extended position controller), the
+ * position reading covers a large number of revolutions.
+ *
+ * Define an "origin" for each joint, which defines the value of the
+ * motor angle, for a joint angle = 0.
+ * - zero_pos = Joint position at the origin
+ * - origin = Motor position at the origin
+ * - scale = scaling between (joint_pos - zero_pos) and (motor_pos - origin)
+ * Such that:
+ * - motor_pos = origin + scale*(joint_pos - zero_pos)
+ * - joint_pos = zero_pos + (motor_pos - origin)/scale
+ * - motor_vel = scale*joint_vel
+ * - joint_vel = motor_vel/scale
+ *
+ * The calibration process for a joint moves the arm to the origin,
+ * where it sets the origin (by reading the motor position), and knows
+ * what the joint position should be
+ */
+
 namespace xl430 {
+
+class Position: public Handle {
+public:
+    Position(
+        const std::string &name,
+        Interfaces &interface,
+        dxl::xl430::ExtendedPositionController controller,
+        double scale=1,
+        double eff2_threshold=2,
+        double zero_pos=0):
+            Handle(name, interface, Type::POS),
+            controller(controller),
+            origin(0),
+            scale(scale),
+            zero_pos(zero_pos),
+            eff2_threshold(eff2_threshold)
+    {
+        connected = controller.disable(); // If already enabled
+        if (connected) {
+            controller.enable();
+            controller.readPosition(origin);
+        } else {
+            std::cerr << "Joint " << name << " not connected." << std::endl;
+        }
+    }
+
+    ~Position()
+    {
+        controller.disable();
+    }
+
+    void calibrate() {
+        if (!connected) return;
+
+        // Copied calibration method for the velocity controller, but
+        // replaced command velocity with equivalent increases in command
+        // position.
+        // Should work in principle but haven't tested. Having steps in
+        // command position instead of a continuous velocity might make affect
+        // the load measurements, in which decreasing step time might help
+
+        ROS_INFO("CALIBRATING");
+
+        double cmd_vel = -0.04;
+
+        static constexpr std::size_t N = 10;
+        std::array<double, N> eff2;
+        double result;
+        for (std::size_t i = 0; i < N; i++) {
+            controller.readLoad(eff2[i]);
+            eff2[i] = pow(result, 2);
+            move(cmd_vel*0.1);
+            ros::Duration(0.1).sleep();
+        }
+        double mean_eff2;
+        std::size_t i = 0;
+        do {
+            controller.readLoad(result);
+            eff2[i] = pow(result, 2);
+            i = (i+1)%N;
+            mean_eff2 = std::accumulate(eff2.begin(), eff2.end(), 0.0f)/N;
+            ROS_INFO("Load2: %f", mean_eff2);
+            move(cmd_vel*0.1);
+            ros::Duration(0.1).sleep();
+        } while(mean_eff2 < eff2_threshold);
+
+        // Now read the current motor angle into the origin variable.
+        // Now, a cmd_pos = zero_pos, will give a motor_pos = origin
+        controller.readPosition(origin);
+    }
+
+    // Used for calibration
+    void move(double cmd_increment)
+    {
+        if (!connected) return;
+        double pos;
+        controller.readPosition(pos);
+        pos += cmd_increment*scale;
+        controller.writeGoalPosition(pos);
+    }
+
+    void write(double cmd)
+    {
+        if (!connected) return;
+        controller.writeGoalPosition(origin + scale*(cmd-zero_pos));
+    }
+
+    void read(double &pos, double &vel, double &eff)
+    {
+        if (!connected) return;
+
+        double pos_reading;
+        controller.readPosition(pos_reading);
+        pos = zero_pos + (pos_reading - origin)/scale;
+
+        double vel_reading;
+        controller.readVelocity(vel_reading);
+        vel = vel_reading/scale;
+
+        controller.readLoad(eff); // Don't convert, just use as is
+    }
+    bool is_connected()const { return connected; }
+private:
+    bool connected;
+    dxl::xl430::ExtendedPositionController controller;
+    double origin, zero_pos, scale;
+    double eff2_threshold;
+};
 
 class Velocity: public Handle {
 public:
@@ -80,10 +209,6 @@ public:
     void read(double &pos, double &vel, double &eff)
     {
         if (!connected) return;
-        // The controller reads back the position, velocity, effort
-        // of the motor.
-        // However, if there is a gearbox, this needs to be converted
-        // to the actual joint position and velocity.
 
         double pos_reading;
         controller.readPosition(pos_reading);

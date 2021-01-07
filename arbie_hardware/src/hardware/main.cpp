@@ -17,31 +17,31 @@ public:
         // TODO: Get IDs from param server
 
         // Arm
-        handles.push_back(std::make_unique<handle::xl430::Velocity>(
+        handles.push_back(std::make_unique<handle::xl430::Position>(
             "arm_1_joint",
             interfaces,
-            dxl::xl430::VelocityController(commHandler, commHandler.PROTOCOL_1, 1),
+            dxl::xl430::ExtendedPositionController(commHandler, commHandler.PROTOCOL_1, 1),
             89/14
         ));
 
-        handles.push_back(std::make_unique<handle::xl430::Velocity>(
+        handles.push_back(std::make_unique<handle::xl430::Position>(
             "arm_2_joint",
             interfaces,
-            dxl::xl430::VelocityController(commHandler, commHandler.PROTOCOL_1, 2),
+            dxl::xl430::ExtendedPositionController(commHandler, commHandler.PROTOCOL_1, 2),
             25,
             8
         ));
-        arm_2_handle = dynamic_cast<handle::xl430::Velocity*>(handles.back().get());
+        arm_2_handle = dynamic_cast<handle::xl430::Position*>(handles.back().get());
 
-        handles.push_back(std::make_unique<handle::xl430::Velocity>(
+        handles.push_back(std::make_unique<handle::xl430::Position>(
             "arm_3_joint",
             interfaces,
-            dxl::xl430::VelocityController(commHandler, commHandler.PROTOCOL_1, 3),
+            dxl::xl430::ExtendedPositionController(commHandler, commHandler.PROTOCOL_1, 3),
             25,
             40,
             -0.11 // found empirically - ie: try different values
         ));
-        arm_3_handle = dynamic_cast<handle::xl430::Velocity*>(handles.back().get());
+        arm_3_handle = dynamic_cast<handle::xl430::Position*>(handles.back().get());
 
         // Wrist
         handles.push_back(std::make_unique<handle::ax12a::PositionPair>(
@@ -133,24 +133,22 @@ public:
             ros::Duration(1).sleep();
 
             arm_2_handle->calibrate();
-            arm_2_handle->write(0.08);
-            ros::Duration(1.5).sleep();
-            arm_2_handle->write(0);
-            ros::Duration(1).sleep();
+            // Move arm_2 back up a bit
+            arm_2_handle->move(0.12);
+            ros::Duration(2.5).sleep();
 
-            // Move wrist out the way temporarily
+            // Move wrist out the way temporarily, while calibrating arm_3
             wrist_pitch_handle->write(-0.785);
             ros::Duration(1).sleep();
 
             arm_3_handle->calibrate();
-            arm_3_handle->write(0.12);
-            ros::Duration(2).sleep();
-            arm_3_handle->write(0);
-            ros::Duration(1).sleep();
+            // Move arm_3 back up a bit
+            arm_3_handle->write(0.24);
+            ros::Duration(3).sleep();
 
+            // Move wrist pitch down again
             wrist_pitch_handle->write(0);
             ros::Duration(1).sleep();
-
         }
     }
 
@@ -174,7 +172,7 @@ private:
     std::vector<std::unique_ptr<handle::Handle>> handles;
 
     // For calibration - have no ownership
-    handle::xl430::Velocity *arm_2_handle, *arm_3_handle;
+    handle::xl430::Position *arm_2_handle, *arm_3_handle;
     handle::ax12a::PositionPair *wrist_pitch_handle;
 };
 
