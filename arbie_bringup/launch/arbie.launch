@@ -11,6 +11,7 @@
 
     <include file="$(find arbie_description)/launch/control.launch">
         <arg name="arm" value="false"/>
+        <arg name="flippers" value="true"/>
     </include>
 
     <!--

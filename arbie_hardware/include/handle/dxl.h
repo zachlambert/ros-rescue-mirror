@@ -23,19 +23,28 @@ public:
         double zero_pos=0):
             Handle(name, interface, Type::VEL),
             controller(controller),
+            origin(0),
             scale(scale),
-            eff2_threshold(eff2_threshold),
-            zero_pos(zero_pos){
-
-        controller.disable(); // If already enabled
-        controller.enable();
-        controller.readPosition(origin);
+            zero_pos(zero_pos),
+            eff2_threshold(eff2_threshold)
+    {
+        connected = controller.disable(); // If already enabled
+        if (connected) {
+            controller.enable();
+            controller.readPosition(origin);
+        } else {
+            std::cerr << "Joint " << name << " not connected." << std::endl;
+        }
     }
-    ~Velocity(){
+
+    ~Velocity()
+    {
         controller.disable();
     }
 
     void calibrate() {
+        if (!connected) return;
+
         ROS_INFO("CALIBRATING");
         write(-0.04);
         ros::Duration(0.25).sleep();
@@ -62,10 +71,15 @@ public:
         controller.readPosition(origin);
     }
 
-    void write(double cmd) {
+    void write(double cmd)
+    {
+        if (!connected) return;
         controller.writeGoalVelocity(cmd*scale);
     }
-    void read(double &pos, double &vel, double &eff) {
+
+    void read(double &pos, double &vel, double &eff)
+    {
+        if (!connected) return;
         // The controller reads back the position, velocity, effort
         // of the motor.
         // However, if there is a gearbox, this needs to be converted
@@ -81,7 +95,9 @@ public:
 
         controller.readLoad(eff); // Don't convert, just use as is
     }
+    bool is_connected()const { return connected; }
 private:
+    bool connected;
     dxl::xl430::VelocityController controller;
     double origin, zero_pos, scale;
     double eff2_threshold;
@@ -96,16 +112,25 @@ public:
             Handle(name, interface, Type::EFF),
             controller(controller)
     {
-        controller.disable(); // If already enabled
-        controller.enable();
+        connected = controller.disable(); // If already enabled
+        if (connected) {
+            controller.enable();
+        } else {
+            std::cerr << "Joint " << name << " not connected." << std::endl;
+        }
     }
+
     ~Effort(){
         controller.disable();
     }
+
     void write(double cmd) {
+        if (!connected) return;
         controller.writeGoalPwm(cmd);
     }
+
     void read(double &pos, double &vel, double &eff) {
+        if (!connected) return;
         // TODO: Currently, this handle doesn't take into account
         // the motor->joint transmission.
         // Currently this handle isn't being used, but add in the
@@ -114,7 +139,9 @@ public:
         vel = controller.readVelocity(vel);
         eff = controller.readLoad(eff);
     }
+    bool is_connected()const { return connected; }
 private:
+    bool connected;
     dxl::xl430::PwmController controller;
 };
 
@@ -131,21 +158,29 @@ public:
             Handle(name, interface, Type::POS),
             controller(controller)
     {
-        controller.disable(); // If already enabled
-        controller.enable();
+        connected = controller.disable(); // If already enabled
+        if (connected) {
+            controller.enable();
+        } else {
+            std::cerr << "Joint " << name << " not connected." << std::endl;
+        }
     }
     ~Position() {
         controller.disable();
     }
     void write(double cmd) {
+        if (!connected) return;
         controller.writeGoalPosition(cmd);
     }
     void read(double &pos, double &vel, double &eff) {
+        if (!connected) return;
         controller.readPosition(pos);
         controller.readVelocity(vel);
         // eff not implemented
     }
+    bool is_connected()const { return connected; }
 private:
+    bool connected;
     dxl::ax12a::JointController controller;
 };
 
@@ -163,22 +198,32 @@ public:
             origin1(origin1), origin2(origin2), scale1(scale1), scale2(scale2),
             disabled(false)
     {
-        controller1.disable();
-        controller2.disable();
+        connected = controller1.disable();
+        connected &= controller2.disable();
+        if (connected) {
         controller1.enable();
         controller2.enable();
+        } else {
+            std::cerr << "Joint " << name << " not connected." << std::endl;
+        }
     }
-    ~PositionPair() {
+
+    ~PositionPair()
+    {
         controller1.disable();
         controller2.disable();
     }
-    void write(double cmd) {
-        if (!disabled) {
-            controller1.writeGoalPosition(origin1 + cmd*scale1);
-            controller2.writeGoalPosition(origin2 + cmd*scale2);
-        }
+
+    void write(double cmd)
+    {
+        if (!connected || disabled) return;
+        controller1.writeGoalPosition(origin1 + cmd*scale1);
+        controller2.writeGoalPosition(origin2 + cmd*scale2);
     }
-    void read(double &pos, double &vel, double &eff) {
+
+    void read(double &pos, double &vel, double &eff)
+    {
+        if (!connected) return;
         // With a PositionPair controller, both positions have
         // the same cmd, pos, vel
         // The scale and origin determine how these correspond
@@ -207,7 +252,9 @@ public:
         }
         // eff not implemented
     }
+    bool is_connected()const { return connected; }
 private:
+    bool connected;
     dxl::ax12a::JointController controller1, controller2;
     static constexpr double pos_diff_allowance = 0.15;
     double origin1, origin2, scale1, scale2;

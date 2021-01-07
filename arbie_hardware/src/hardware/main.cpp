@@ -77,11 +77,6 @@ public:
             0.348, -0.317, -1, 1
         ));
 
-        registerInterface(&interfaces.state);
-        registerInterface(&interfaces.pos);
-        registerInterface(&interfaces.vel);
-        registerInterface(&interfaces.eff);
-
         // Odrives
         // Assume the odrives node has been started, with the services:
 
@@ -102,43 +97,55 @@ public:
         ));
 
         handles.push_back(std::make_unique<handle::Service>(
-            "tracks_front_joint",
+            "tracks_left_joint",
             interfaces,
             handle::Type::VEL,
-            "tracks/front",
+            "tracks/left",
             n
         ));
 
         handles.push_back(std::make_unique<handle::Service>(
-            "tracks_rear_joint",
+            "tracks_right_joint",
             interfaces,
             handle::Type::VEL,
-            "tracks/rear",
+            "tracks/right",
             n
         ));
 
+        registerInterface(&interfaces.state);
+        registerInterface(&interfaces.pos);
+        registerInterface(&interfaces.vel);
+        registerInterface(&interfaces.eff);
+
+        std::cout << "FINISHED REGISTERING" << std::endl;
+
         // Calibrate
 
-        ros::Duration(1).sleep();
+        if (arm_2_handle->is_connected() && arm_3_handle->is_connected()
+            & wrist_pitch_handle->is_connected()) {
 
-        arm_2_handle->calibrate();
-        arm_2_handle->write(0.08);
-        ros::Duration(1.5).sleep();
-        arm_2_handle->write(0);
-        ros::Duration(1).sleep();
+            ros::Duration(1).sleep();
 
-        // Move wrist out the way temporarily
-        wrist_pitch_handle->write(-0.785);
-        ros::Duration(1).sleep();
+            arm_2_handle->calibrate();
+            arm_2_handle->write(0.08);
+            ros::Duration(1.5).sleep();
+            arm_2_handle->write(0);
+            ros::Duration(1).sleep();
 
-        arm_3_handle->calibrate();
-        arm_3_handle->write(0.12);
-        ros::Duration(2).sleep();
-        arm_3_handle->write(0);
-        ros::Duration(1).sleep();
+            // Move wrist out the way temporarily
+            wrist_pitch_handle->write(-0.785);
+            ros::Duration(1).sleep();
 
-        wrist_pitch_handle->write(0);
-        ros::Duration(1).sleep();
+            arm_3_handle->calibrate();
+            arm_3_handle->write(0.12);
+            ros::Duration(2).sleep();
+            arm_3_handle->write(0);
+            ros::Duration(1).sleep();
+
+            wrist_pitch_handle->write(0);
+            ros::Duration(1).sleep();
+
+        }
     }
 
     void read()
@@ -200,7 +207,7 @@ int main(int argc, char **argv)
     std::string port = "/dev/ttyUSB0";
     Node node(n, port);
 
-    ros::AsyncSpinner spinner(2);
+    ros::AsyncSpinner spinner(4);
     spinner.start();
     ros::waitForShutdown();
     return 0;
