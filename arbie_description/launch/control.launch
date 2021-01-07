@@ -16,6 +16,7 @@
         command="load"
     />
 
+    <group if="$(arg start_controllers)">
     <node
         name="controller_spawner"
         pkg="controller_manager"
@@ -32,5 +33,6 @@
         respawn="false"
         args="--stopped arm_trajectory_controller gripper_trajectory_controller"
     />
+    </group>
 
 </launch>

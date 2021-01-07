@@ -308,10 +308,10 @@ so am just omitting it for now. It's not that important to simulate this.
 <transmission name="arm_1_tran">
   <type>transmission_interface/SimpleTransmission</type>
   <joint name="arm_1_joint">
-    <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
   </joint>
   <actuator name="arm_1_actuator">
-    <hardwareInterface>VelocityJointInterface</hardwareInterface>
+    <hardwareInterface>PositionJointInterface</hardwareInterface>
     <mechanicalReduction>1</mechanicalReduction>
   </actuator>
 </transmission>
@@ -326,10 +326,10 @@ so am just omitting it for now. It's not that important to simulate this.
 <transmission name="arm_2_transmission">
   <type>transmission_interface/SimpleTransmission</type>
   <joint name="arm_2_joint">
-    <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
   </joint>
   <actuator name="arm_2_actuator">
-    <hardwareInterface>VelocityJointInterface</hardwareInterface>
+    <hardwareInterface>PositionJointInterface</hardwareInterface>
     <mechanicalReduction>1</mechanicalReduction>
   </actuator>
 </transmission>
@@ -344,10 +344,10 @@ so am just omitting it for now. It's not that important to simulate this.
 <transmission name="arm_3_transmission">
   <type>transmission_interface/SimpleTransmission</type>
   <joint name="arm_3_joint">
-    <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
   </joint>
   <actuator name="arm_3_actuator">
-    <hardwareInterface>VelocityJointInterface</hardwareInterface>
+    <hardwareInterface>PositionJointInterface</hardwareInterface>
     <mechanicalReduction>1</mechanicalReduction>
   </actuator>
 </transmission>
@@ -422,7 +422,7 @@ so am just omitting it for now. It's not that important to simulate this.
 
 <transmission name="gripper_right_driver_transmission">
   <type>transmission_interface/SimpleTransmission</type>
-  <joint name="gripper_right_joint">
+  <joint name="gripper_joint">
     <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
   </joint>
   <actuator name="gripper_right_driver_actuator">
@@ -450,6 +450,15 @@ so am just omitting it for now. It's not that important to simulate this.
     <mechanicalReduction>1</mechanicalReduction>
   </actuator>
 </transmission>
+
+<!-- Use gazebo mimic joint plugin to drive the left joint too -->
+<gazebo>
+<plugin name="gripper_mimic_joint_plugin" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
+  <joint>gripper_joint</joint>
+  <mimicJoint>gripper_left_joint</mimicJoint>
+  <multiplier>-1</multiplier>
+</plugin>
+</gazebo>
 
 
 <!-- GRIPPER DEPENDENT JOINTS

@@ -12,10 +12,14 @@
     />
 
     <!-- Start controllers -->
-    <include file="$(find arbie_description)/launch/control.launch">
-        <arg name="arm" value="false"/>
-        <arg name="flippers" value="false"/>
-    </include>
+    <include file="$(find arbie_description)/launch/control.launch"/>
+    <node
+        name="controller_spawner"
+        pkg="controller_manager"
+        type="spawner"
+        respawn="false"
+        args="joint_state_controller base_controller camera_tilt_controller"
+    />
 
     <!-- Command base velocity -->
     <node
