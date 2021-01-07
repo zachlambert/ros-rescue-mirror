@@ -70,7 +70,7 @@ class OdriveController:
             message.values = [
                 KeyValue("connected", str(True)),
                 KeyValue("bus-voltage", str(self.device.vbus_voltage)),
-                KeyValue("axis0-error", oenums.errors.axis[self.device_odrive.axis0.error]),
+                KeyValue("axis0-error", oenums.errors.axis[self.device.axis0.error]),
                 KeyValue("axis0-encoder-error", oenums.errors.encoder[self.device.axis0.encoder.error]),
                 KeyValue("axis0-motor-error", oenums.errors.motor[self.device.axis0.motor.error]),
                 # KeyValue("axis0-controller-error", oenums.errors.controller[self.device.axis0.controller.error]),
