@@ -57,7 +57,7 @@ function gamepad_init() {
 
     gamepad_topic = new ROSLIB.Topic({
         ros: ros,
-        name: '/gamepad/values',
+        name: '/joy',
         messageType: 'sensor_msgs/Joy'
     });
 

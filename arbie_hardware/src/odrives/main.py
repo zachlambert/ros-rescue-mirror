@@ -11,10 +11,10 @@ from math import pi
 # Setup hardware interface
 
 # TODO: flippers = OdriveController(rospy.get_param("~flippers_serial_no")
-flippers = OdriveController("336631563536")
+flippers = OdriveController("flippers", "336631563123")
 
 # TODO: flippers = OdriveController(rospy.get_param("~flippers_serial_no")
-tracks = OdriveController("209137933548")
+tracks = OdriveController("tracks", "336631563536")
 
 if not flippers.is_connected():
     print("Flippers hardware not connected")
