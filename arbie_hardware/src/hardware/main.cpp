@@ -11,8 +11,8 @@
 
 class Hardware: public hardware_interface::RobotHW {
 public:
-    Hardware(ros::NodeHandle &n, std::string port):
-        commHandler(port)
+    Hardware(ros::NodeHandle &n, std::string dxl_port):
+        commHandler(dxl_port)
     {
         // TODO: Get IDs from param server
 
@@ -81,6 +81,41 @@ public:
         registerInterface(&interfaces.pos);
         registerInterface(&interfaces.vel);
         registerInterface(&interfaces.eff);
+
+        // Odrives
+        // Assume the odrives node has been started, with the services:
+
+        handles.push_back(std::make_unique<handle::Service>(
+            "flippers_front_joint",
+            interfaces,
+            handle::Type::VEL,
+            "flippers/front",
+            n
+        ));
+
+        handles.push_back(std::make_unique<handle::Service>(
+            "flippers_rear_joint",
+            interfaces,
+            handle::Type::VEL,
+            "flippers/rear",
+            n
+        ));
+
+        handles.push_back(std::make_unique<handle::Service>(
+            "tracks_front_joint",
+            interfaces,
+            handle::Type::VEL,
+            "tracks/front",
+            n
+        ));
+
+        handles.push_back(std::make_unique<handle::Service>(
+            "tracks_rear_joint",
+            interfaces,
+            handle::Type::VEL,
+            "tracks/rear",
+            n
+        ));
 
         // Calibrate
 

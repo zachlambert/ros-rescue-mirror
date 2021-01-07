@@ -21,7 +21,7 @@ public:
         double scale=1,
         double eff2_threshold=2,
         double zero_pos=0):
-            Handle(name, interface, Handle::VEL),
+            Handle(name, interface, Type::VEL),
             controller(controller),
             scale(scale),
             eff2_threshold(eff2_threshold),
@@ -77,7 +77,7 @@ public:
         const std::string &name,
         Interfaces &interface,
         dxl::xl430::PwmController controller):
-            Handle(name, interface, Handle::EFF),
+            Handle(name, interface, Type::EFF),
             controller(controller)
     {
         controller.disable(); // If already enabled
@@ -108,7 +108,7 @@ public:
         const std::string &name,
         Interfaces &interface,
         dxl::ax12a::JointController controller):
-            Handle(name, interface, Handle::POS),
+            Handle(name, interface, Type::POS),
             controller(controller)
     {
         controller.disable(); // If already enabled
@@ -137,7 +137,7 @@ public:
         dxl::ax12a::JointController controller1,
         dxl::ax12a::JointController controller2,
         double origin1=0, double origin2=0, double scale1=1, double scale2=1):
-            Handle(name, interface, Handle::POS),
+            Handle(name, interface, Type::POS),
             controller1(controller1),
             controller2(controller2),
             origin1(origin1), origin2(origin2), scale1(scale1), scale2(scale2),

@@ -1,12 +1,23 @@
 <launch>
     <param
         name="robot_description"
-        command="cat $(find arbie_description)/model/arbie.urdf"
+        command="xacro $(find arbie_description)/model/arbie.urdf.xacro"
     />
-    <include file="$(find arbie_hardware)/launch/hardware.launch"/>
-    <include file="$(find arbie_description)/launch/control.launch"/>
+
+    <!-- Start hardware. Only use odrives at the moment -->
+    <include file="$(find arbie_hardware)/launch/hardware.launch">
+        <arg name="pcb" value="false"/>
+        <arg name="pcb" value="false"/>
+    </include>
+
+    <include file="$(find arbie_description)/launch/control.launch">
+        <arg name="arm" value="false"/>
+    </include>
+
     <include file="$(find arbie_webgui)/launch/webgui.launch"/>
+    <!--
     <include file="$(find arbie_teleop)/launch/teleop.launch"/>
     <include file="$(find arbie_manipulation)/launch/manipulation.launch"/>
     <include file="$(find arbie_slam)/launch/slam.launch"/>
+    -->
 </launch>

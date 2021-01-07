@@ -1,5 +1,5 @@
 ---
-std_msgs/Float64MultiArray pos
-std_msgs/Float64MultiArray vel
-std_msgs/Float64MultiArray eff
+std_msgs/Float64 pos
+std_msgs/Float64 vel
+std_msgs/Float64 eff
 bool success

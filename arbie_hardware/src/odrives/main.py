@@ -25,82 +25,117 @@ if not tracks.is_connected():
 
 # Setup ROS interface
 
-dim = MultiArrayDimension(size=2, stride=1, label="joint")
+flippers_front_res = ReadHardwareResponse()
+flippers_rear_res = ReadHardwareResponse()
 
-flippers_res = ReadHardwareResponse()
-flippers_res.pos.layout.dim.append(dim)
-flippers_res.vel.layout.dim.append(dim)
-flippers_res.eff.layout.dim.append(dim)
-flippers_res.pos.data = [0, 0]
-flippers_res.vel.data = [0, 0]
-flippers_res.eff.data = [0, 0]
-
-tracks_res = ReadHardwareResponse()
-tracks_res.pos.layout.dim.append(dim)
-tracks_res.vel.layout.dim.append(dim)
-tracks_res.eff.layout.dim.append(dim)
-tracks_res.pos.data = [0, 0]
-tracks_res.vel.data = [0, 0]
-tracks_res.eff.data = [0, 0]
+tracks_front_res = ReadHardwareResponse()
+tracks_rear_res = ReadHardwareResponse()
 
 # TODO: Set these as parameters
 flippers_front_offset = 373
 flippers_rear_offset =  605
 flippers_scale = 2 * pi/1024.0
 
-def set_flippers_front_position(raw_value):
-    flippers_res.pos.data[0] = (raw_value - flippers_front_offset) * flippers_scale
 
-def set_flippers_rear_position(raw_value):
-    flippers_res.pos.data[1] = (raw_value - flippers_rear_offset) * flippers_scale
+# Service callbacks for flippers_front_...
 
-def flippers_read(req):
+def flippers_front_read(req):
+    flippers_front_res.success = flippers.is_connected()
+    return flippers_front_res
+
+def flippers_front_write(req):
     if flippers.is_connected():
-        flippers_res.success = True
-    else:
-        flipper_res.success = False
-    return flippers_res
-
-def flippers_write(req):
-    if flippers.is_connected():
-        flippers.write_velocity_axis0(flippers_res.vel.data[0])
-        flippers.write_velocity_axis1(flippers_res.vel.data[1])
-        flippers_res.vel.data = req.cmd.data
+        # WRITE AXIS0
+        flippers.write_velocity_axis0(req.cmd.data)
+        flippers_front_res.vel.data = req.cmd.data
         return WriteHardwareResponse(True)
     else:
         return WriteHardwareResponse(False)
 
-def tracks_read(req):
-    if tracks.is_connected():
-        tracks_res.success = True
-    else:
-        tracks_res.success = False
-    return tracks_res
 
-def tracks_write(req):
+# Service callbacks for flippers_rear_...
+
+def flippers_rear_read(req):
+    flippers_rear_res.success = flippers.is_connected()
+    return flippers_rear_res
+
+def flippers_rear_write(req):
+    if flippers.is_connected():
+        # WRITE AXIS1
+        flippers.write_velocity_axis1(req.cmd.data)
+        flippers_front_res.vel.data = req.cmd.data
+        return WriteHardwareResponse(True)
+    else:
+        return WriteHardwareResponse(False)
+
+
+# Service callbacks for tracks_front_...
+
+def tracks_front_read(req):
+    tracks_front_res.success = tracks.is_connected()
+    return tracks_front_res
+
+def tracks_front_write(req):
     if tracks.is_connected():
-        tracks.write_velocity_axis0(flippers_res.vel.data[0])
-        flippers.write_velocity_axis1(flippers_res.vel.data[1])
-        tracks_res.vel.data = req.cmd.data
+        # WRITE AXIS0
+        tracks.write_velocity_axis0(req.cmd.data)
+        tracks_front_res.vel.data = req.cmd.data
         return WriteHardwareResponse(True)
     else:
         return WriteHardwareResponse(False)
     return WriteHardwareResponse(True)
 
+
+# Service callbacks for tracks_front_...
+
+def tracks_rear_read(req):
+    tracks_rear_res.success = tracks.is_connected()
+    return tracks_rear_res
+
+def tracks_rear_write(req):
+    if tracks.is_connected():
+        # WRITE AXIS1
+        tracks.write_velocity_axis1(req.cmd.data)
+        tracks_rear_res.vel.data = req.cmd.data
+        return WriteHardwareResponse(True)
+    else:
+        return WriteHardwareResponse(False)
+    return WriteHardwareResponse(True)
+
+
+# Topic callback from the topics which monitor the flipper angles
+
+def set_flippers_front_position(raw_value):
+    flippers_front_res = (raw_value - flippers_front_offset) * flippers_scale
+
+def set_flippers_rear_position(raw_value):
+    flippers_rear_res = (raw_value - flippers_rear_offset) * flippers_scale
+
+
 def main():
     rospy.init_node("odrives")
-    rospy.Service("flippers/read", ReadHardware, flippers_read)
-    rospy.Service("flippers/write", WriteHardware, flippers_write)
-    rospy.Service("tracks/read", ReadHardware, tracks_read)
-    rospy.Service("tracks/write", WriteHardware, tracks_write)
 
-    rospy.Subscriber("/flipper/front", Float32, set_flippers_front_position)
-    rospy.Subscriber("/flipper/rear", Float32, set_flippers_rear_position)
+    # Used by ros_control to read and write joints
+    rospy.Service("flippers/front/read", ReadHardware, flippers_front_read)
+    rospy.Service("flippers/front/write", WriteHardware, flippers_front_write)
+    rospy.Service("flippers/rear/read", ReadHardware, flippers_front_read)
+    rospy.Service("flippers/rear/write", WriteHardware, flippers_front_write)
+
+    # Used by ros_control to read and write joints
+    rospy.Service("tracks/front/read", ReadHardware, tracks_front_read)
+    rospy.Service("tracks/front/write", WriteHardware, tracks_front_write)
+    rospy.Service("tracks/rear/read", ReadHardware, tracks_rear_read)
+    rospy.Service("tracks/rear/write", WriteHardware, tracks_rear_write)
+
+    # Provides feedback for flipper positions, which is written
+    # to the ReadHardware response messages
+    rospy.Subscriber("/flippers/front", Float32, set_flippers_front_position)
+    rospy.Subscriber("/flippers/rear", Float32, set_flippers_rear_position)
 
     flippers_diagnostic_pub = rospy.Publisher(
         "flippers/diagnostic", DiagnosticStatus, 10)
     tracks_diagnostic_pub = rospy.Publisher(
-        "flippers/diagnostic", DiagnosticStatus, 10)
+        "tracks/diagnostic", DiagnosticStatus, 10)
 
     rate = rospy.Rate(1);
     while not rospy.is_shutdown():
