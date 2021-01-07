@@ -308,10 +308,10 @@ so am just omitting it for now. It's not that important to simulate this.
 <transmission name="arm_1_tran">
   <type>transmission_interface/SimpleTransmission</type>
   <joint name="arm_1_joint">
-    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
   </joint>
   <actuator name="arm_1_actuator">
-    <hardwareInterface>PositionJointInterface</hardwareInterface>
+    <hardwareInterface>VelocityJointInterface</hardwareInterface>
     <mechanicalReduction>1</mechanicalReduction>
   </actuator>
 </transmission>
@@ -326,10 +326,10 @@ so am just omitting it for now. It's not that important to simulate this.
 <transmission name="arm_2_transmission">
   <type>transmission_interface/SimpleTransmission</type>
   <joint name="arm_2_joint">
-    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
   </joint>
   <actuator name="arm_2_actuator">
-    <hardwareInterface>PositionJointInterface</hardwareInterface>
+    <hardwareInterface>VelocityJointInterface</hardwareInterface>
     <mechanicalReduction>1</mechanicalReduction>
   </actuator>
 </transmission>
@@ -344,10 +344,10 @@ so am just omitting it for now. It's not that important to simulate this.
 <transmission name="arm_3_transmission">
   <type>transmission_interface/SimpleTransmission</type>
   <joint name="arm_3_joint">
-    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
   </joint>
   <actuator name="arm_3_actuator">
-    <hardwareInterface>PositionJointInterface</hardwareInterface>
+    <hardwareInterface>VelocityJointInterface</hardwareInterface>
     <mechanicalReduction>1</mechanicalReduction>
   </actuator>
 </transmission>
@@ -412,7 +412,8 @@ so am just omitting it for now. It's not that important to simulate this.
 
 <!-- GRIPPER DRIVEN JOINTS -->
 
-<joint name="gripper_right_joint" type="continuous">
+<!-- Use the right gripper joint as the "driven" joint -->
+<joint name="gripper_joint" type="continuous">
   <origin rpy="0 -0.348 0" xyz="0.016 0.019 0.0487"/>
   <parent link="gripper_base_link"/>
   <child link="gripper_right_driver_link"/>
@@ -430,11 +431,13 @@ so am just omitting it for now. It's not that important to simulate this.
   </actuator>
 </transmission>
 
+<!-- Mimic gripper_joint to gripper_left_joint -->
 <joint name="gripper_left_joint" type="continuous">
   <origin rpy="0 0.348 0" xyz="-0.016 0.019 0.0487"/>
   <parent link="gripper_base_link"/>
   <child link="gripper_left_driver_link"/>
   <axis xyz="0 1 0"/>
+  <mimic joint="gripper_joint" multiplier="-1"/>
 </joint>
 
 <transmission name="gripper_left_driver_transmission">
@@ -460,7 +463,7 @@ robot state.
   <parent link="gripper_left_driver_link"/>
   <child link="gripper_left_contact_link"/>
   <axis xyz="0 1 0"/>
-  <mimic joint="gripper_left_joint" multiplier="-1"/>
+  <mimic joint="gripper_joint"/>
 </joint>
 
 <joint name="gripper_right_contact_dependent_joint" type="continuous">
@@ -468,7 +471,7 @@ robot state.
   <parent link="gripper_right_driver_link"/>
   <child link="gripper_right_contact_link"/>
   <axis xyz="0 1 0"/>
-  <mimic joint="gripper_right_joint" multiplier="-1"/>
+  <mimic joint="gripper_joint" multiplier="-1"/>
 </joint>
 
 <joint name="gripper_left_linkage_dependent_joint" type="continuous">
@@ -476,7 +479,7 @@ robot state.
   <parent link="gripper_base_link"/>
   <child link="gripper_left_linkage_link"/>
   <axis xyz="0 1 0"/>
-  <mimic joint="gripper_left_joint"/>
+  <mimic joint="gripper_joint" multiplier="-1"/>
 </joint>
 
 <joint name="gripper_right_linkage_dependent_joint" type="continuous">
@@ -484,7 +487,7 @@ robot state.
   <parent link="gripper_base_link"/>
   <child link="gripper_right_linkage_link"/>
   <axis xyz="0 1 0"/>
-  <mimic joint="gripper_right_joint"/>
+  <mimic joint="gripper_joint"/>
 </joint>
 
 

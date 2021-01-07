@@ -1,5 +1,6 @@
 #include "ros/ros.h"
 #include "sensor_msgs/Joy.h"
+#include <iostream>
 #include <sstream>
 #include "command_publisher.h"
 #include "joystick_listener.h"
@@ -23,6 +24,7 @@ int main(int argc, char **argv)
             arm_mode = !arm_mode;
         }
         if (!arm_mode) {
+            std::cout << "here" << std::endl;
             command_publisher.set_tracks_command(
                 -joystick_listener.query_axis(JoyAxis::LEFT_VERTICAL),
                 -joystick_listener.query_axis(JoyAxis::LEFT_HORIZONTAL));

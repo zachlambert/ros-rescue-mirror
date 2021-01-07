@@ -3,6 +3,6 @@
         name="gamepad"
         pkg="arbie_teleop"
         type="gamepad">
-        <remap from="joy" to="gamepad/values"/>
+        <!--<remap from="joy" to="gamepad/values"/>-->
     </node>
 </launch>

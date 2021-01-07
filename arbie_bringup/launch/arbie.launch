@@ -10,7 +10,7 @@
     </include>
 
     <include file="$(find arbie_description)/launch/control.launch">
-        <arg name="arm" value="false"/>
+        <arg name="start_controllers" value="true"/>
     </include>
 
     <include file="$(find arbie_webgui)/launch/webgui.launch"/>

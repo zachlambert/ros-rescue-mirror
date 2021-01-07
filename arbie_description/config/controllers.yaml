@@ -51,13 +51,9 @@ wrist_roll_controller:
     type: position_controllers/JointPositionController
     joint: wrist_roll_joint
 
-gripper_right_controller:
+gripper_controller:
     type: position_controllers/JointPositionController
-    joint: gripper_right_joint
-
-gripper_left_controller:
-    type: position_controllers/JointPositionController
-    joint: gripper_left_joint
+    joint: gripper_joint
 
 # Moveit requires trajectory controllers in order to execute
 # trajectories. Therefore, need individual joint controllers above
@@ -78,5 +74,4 @@ gripper_trajectory_controller:
     type: position_controllers/JointTrajectoryController
     action_ns: gripper_action
     joints:
-      - gripper_right_joint
-      - gripper_left_joint
+      - gripper_joint

@@ -70,7 +70,7 @@ public:
 
         // Gripper
         handles.push_back(std::make_unique<handle::ax12a::PositionPair>(
-            "gripper_left_joint",
+            "gripper_joint",
             interfaces,
             dxl::ax12a::JointController(commHandler, commHandler.PROTOCOL_1, 8),
             dxl::ax12a::JointController(commHandler, commHandler.PROTOCOL_1, 9),
