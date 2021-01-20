@@ -6,5 +6,8 @@
     <maintainer email="zach@todo.todo">zach</maintainer>
     <license>TODO</license>
 
+    <exec_depend>rviz</exec_depend>
+    <exec_depend>rqt_graph</exec_depend>
+
     <buildtool_depend>catkin</buildtool_depend>
 </package>

@@ -10,6 +10,7 @@
 
     <exec_depend>robot_state_publisher</exec_depend>
     <exec_depend>controller_manager</exec_depend>
+    <exec_depend>ros_controllers</exec_depend>
 
     <!-- Required for gazebo to access meshes -->
     <export>
