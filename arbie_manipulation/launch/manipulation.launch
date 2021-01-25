@@ -1,14 +1,16 @@
 <launch>
     <!-- Launch the moveit move_group node, used for planning and executing
     trajectories -->
-    <include file="$(find arbie_moveit_config)/launch/move_group.launch"/>
+    <include file="$(find arbie_moveit_config)/launch/move_group.launch">
+        <arg name="load_robot_description" value="false"/>
+    </include>
 
     <!-- Manipulation node, which controls the arm. Either moves arm with
     velocity commands, or passes pose commands to the moveit move_group node-->
-    <node
+    <!--<node
         name="manipulation"
         pkg="arbie_manipulation"
         type="manipulation"
         output="screen"
-    />
+    />-->
 </launch>

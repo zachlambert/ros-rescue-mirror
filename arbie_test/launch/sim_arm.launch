@@ -18,7 +18,7 @@
         pkg="controller_manager"
         type="spawner"
         respawn="false"
-        args="joint_state_controller flippers_front_controller flippers_rear_controller arm_1_controller arm_2_controller arm_3_controller wrist_pitch_controller wrist_yaw_controller wrist_roll_controller gripper_controller"
+        args="joint_state_controller flippers_front_controller flippers_rear_controller arm_trajectory_controller gripper_trajectory_controller"
     />
     <!-- For MoveIt -->
     <node
@@ -26,8 +26,11 @@
         pkg="controller_manager"
         type="spawner"
         respawn="false"
-        args="--stopped arm_trajectory_controller gripper_trajectory_controller"
+        args="--stopped arm_position_controller gripper_position_controller"
     />
+
+    <!-- Manipulation -->
+    <include file="$(find arbie_manipulation)/launch/manipulation.launch"/>
 
     <!-- Start a window for viewing the robot model, and a window for setting
     the arm joint commands -->
@@ -37,7 +40,7 @@
         type="rviz"
         args="-d $(find arbie_test)/config/view_model.rviz"
     />
-    <include file="$(find arbie_webgui)/launch/webgui.launch"/>
+    <!--<include file="$(find arbie_webgui)/launch/webgui.launch"/>-->
     <node
         name="rqt_gui"
         pkg="rqt_gui"

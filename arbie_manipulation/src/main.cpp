@@ -12,16 +12,16 @@ public:
             n.serviceClient<controller_manager_msgs::SwitchController>(
                 "controller_manager/switch_controller");
 
-        load_position_msg.request.start_controllers.push_back(
-            "arm_position_controller");
-        load_position_msg.request.stop_controllers.push_back(
-            "arm_trajectory_controller");
+        load_position_msg.request.start_controllers.push_back("arm_position_controller");
+        load_position_msg.request.start_controllers.push_back("gripper_position_controller");
+        load_position_msg.request.stop_controllers.push_back("arm_trajectory_controller");
+        load_position_msg.request.stop_controllers.push_back("gripper_trajectory_controller");
         load_position_msg.request.strictness = 1;
 
-        load_trajectory_msg.request.start_controllers.push_back(
-            "arm_trajectory_controller");
-        load_trajectory_msg.request.stop_controllers.push_back(
-            "arm_position_controller");
+        load_trajectory_msg.request.start_controllers.push_back("arm_trajectory_controller");
+        load_trajectory_msg.request.start_controllers.push_back("gripper_trajectory_controller");
+        load_trajectory_msg.request.stop_controllers.push_back("arm_position_controller");
+        load_trajectory_msg.request.stop_controllers.push_back("gripper_position_controller");
         load_trajectory_msg.request.strictness = 1;
 
         switch_controllers_client.call(load_position_msg);
