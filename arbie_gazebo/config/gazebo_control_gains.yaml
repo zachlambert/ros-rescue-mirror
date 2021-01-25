@@ -18,9 +18,9 @@ gazebo_ros_control:
         arm_2_joint: {p: 200.0, i: 0, d: 10}
         arm_3_joint: {p: 200.0, i: 0, d: 10}
 
-        wrist_pitch_joint: {p: 20, i: 0, d: 0.1}
-        wrist_yaw_joint: {p: 20, i: 0, d: 0.1}
-        wrist_roll_joint: {p: 10, i: 0, d: 0.1}
+        wrist_pitch_joint: {p: 40, i: 0, d: 0.5}
+        wrist_yaw_joint: {p: 40, i: 0, d: 0.5}
+        wrist_roll_joint: {p: 40, i: 0, d: 0.5}
 
         # gripper_right_joint: {p: 0.5, i: 0, d: 0.01}
         # gripper_left_joint: {p: 0.5, i: 0, d: 0.01}

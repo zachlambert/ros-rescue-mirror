@@ -18,7 +18,7 @@
         pkg="controller_manager"
         type="spawner"
         respawn="false"
-        args="joint_state_controller flippers_front_controller flippers_rear_controller arm_trajectory_controller gripper_trajectory_controller"
+        args="joint_state_controller flippers_front_controller flippers_rear_controller arm_position_controller gripper_position_controller"
     />
     <!-- For MoveIt -->
     <node
@@ -26,25 +26,26 @@
         pkg="controller_manager"
         type="spawner"
         respawn="false"
-        args="--stopped arm_position_controller gripper_position_controller"
+        args="--stopped arm_trajectory_controller gripper_trajectory_controller"
     />
 
-    <!-- Manipulation -->
+    <!-- Manipulation and teleop-->
     <include file="$(find arbie_manipulation)/launch/manipulation.launch"/>
+    <include file="$(find arbie_teleop)/launch/teleop.launch"/>
 
     <!-- Start a window for viewing the robot model, and a window for setting
     the arm joint commands -->
-    <node
+    <!--<node
         name="rviz"
         pkg="rviz"
         type="rviz"
         args="-d $(find arbie_test)/config/view_model.rviz"
-    />
-    <!--<include file="$(find arbie_webgui)/launch/webgui.launch"/>-->
-    <node
+    />-->
+    <include file="$(find arbie_webgui)/launch/webgui.launch"/>
+    <!--<node
         name="rqt_gui"
         pkg="rqt_gui"
         type="rqt_gui"
-        args="--perspective-file $(find arbie_test)/config/test_arm_control.perspective"
-    />
+        args="-perspective-file $(find arbie_test)/config/test_arm_control.perspective"
+    />-->
 </launch>

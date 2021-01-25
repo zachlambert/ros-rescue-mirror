@@ -33,7 +33,7 @@ Eigen::Isometry3d KinematicsHandler::gripper_coords_to_pose(
     Eigen::AngleAxisd yaw(gripper_coords[1] + gripper_coords[5], Eigen::Vector3d::UnitZ());
     Eigen::Isometry3d gripper_pose_relative = translation * yaw * pitch * roll;
     Eigen::Translation3d arm_base_translation(
-        kinematic_state->getFrameTransform("arm_base_1").translation());
+        kinematic_state->getFrameTransform("arm_base_link").translation());
 
     Eigen::Isometry3d gripper_pose_absolute =
         arm_base_translation * gripper_pose_relative;
@@ -46,7 +46,7 @@ void KinematicsHandler::gripper_pose_to_coords(
     std::vector<double> &gripper_coords)
 {
     Eigen::Translation3d arm_base_translation(
-        kinematic_state->getFrameTransform("arm_base_1").translation());
+        kinematic_state->getFrameTransform("arm_base_link").translation());
     Eigen::Isometry3d gripper_pose_relative =
         arm_base_translation.inverse() * gripper_pose_absolute;
 
@@ -121,7 +121,7 @@ KinematicsHandler::KinematicsHandler(ros::NodeHandle& n):
     // May need to use the below to do IK near the base position.
     // Alternatively, may choose to use moveit to return to home.
     effective_arm_length =
-        kinematic_model->getLinkModel("arm_upper_1")
+        kinematic_model->getLinkModel("arm_upper_link")
         ->getJointOriginTransform().translation().norm();
 }
 
@@ -143,7 +143,7 @@ void KinematicsHandler::initialise_arm_state()
 
     // Get the relative gripper pose
     Eigen::Isometry3d gripper_pose_absolute =
-        kinematic_state->getFrameTransform("gripper_1");
+        kinematic_state->getFrameTransform("gripper_base_link");
 
     // Clear arm state buffer
     arm_state_buffer.reset();
@@ -164,14 +164,14 @@ void KinematicsHandler::joint_state_callback(
     joint_state_actual = joint_state_msg;
 
     // TODO: Tidy the block below
-    kinematic_state->setJointPositions(
-        "flippers_front", &joint_state_msg.position[3]);
-    kinematic_state->setJointPositions(
-        "flippers_rear", &joint_state_msg.position[4]);
-    kinematic_state->setJointPositions(
-        "track_left", &joint_state_msg.position[5]);
-    kinematic_state->setJointPositions(
-        "track_right", &joint_state_msg.position[6]);
+    // kinematic_state->setJointPositions(
+    //     "flippers_front", &joint_state_msg.position[3]);
+    // kinematic_state->setJointPositions(
+    //     "flippers_rear", &joint_state_msg.position[4]);
+    // kinematic_state->setJointPositions(
+    //     "track_left", &joint_state_msg.position[5]);
+    // kinematic_state->setJointPositions(
+    //     "track_right", &joint_state_msg.position[6]);
 
     if (!joints_updated) {
         initialise_arm_state();

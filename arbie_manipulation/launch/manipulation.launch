@@ -7,10 +7,10 @@
 
     <!-- Manipulation node, which controls the arm. Either moves arm with
     velocity commands, or passes pose commands to the moveit move_group node-->
-    <!--<node
+    <node
         name="manipulation"
         pkg="arbie_manipulation"
         type="manipulation"
         output="screen"
-    />-->
+    />
 </launch>
