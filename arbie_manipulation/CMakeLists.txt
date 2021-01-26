@@ -50,3 +50,7 @@ target_link_libraries(manipulation
     ${catkin_LIBRARIES}
     ${Boost_LIBRARIES}
 )
+add_dependencies(manipulation
+    arbie_msgs_generate_messages_cpp
+    arbie_msgs_generate_messages
+)

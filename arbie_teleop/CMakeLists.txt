@@ -28,4 +28,6 @@ target_link_libraries(gamepad
 )
 add_dependencies(gamepad
     ${catkin_EXPORTED_TARGETS}
+    arbie_msgs_generate_messages_cpp
+    arbie_msgs_generate_messages
 )

@@ -8,4 +8,4 @@ moveit_setup_assistant_config:
   CONFIG:
     author_name: Zach Lambert
     author_email: zachalambert@gmail.com
-    generated_timestamp: 1611594913
+    generated_timestamp: 1611616425

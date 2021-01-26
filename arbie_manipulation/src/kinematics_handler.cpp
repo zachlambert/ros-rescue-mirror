@@ -132,6 +132,8 @@ void KinematicsHandler::initialise_arm_state()
         kinematic_state->setJointPositions(
             joint_state_actual.name[i], &joint_state_actual.position[i]
         );
+        ROS_INFO("Joint %s = %f", joint_state_actual.name[i].c_str(),
+                joint_state_actual.position[i]);
     }
 
     // TODO: Tidy up the block below
@@ -156,6 +158,15 @@ void KinematicsHandler::initialise_arm_state()
     arm_state_buffer.next().fail_count = 0;
 
     arm_state_buffer.increment();
+
+    ROS_INFO("Pos = %f, %f, %f",
+        arm_state_buffer.current().gripper_coords[0],
+        arm_state_buffer.current().gripper_coords[1],
+        arm_state_buffer.current().gripper_coords[2]);
+    ROS_INFO("Euler = %f, %f, %f",
+        arm_state_buffer.current().gripper_coords[3],
+        arm_state_buffer.current().gripper_coords[4],
+        arm_state_buffer.current().gripper_coords[5]);
 }
 
 void KinematicsHandler::joint_state_callback(
@@ -164,10 +175,10 @@ void KinematicsHandler::joint_state_callback(
     joint_state_actual = joint_state_msg;
 
     // TODO: Tidy the block below
-    // kinematic_state->setJointPositions(
-    //     "flippers_front", &joint_state_msg.position[3]);
-    // kinematic_state->setJointPositions(
-    //     "flippers_rear", &joint_state_msg.position[4]);
+    kinematic_state->setJointPositions(
+        "flippers_front_joint", &joint_state_msg.position[3]);
+    kinematic_state->setJointPositions(
+        "flippers_rear_joint", &joint_state_msg.position[4]);
     // kinematic_state->setJointPositions(
     //     "track_left", &joint_state_msg.position[5]);
     // kinematic_state->setJointPositions(
@@ -219,6 +230,7 @@ bool KinematicsHandler::validate_velocity(double dt)
             arm_state_buffer.current().gripper_coords[i]
             + dt * gripper_velocity[i]
                  * arm_state_buffer.TRIAL_STEP_MULTIPLIER;
+        ROS_INFO("%lu: %f -> %f", i, arm_state_buffer.current().gripper_coords[i], arm_state_buffer.trial_gripper_coords[i]);
     }
 
     Eigen::Isometry3d gripper_pose = gripper_coords_to_pose(
@@ -251,9 +263,9 @@ void KinematicsHandler::update_position(double dt)
 
     // If the velocity is valid, it is very likely that the next valid too,
     // but should still check
-    if (!validate_state(gripper_pose)) {
-        return;
-    }
+    // if (!validate_state(gripper_pose)) {
+    //     return;
+    // }
 
     kinematic_state->copyJointGroupPositions(
         joint_model_group, arm_msg.data);
@@ -304,12 +316,13 @@ bool KinematicsHandler::ik_constraint(
 {
     static const double MAX_ANGLE_CHANGE = M_PI/4;
     double angle_dif;
-    for (std::size_t i = 0; i < 6; i++) {
-        angle_dif = fabs(joint_angles[i] - arm_state_buffer.current().joint_angles[i]);
-        if (angle_dif > MAX_ANGLE_CHANGE && angle_dif < 2*M_PI - MAX_ANGLE_CHANGE) {
-            return false;
-        }
-    }
+    // for (std::size_t i = 0; i < 6; i++) {
+    //     angle_dif = fabs(joint_angles[i] - arm_state_buffer.current().joint_angles[i]);
+    //     if (angle_dif > MAX_ANGLE_CHANGE && angle_dif < 2*M_PI - MAX_ANGLE_CHANGE) {
+    //         ROS_INFO("Joint %lu: %f vs %f", i, joint_angles[i], arm_state_buffer.current().joint_angles[i]);
+    //         return false;
+    //     }
+    // }
     return true;
 }
 

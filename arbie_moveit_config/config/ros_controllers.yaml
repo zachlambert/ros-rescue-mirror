@@ -44,4 +44,4 @@ controller_list:
     default: True
     type: FollowJointTrajectory
     joints:
-      gripper_joint
+      []

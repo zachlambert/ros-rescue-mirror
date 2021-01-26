@@ -37,6 +37,11 @@ target_include_directories(hardware PRIVATE
     include
 )
 
+add_dependencies(hardware
+    arbie_msgs_generate_messages_cpp
+    arbie_msgs_generate_messages
+)
+
 install(PROGRAMS
   nodes/odrives
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
