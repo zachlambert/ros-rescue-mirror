@@ -29,23 +29,19 @@
         args="--stopped arm_trajectory_controller gripper_trajectory_controller"
     />
 
-    <!-- Manipulation and teleop-->
-    <include file="$(find arbie_manipulation)/launch/manipulation.launch"/>
-    <include file="$(find arbie_teleop)/launch/teleop.launch"/>
-
     <!-- Start a window for viewing the robot model, and a window for setting
     the arm joint commands -->
-    <!--<node
+    <node
         name="rviz"
         pkg="rviz"
         type="rviz"
         args="-d $(find arbie_test)/config/view_model.rviz"
-    />-->
+    />
     <include file="$(find arbie_webgui)/launch/webgui.launch"/>
-    <!--<node
+    <node
         name="rqt_gui"
         pkg="rqt_gui"
         type="rqt_gui"
-        args="-perspective-file $(find arbie_test)/config/test_arm_control.perspective"
-    />-->
+        args="--perspective-file $(find arbie_test)/config/test_arm_control.perspective"
+    />
 </launch>
