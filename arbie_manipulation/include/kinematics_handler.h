@@ -23,8 +23,10 @@ public:
     void loop_velocity(double dt);
     void loop_master(double dt);
 
-    const std::vector<double> &get_joint_positions();
+    const std::vector<double> &get_joint_positions(){ return joint_positions; }
     void reset_joint_positions();
+    void copy_arm_joints_to(std_msgs::Float64MultiArray &arm_command_msg);
+    void copy_arm_joints_to(sensor_msgs::JointState &joint_states);
 
 private:
     // Validate the current state of kinematic_state
@@ -47,9 +49,9 @@ private:
     ros::Subscriber velocity_sub;
     ros::Publisher arm_pub;
 
-    // Joint positions, velocities and gripper velocity
+    // Joint positions, joint states and gripper velocity
     std::vector<double> joint_positions;
-    std::vector<double> joint_velocities;
+    std::vector<double> master_angles;
     sensor_msgs::JointState joint_states;
     Eigen::VectorXd gripper_velocity; // 6-dimensional vector = [angular, linear]
 };

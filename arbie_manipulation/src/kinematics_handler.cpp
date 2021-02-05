@@ -162,21 +162,25 @@ void KinematicsHandler::set_gripper_velocity(const std_msgs::Float64MultiArray &
     this->gripper_velocity.block<3, 1>(3, 0) = linear_velocity;
 }
 
+void KinematicsHandler::set_master_angles(const std_msgs::Float64MultiArray &master_angles_msg)
+{
+    for (std::size_t i = 0; i < master_angles_msg.data.size(); i++) {
+        master_angles[i] = master_angles_msg.data[i];
+    }
+}
+
 void KinematicsHandler::loop_velocity(double dt)
 {
     // Assume dt is small enough that a single step is accurate
     // ie: theta_next = theta + dt * theta_vel
     // (instead of interpolating)
 
-    // TODO: Make this a private variable, which gets updated each loop and
-    // initialised by joint_state_callback when necessary
-    std::vector<double> joint_pos(6);
     // TODO: Compare joint_pos with actual joint states. If these lag behind
     // the target joint states too much, adjust targets
 
-    robot_state->setJointGroupPositions(joint_model_group, joint_pos);
+    robot_state->setJointGroupPositions(joint_model_group, joint_positions);
 
-    Eigen::VectorXd joint_vel;
+    Eigen::VectorXd joint_velocities;
 
     Eigen::MatrixXd jacobian;
     Eigen::Vector3d reference_point_position(0, 0, 0);
@@ -186,10 +190,10 @@ void KinematicsHandler::loop_velocity(double dt)
         reference_point_position,
         jacobian
     );
-    joint_vel = jacobian.inverse() * gripper_velocity;
+    joint_velocities = jacobian.inverse() * gripper_velocity;
 
     // Check that velocity limits aren't exceeded
-    robot_state->setJointGroupVelocities(joint_model_group, joint_vel.data());
+    robot_state->setJointGroupVelocities(joint_model_group, joint_velocities.data());
     for (auto &joint_model: joint_model_group->getJointModels()) {
         if (!robot_state->satisfiesVelocityBounds(joint_model)) {
             ROS_INFO("Doesn't satisfy velocity bounds.");
@@ -200,41 +204,79 @@ void KinematicsHandler::loop_velocity(double dt)
     // trial_joint_pos = joint_pos + dt * joint_vel
     // joint_pos will be updated to these values if the current velocity
     // doesn't cause a collision
-    std::vector<double> trial_joint_pos(joint_pos.size());
-    for (std::size_t i = 0; i < trial_joint_pos.size(); i++) {
-        trial_joint_pos[i] = joint_pos[i] + joint_vel[i] * dt;
+    std::vector<double> trial_joint_positions(joint_positions.size());
+    for (std::size_t i = 0; i < trial_joint_positions.size(); i++) {
+        trial_joint_positions[i] = joint_positions[i] + joint_velocities[i] * dt;
     }
 
     // To check if the current velocity causes a collision, move with this
     // velocity for a given period of time T, then check if the final state
     // is valid.
 
-    std::vector<double> query_joint_pos = trial_joint_pos;
+    std::vector<double> query_joint_positions = trial_joint_positions;
 
     double t = dt;
     const double T = 0.25;
     while (t < T) {
-        robot_state->setJointGroupPositions(joint_model_group, query_joint_pos);
+        robot_state->setJointGroupPositions(joint_model_group, query_joint_positions);
         robot_state->getJacobian(
             joint_model_group,
             robot_state->getLinkModel(joint_model_group->getLinkModelNames().back()),
             reference_point_position,
             jacobian
         );
-        joint_vel = jacobian.inverse() * gripper_velocity;
-        for (std::size_t i = 0; i < query_joint_pos.size(); i++) {
-            query_joint_pos[i] += joint_vel[i] * dt;
+        joint_velocities = jacobian.inverse() * gripper_velocity;
+        for (std::size_t i = 0; i < query_joint_positions.size(); i++) {
+            query_joint_positions[i] += joint_velocities[i] * dt;
         }
         t += dt;
     }
-    robot_state->setJointGroupPositions(joint_model_group, query_joint_pos);
+    robot_state->setJointGroupPositions(joint_model_group, query_joint_positions);
     if (!validate_state()) {
         ROS_INFO("Velocity failed");
         return;
     }
 
-    joint_pos = trial_joint_pos;
-    // TODO: Publish joint commands
+    joint_positions = trial_joint_positions;
+}
+
+void KinematicsHandler::loop_master(double dt)
+{
+    static constexpr double time_constant = 1.0;
+    static constexpr double snap_angle = 0.1;
+    double difference;
+    for (std::size_t i = 0; i < joint_positions.size(); i++) {
+        difference = master_angles[i] - joint_positions[i];
+        if (fabs(difference) < snap_angle) {
+            joint_positions[i] = master_angles[i];
+        } else {
+            joint_positions[i] += (dt/time_constant) * difference;
+        }
+    }
+}
+
+void KinematicsHandler::reset_joint_positions()
+{
+    // Set joint_positions from joint_states
+    for (std::size_t i = 0; i < joint_states.name.size(); i++) {
+        std::size_t joint_i =
+            joint_model_group->getJointModel(joint_states.name[i])->getJointIndex();
+        joint_positions[joint_i] = joint_states.position[i];
+    }
+}
+
+void KinematicsHandler::copy_arm_joints_to(std_msgs::Float64MultiArray &arm_command_msg)
+{
+    std::copy(joint_positions.begin(), joint_positions.end(), arm_command_msg.data.begin());
+}
+
+void KinematicsHandler::copy_arm_joints_to(sensor_msgs::JointState &joint_states)
+{
+    for (std::size_t i = 0; i < joint_states.name.size(); i++) {
+        std::size_t joint_i =
+            joint_model_group->getJointModel(joint_states.name[i])->getJointIndex();
+        joint_states.position[i] = joint_positions[joint_i];
+    }
 }
 
 bool KinematicsHandler::validate_state()

@@ -90,29 +90,27 @@ public:
 
         loop_timer = n.createTimer(
             ros::Duration(1.0/20),
-            &KinematicsHandler::loop,
-            &kinematics_handler
+            &Node::loop,
+            this
         );
     }
 
     void joint_states_callback(const sensor_msgs::JointState &joint_states)
     {
-        // TODO
-        // kinematics_hander.set_joint_states(joint_states)
+        kinematics_handler.set_joint_states(joint_states);
     }
 
     void gripper_velocity_callback(const std_msgs::Float64MultiArray &gripper_velocity)
     {
         if (control_mode == ControlMode::VELOCITY) {
-            // kinematics_handler.set_gripper_velocity(gripper_velocity);
+            kinematics_handler.set_gripper_velocity(gripper_velocity);
         }
     }
 
     void master_angles_callback(const std_msgs::Float64MultiArray &master_angles)
     {
         if (control_mode == ControlMode::MASTER) {
-            // TODO
-            // kinematics_handler.set_joints(master_angles.positions);
+            kinematics_handler.set_master_angles(master_angles);
         }
     }
 
@@ -127,13 +125,11 @@ public:
         }
 
         if (command_mode == CommandMode::MOVE) {
-            // TODO
-            // kinematics_handler.copy_arm_joints(arm_command_msg)
+            kinematics_handler.copy_arm_joints_to(arm_command_msg);
             arm_command_pub.publish(arm_command_msg);
 
         } else { // CommandMode::PLAN
-            // TODO
-            // kinematics_handler.copy_arm_joints(planned_joint_states_msg)
+            kinematics_handler.copy_arm_joints_to(planned_joint_states_msg);
             planned_joint_states_pub.publish(planned_joint_states_msg);
         }
     }
