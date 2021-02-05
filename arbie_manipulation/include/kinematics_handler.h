@@ -16,12 +16,15 @@ class KinematicsHandler{
 public:
     KinematicsHandler(ros::NodeHandle& n);
 
-    // Receive and save actual joint states
-    void joint_state_callback(sensor_msgs::JointState joint_state_msg);
-    // Receive and save target gripper velocity
-    void velocity_callback(std_msgs::Float64MultiArray velocity_msg);
-    // Loop for updating position command
-    void loop(const ros::TimerEvent &timer);
+    void set_joint_states(const sensor_msgs::JointState &joint_states_msg);
+    void set_gripper_velocity(const std_msgs::Float64MultiArray &velocity_msg);
+    void set_master_angles(const std_msgs::Float64MultiArray &master_angles);
+
+    void loop_velocity(double dt);
+    void loop_master(double dt);
+
+    const std::vector<double> &get_joint_positions();
+    void reset_joint_positions();
 
 private:
     // Validate the current state of kinematic_state
@@ -44,19 +47,11 @@ private:
     ros::Subscriber velocity_sub;
     ros::Publisher arm_pub;
 
-    sensor_msgs::JointState joint_state_actual;
-    bool joints_updated;
-
-    std::vector<double> gripper_velocity;
-    bool velocity_is_zero;
-
-    std_msgs::Float64MultiArray arm_msg;
-
-    // For handling inverse kinematics near r=0
-    static constexpr double R_THRESHOLD = 0.05;
-    double effective_arm_length;
-
-    // For moving to a pose target
+    // Joint positions, velocities and gripper velocity
+    std::vector<double> joint_positions;
+    std::vector<double> joint_velocities;
+    sensor_msgs::JointState joint_states;
+    Eigen::VectorXd gripper_velocity; // 6-dimensional vector = [angular, linear]
 };
 
 #endif

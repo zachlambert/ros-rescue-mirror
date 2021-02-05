@@ -56,6 +56,11 @@ public:
         arm_command_msg.layout.dim[0].label = "joint";
         arm_command_msg.data.resize(6);
 
+        planned_joint_states_pub = n.advertise<sensor_msgs::JointState>(
+            "planned/joint_states",
+            10
+        );
+
         // Initialise service clients for swapping arm controllers
 
         switch_controllers_client =
@@ -113,11 +118,23 @@ public:
 
     void loop(const ros::TimerEvent &timer)
     {
-        kinematics_handler.loop(timer);
+        double dt = ros::Duration(timer.current_real - timer.last_real).toSec();
+
+        if (control_mode == ControlMode::VELOCITY) {
+            kinematics_handler.loop_velocity(dt);
+        } else { // ControlMode::MASTER
+            kinematics_handler.loop_master(dt);
+        }
 
         if (command_mode == CommandMode::MOVE) {
-            // TODO: Copy kinematics_handler joints to arm_command_msg.positions
+            // TODO
+            // kinematics_handler.copy_arm_joints(arm_command_msg)
             arm_command_pub.publish(arm_command_msg);
+
+        } else { // CommandMode::PLAN
+            // TODO
+            // kinematics_handler.copy_arm_joints(planned_joint_states_msg)
+            planned_joint_states_pub.publish(planned_joint_states_msg);
         }
     }
 
@@ -136,16 +153,23 @@ public:
             res.success = plan_and_execute_trajectory();
 
         } else if (command == "planned_target" && command_mode == CommandMode::PLAN) {
-            // TODO
-            // move_group.setJointValueTarget(kinematics_handler.get_joints());
+            move_group.setJointValueTarget(kinematics_handler.get_joint_positions());
+            res.success = plan_and_execute_trajectory();
 
         } else if (command == "control_mode") {
-            if (argument == "velocity") control_mode = ControlMode::VELOCITY;
-            if (argument == "master") control_mode = ControlMode::MASTER;
+            if (argument == "velocity") {
+                control_mode = ControlMode::VELOCITY;
+            } else if (argument == "master") {
+                control_mode = ControlMode::MASTER;
+            }
 
         } else if (command == "command_mode") {
-            if (argument == "move") command_mode = CommandMode::MOVE;
-            if (argument == "plan") command_mode = CommandMode::PLAN;
+            if (argument == "move") {
+                command_mode = CommandMode::MOVE;
+                kinematics_handler.reset_joint_positions();
+            } else if (argument == "plan") {
+                command_mode = CommandMode::PLAN;
+            }
         }
 
         res.success = success;
@@ -153,7 +177,6 @@ public:
     }
 
 private:
-
     bool plan_and_execute_trajectory() {
         bool success = false;
         moveit::planning_interface::MoveGroupInterface::Plan plan;
@@ -192,6 +215,8 @@ private:
     ros::Subscriber master_angles_sub;
     ros::Publisher arm_command_pub; // Command joint positions for arm angles
     std_msgs::Float64MultiArray arm_command_msg;
+    ros::Publisher planned_joint_states_pub;
+    sensor_msgs::JointState planned_joint_states_msg;
 
     // Timer for kinematics_handler loop
     ros::Timer loop_timer;
