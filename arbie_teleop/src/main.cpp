@@ -43,10 +43,10 @@ int main(int argc, char **argv)
             );
 
             if (joystick_listener.query_button_state(JoyButton::A) == JoyButtonState::PRESSED) {
-                command_publisher.send_gripper_command("home");
+                command_publisher.send_gripper_command("named_target", "home");
             }
             if (joystick_listener.query_button_state(JoyButton::X) == JoyButtonState::PRESSED) {
-                command_publisher.send_gripper_command("ready");
+                command_publisher.send_gripper_command("named_target", "ready");
             }
         }
 

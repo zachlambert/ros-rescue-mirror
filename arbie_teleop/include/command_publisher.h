@@ -18,7 +18,7 @@ public:
     void set_base_pose(double x, double y, double theta);
     void publish_all();
 
-    bool send_gripper_command(std::string pose_name);
+    bool send_gripper_command(const std::string &command, const std::string &argument);
 private:
     // Tracks
     ros::Publisher tracks_command_pub;

@@ -70,9 +70,11 @@ void CommandPublisher::publish_all()
     flippers_rear_command_pub.publish(flippers_rear_msg);
 }
 
-bool CommandPublisher::send_gripper_command(std::string pose_name)
+bool CommandPublisher::send_gripper_command(
+    const std::string &command, const std::string &argument)
 {
-    gripper_command_msg.request.pose_name = pose_name;
+    gripper_command_msg.request.command = command;
+    gripper_command_msg.request.argument = argument;
     if (gripper_command_service.call(gripper_command_msg)) {
         ROS_INFO("Gripper command status: %d", gripper_command_msg.response.success);
         return gripper_command_msg.response.success;

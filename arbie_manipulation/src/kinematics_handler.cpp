@@ -156,7 +156,8 @@ void KinematicsHandler::set_gripper_velocity(const std_msgs::Float64MultiArray &
     linear_velocity(1) = r * cylindrical_velocity(2);
     linear_velocity(2) = cylindrical_velocity(2);
     // Rotate to align x with direction from arm base to end effector
-    linear_velocity *= base_transform.rotation().inverse();
+
+    linear_velocity = base_transform.rotation().inverse() * linear_velocity;
 
     this->gripper_velocity.block<3, 1>(0, 0) = angular_velocity;
     this->gripper_velocity.block<3, 1>(3, 0) = linear_velocity;

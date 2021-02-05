@@ -1,3 +1,4 @@
-string pose_name
+string command
+string argument
 ---
 bool success

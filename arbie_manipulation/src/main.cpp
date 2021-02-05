@@ -138,32 +138,30 @@ public:
         arbie_msgs::GripperCommand::Request &req,
         arbie_msgs::GripperCommand::Response &res)
     {
-        // TODO: Update GripperCommand msg to have command field
-        // TODO: Replace req.pose_name with req.argument
         std::string command = "named_target";
         std::string argument = "";
         bool success = false;
 
-        if (command == "named_target" && command_mode == CommandMode::PLAN) {
-            move_group.setNamedTarget(req.pose_name);
+        if (req.command == "named_target" && command_mode == CommandMode::PLAN) {
+            move_group.setNamedTarget(req.argument);
             res.success = plan_and_execute_trajectory();
 
-        } else if (command == "planned_target" && command_mode == CommandMode::PLAN) {
+        } else if (req.command == "planned_target" && command_mode == CommandMode::PLAN) {
             move_group.setJointValueTarget(kinematics_handler.get_joint_positions());
             res.success = plan_and_execute_trajectory();
 
-        } else if (command == "control_mode") {
-            if (argument == "velocity") {
+        } else if (req.command == "control_mode") {
+            if (req.argument == "velocity") {
                 control_mode = ControlMode::VELOCITY;
-            } else if (argument == "master") {
+            } else if (req.argument == "master") {
                 control_mode = ControlMode::MASTER;
             }
 
-        } else if (command == "command_mode") {
-            if (argument == "move") {
+        } else if (req.command == "command_mode") {
+            if (req.argument == "move") {
                 command_mode = CommandMode::MOVE;
                 kinematics_handler.reset_joint_positions();
-            } else if (argument == "plan") {
+            } else if (req.argument == "plan") {
                 command_mode = CommandMode::PLAN;
             }
         }
