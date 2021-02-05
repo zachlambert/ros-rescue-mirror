@@ -8,7 +8,6 @@
 #include <moveit/robot_model/robot_model.h>
 #include <moveit/robot_state/robot_state.h>
 #include <moveit/planning_scene/planning_scene.h>
-#include <moveit/move_group_interface/move_group_interface.h>
 #include <moveit/collision_detection/collision_tools.h>
 #include "tf2_eigen/tf2_eigen.h"
 #include <Eigen/Geometry>
@@ -17,45 +16,40 @@ class KinematicsHandler{
 public:
     KinematicsHandler(ros::NodeHandle& n);
 
+    // Receive and save actual joint states
     void joint_state_callback(sensor_msgs::JointState joint_state_msg);
+    // Receive and save target gripper velocity
     void velocity_callback(std_msgs::Float64MultiArray velocity_msg);
+    // Loop for updating position command
     void loop(const ros::TimerEvent &timer);
 
-    bool gripper_command(const std::string &pose_name);
-
 private:
-    void initialise_arm_state();
-    void gripper_pose_to_coords(
-        const Eigen::Isometry3d &gripper_pose,
-        std::vector<double> &gripper_coords);
-    Eigen::Isometry3d gripper_coords_to_pose(
-        const std::vector<double> &gripper_coords);
-
-    bool ik_constraint(
-        robot_state::RobotState *robot_state,
-        const robot_state::JointModelGroup *joint_group,
-        const double *joint_angles);
-
+    // Validate the current state of kinematic_state
     bool validate_state();
 
+    // Objects for loading robot model, accessing robot model, storing robot state
+    // and accessing the joints for the arm group
     robot_model_loader::RobotModelLoader robot_model_loader;
-    robot_model::RobotModelPtr kinematic_model;
-    robot_state::RobotStatePtr kinematic_state;
+    robot_model::RobotModelPtr robot_model;
+    robot_state::RobotStatePtr robot_state;
     robot_state::JointModelGroup* joint_model_group;
 
+    // Objects for checking collisions
     collision_detection::CollisionRequest c_req;
     collision_detection::CollisionResult c_res;
     planning_scene::PlanningScene* g_planning_scene;
 
+    // Publishers and subscribers
     ros::Subscriber joint_state_sub;
+    ros::Subscriber velocity_sub;
+    ros::Publisher arm_pub;
+
     sensor_msgs::JointState joint_state_actual;
     bool joints_updated;
 
-    ros::Subscriber velocity_sub;
     std::vector<double> gripper_velocity;
     bool velocity_is_zero;
 
-    ros::Publisher arm_pub;
     std_msgs::Float64MultiArray arm_msg;
 
     // For handling inverse kinematics near r=0
@@ -63,7 +57,6 @@ private:
     double effective_arm_length;
 
     // For moving to a pose target
-    moveit::planning_interface::MoveGroupInterface move_group;
 };
 
 #endif

@@ -32,7 +32,7 @@ Eigen::Isometry3d KinematicsHandler::gripper_coords_to_pose(
     Eigen::AngleAxisd yaw(gripper_coords[1] + gripper_coords[5], Eigen::Vector3d::UnitZ());
     Eigen::Isometry3d gripper_pose_relative = translation * yaw * pitch * roll;
     Eigen::Translation3d arm_base_translation(
-        kinematic_state->getFrameTransform("arm_base_link").translation());
+        robot_state->getFrameTransform("arm_base_link").translation());
 
     Eigen::Isometry3d gripper_pose_absolute =
         arm_base_translation * gripper_pose_relative;
@@ -45,7 +45,7 @@ void KinematicsHandler::gripper_pose_to_coords(
     std::vector<double> &gripper_coords)
 {
     Eigen::Translation3d arm_base_translation(
-        kinematic_state->getFrameTransform("arm_base_link").translation());
+        robot_state->getFrameTransform("arm_base_link").translation());
     Eigen::Isometry3d gripper_pose_relative =
         arm_base_translation.inverse() * gripper_pose_absolute;
 
@@ -71,9 +71,9 @@ void KinematicsHandler::gripper_pose_to_coords(
 
 KinematicsHandler::KinematicsHandler(ros::NodeHandle& n):
         robot_model_loader("robot_description"),
-        kinematic_model(robot_model_loader.getModel()),
-        kinematic_state(new robot_state::RobotState(kinematic_model)),
-        joint_model_group(kinematic_model->getJointModelGroup("arm")),
+        robot_model(robot_model_loader.getModel()),
+        robot_state(new robot_state::RobotState(robot_model)),
+        joint_model_group(robot_model->getJointModelGroup("arm")),
         c_req(),
         c_res(),
         gripper_velocity(6),
@@ -86,7 +86,7 @@ KinematicsHandler::KinematicsHandler(ros::NodeHandle& n):
     c_req.max_contacts = 100;
     c_req.max_contacts_per_pair = 5;
     c_req.verbose = false;
-    g_planning_scene = new planning_scene::PlanningScene(kinematic_model);
+    g_planning_scene = new planning_scene::PlanningScene(robot_model);
 
     // Setup subscriber for joint_states - for initialising arm state and
     // checking that the arm keeps up with the command angles
@@ -105,18 +105,6 @@ KinematicsHandler::KinematicsHandler(ros::NodeHandle& n):
         &KinematicsHandler::velocity_callback,
         this
     );
-
-    // Setup publisher and message for the arm angles
-    arm_msg.layout.data_offset = 0;
-    arm_msg.layout.dim.push_back(std_msgs::MultiArrayDimension());
-    arm_msg.layout.dim[0].size = 6;
-    arm_msg.layout.dim[0].stride = 1;
-    arm_msg.layout.dim[0].label = "joint";
-    arm_msg.data.resize(6);
-    arm_pub = n.advertise<std_msgs::Float64MultiArray>(
-        "arm_position_controller/command",
-        1000
-    );
 }
 
 void KinematicsHandler::joint_state_callback(
@@ -125,13 +113,13 @@ void KinematicsHandler::joint_state_callback(
     joint_state_actual = joint_state_msg;
 
     // TODO: Tidy the block below
-    kinematic_state->setJointPositions(
+    robot_state->setJointPositions(
         "flippers_front_joint", &joint_state_msg.position[3]);
-    kinematic_state->setJointPositions(
+    robot_state->setJointPositions(
         "flippers_rear_joint", &joint_state_msg.position[4]);
-    // kinematic_state->setJointPositions(
+    // robot_state->setJointPositions(
     //     "track_left", &joint_state_msg.position[5]);
-    // kinematic_state->setJointPositions(
+    // robot_state->setJointPositions(
     //     "track_right", &joint_state_msg.position[6]);
 
     if (!joints_updated) {
@@ -171,7 +159,7 @@ void KinematicsHandler::loop(const ros::TimerEvent &timer)
     // TODO: Compare joint_pos with actual joint states. If these lag behind
     // the target joint states too much, adjust targets
 
-    kinematic_state->setJointGroupPositions(joint_model_group, joint_pos);
+    robot_state->setJointGroupPositions(joint_model_group, joint_pos);
 
     Eigen::VectorXd ee_vel, joint_vel;
     // TODO: Make this a private variable which gets updated with gripper velocity callback
@@ -180,18 +168,18 @@ void KinematicsHandler::loop(const ros::TimerEvent &timer)
 
     Eigen::MatrixXd jacobian;
     Eigen::Vector3d reference_point_position(0, 0, 0);
-    kinematic_state->getJacobian(
+    robot_state->getJacobian(
         joint_model_group,
-        kinematic_state->getLinkModel(joint_model_group->getLinkModelNames().back()),
+        robot_state->getLinkModel(joint_model_group->getLinkModelNames().back()),
         reference_point_position,
         jacobian
     );
     joint_vel = jacobian.inverse() * ee_vel;
 
     // Check that velocity limits aren't exceeded
-    kinematic_state->setJointGroupVelocities(joint_model_group, joint_vel.data());
+    robot_state->setJointGroupVelocities(joint_model_group, joint_vel.data());
     for (auto &joint_model: joint_model_group->getJointModels()) {
-        if (!kinematic_state->satisfiesVelocityBounds(joint_model)) {
+        if (!robot_state->satisfiesVelocityBounds(joint_model)) {
             ROS_INFO("Doesn't satisfy velocity bounds.");
             return;
         }
@@ -214,10 +202,10 @@ void KinematicsHandler::loop(const ros::TimerEvent &timer)
     double t = dt;
     const double T = 0.25;
     while (t < T) {
-        kinematic_state->setJointGroupPositions(joint_model_group, query_joint_pos);
-        kinematic_state->getJacobian(
+        robot_state->setJointGroupPositions(joint_model_group, query_joint_pos);
+        robot_state->getJacobian(
             joint_model_group,
-            kinematic_state->getLinkModel(joint_model_group->getLinkModelNames().back()),
+            robot_state->getLinkModel(joint_model_group->getLinkModelNames().back()),
             reference_point_position,
             jacobian
         );
@@ -227,7 +215,7 @@ void KinematicsHandler::loop(const ros::TimerEvent &timer)
         }
         t += dt;
     }
-    kinematic_state->setJointGroupPositions(joint_model_group, query_joint_pos);
+    robot_state->setJointGroupPositions(joint_model_group, query_joint_pos);
     if (!validate_state()) {
         ROS_INFO("Velocity failed");
         return;
@@ -239,15 +227,15 @@ void KinematicsHandler::loop(const ros::TimerEvent &timer)
 
 bool KinematicsHandler::validate_state()
 {
-    // validates the current state of kinematic_state, so assumes
-    // kinematic_state has already been set with positions and velocities
+    // validates the current state of robot_state, so assumes
+    // robot_state has already been set with positions and velocities
 
-    if(!kinematic_state->satisfiesBounds()){
+    if(!robot_state->satisfiesBounds()){
         ROS_INFO("IK solution found but exceeds joint limits");
         return false;
     }
 
-    g_planning_scene->checkCollision(c_req, c_res, *kinematic_state);
+    g_planning_scene->checkCollision(c_req, c_res, *robot_state);
     if(c_res.collision){
         ROS_INFO("IK found but in collision state");
         std::size_t i = 0;
