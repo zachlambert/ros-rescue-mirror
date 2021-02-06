@@ -7,7 +7,7 @@
 
 void quaternion_to_euler(
         const Eigen::Quaterniond &q,
-        double *roll, double *pitch, double *yaw)
+        double *yaw, double *pitch, double *roll)
 {
     *roll = atan2(
         2*(q.x()*q.w() + q.y()*q.z()),
@@ -20,7 +20,7 @@ void quaternion_to_euler(
 
 void rotation_matrix_to_euler(
         const Eigen::MatrixXd &R,
-        double *roll, double *pitch, double *yaw)
+        double *yaw, double *pitch, double *roll)
 {
     // Note: Yaw and roll are invalid if pitch = pi/2 or -pi/2
     *pitch = atan2(-R(2, 0), hypot(R(0, 0), R(1, 0)));
@@ -96,6 +96,10 @@ KinematicsHandler::KinematicsHandler(ros::NodeHandle& n):
     g_planning_scene = new planning_scene::PlanningScene(robot_model);
 
     gripper_velocity = Eigen::VectorXd(6);
+    gripper_velocity.fill(0);
+
+    joint_positions.resize(6);
+    std::fill(joint_positions.begin(), joint_positions.end(), 0);
 }
 
 void KinematicsHandler::set_joint_states(const sensor_msgs::JointState &joint_states_msg)
@@ -112,33 +116,88 @@ void KinematicsHandler::set_joint_states(const sensor_msgs::JointState &joint_st
     }
 }
 
-void KinematicsHandler::set_gripper_velocity(const std_msgs::Float64MultiArray &gripper_velocity)
+void KinematicsHandler::set_gripper_velocity(const std_msgs::Float64MultiArray &gripper_velocity_in)
 {
+    // The generated robot model uses the following reference frames:
+    // Forward = Z (Usually X)
+    // Left = X (Usually Y)
+    // Up = Y (Usually Z)
+
+    // Define a matrix U, with column vectors = unit vectors of reference frames
+    // eg: Column 1 = X = Usually Y = (0, 1, 0)
+    Eigen::Matrix3d U;
+    U << 0, 0, 1,
+         1, 0, 0,
+         0, 1, 0;
+
+    // Also need a matrix U that transforms homogeneous matrices
+    Eigen::Matrix4d Uh;
+    Uh << 0, 0, 1, 0,
+          1, 0, 0, 0,
+          0, 1, 0, 0,
+          0, 0, 0, 1;
+
+    // Velocities need to be expressed in terms of the robot reference frames
+    // If v = velocity in (x, y, z)
+    // and v2 = velocity in (u1, u2, u3) (in robot reference frame)
+    // v2 = U^T * v
+    // v = U * v2
+
     // gripper_velocity provided as:
     // [ r_dot, theta_dot, z_dot, yaw_dot, pitch_dot, roll_dot ]
     // - Linear velocity in cylindrical coordinates
     // - Angular velocity in euler angles
 
-    Eigen::Vector3d euler_velocity(
-        gripper_velocity.data[3], gripper_velocity.data[4], gripper_velocity.data[5]);
-
     Eigen::Vector3d cylindrical_velocity(
-        gripper_velocity.data[0], gripper_velocity.data[1], gripper_velocity.data[2]);
+        gripper_velocity_in.data[0], gripper_velocity_in.data[1], gripper_velocity_in.data[2]);
+
+    Eigen::Vector3d euler_velocity(
+        gripper_velocity_in.data[3],
+        gripper_velocity_in.data[4],
+        gripper_velocity_in.data[5]
+    );
     
     // this->gripper_velocity vector has the form:
-    // [ wx, wy, wz, vx, vy, vz]
-    // - Angular velocity and linear velocity in cartesian coordinates
-    Eigen::Vector3d angular_velocity, linear_velocity;
+    // [ vx, vy, vz, wx, wy, wz]
+    // - Linear velocity and angular velocity in cartesian coordinates
+    Eigen::Vector3d linear_velocity, angular_velocity;
     
-    // TODO: Need to check these are the correct frame names
-    Eigen::Isometry3d ee_transform = robot_state->getFrameTransform("gripper_base_link");
-    Eigen::Isometry3d base_transform = robot_state->getFrameTransform("arm_base");
-    Eigen::Isometry3d relative_transform = base_transform.inverse() * ee_transform;
+    Eigen::Isometry3d origin_body_trans = robot_state->getFrameTransform("body_link");
+    Eigen::Isometry3d origin_base_trans = robot_state->getFrameTransform("arm_base_link");
+    Eigen::Isometry3d origin_ee_trans = robot_state->getFrameTransform("gripper_base_link");
+
+    // 1) Want rotation from body -> arm_base
+    Eigen::Matrix3d base_rotation = (origin_body_trans.inverse() * origin_base_trans).rotation();
+    // 2) Want rigid-body transformation from arm_base -> gripper (end effector)
+    Eigen::Isometry3d ee_trans = (origin_base_trans.inverse() * origin_ee_trans);
+
+    // Frame transformations need to also be changed, with:
+    // A' = U*A*U^T (or Uh for full transformation)
+    base_rotation = U*base_rotation.matrix()*U.transpose();
+    ee_trans = Uh*ee_trans*Uh.transpose();
+
+    // Set linear velocity
+
+    Eigen::Vector3d ee_position = ee_trans.translation();
+    double r = hypot(ee_position(0), ee_position(1));
+    // Set linear velocity such that it's aligoed with the forward/left axis
+    linear_velocity(0) = cylindrical_velocity(0);
+    linear_velocity(1) = r * cylindrical_velocity(1);
+    linear_velocity(2) = cylindrical_velocity(2);
+
+    // Rotate this such that linear_velocity(0) -> Direction from arm_base -> ee
+    linear_velocity = base_rotation * linear_velocity;
+
+    std::cout << "Radius = " << r << std::endl;
 
     // Set angular velocity
 
     double yaw, pitch, roll;
-    rotation_matrix_to_euler(relative_transform.rotation(), &yaw, &pitch, &roll);
+    // Need to pass untransformed rotation to this function
+    rotation_matrix_to_euler(U.transpose()*ee_trans.rotation()*U, &yaw, &pitch, &roll);
+    std::cout << "Yaw = " << yaw << std::endl;
+    std::cout << "Pitch = " << pitch << std::endl;
+    std::cout << "Roll = " << roll << std::endl;
 
     // euler_velocity = A * angular_velocity
     Eigen::Matrix3d A;
@@ -146,25 +205,21 @@ void KinematicsHandler::set_gripper_velocity(const std_msgs::Float64MultiArray &
           cos(pitch)*sin(roll),  cos(roll),  0,
           cos(pitch)*cos(roll), -sin(pitch), 0;
     angular_velocity = A.inverse() * euler_velocity;
+    // At this point, angular velocity is defined in the end effector
+    // reference frame.
+    // Therefore, need to refer to the body frame
+    angular_velocity = base_rotation * ee_trans.rotation() * angular_velocity;
 
-    // Set linear velocity
+    // Add theta velocity to angular_velocity(2)
+    angular_velocity(2) += cylindrical_velocity(1);
 
-    Eigen::Vector3d ee_position = relative_transform.translation();
-    double r = hypot(ee_position(1), ee_position(2));
-    // Aligned with x-y axis
-    linear_velocity(0) = cylindrical_velocity(2);
-    linear_velocity(1) = r * cylindrical_velocity(2);
-    linear_velocity(2) = cylindrical_velocity(2);
-    // Rotate to align x with direction from arm base to end effector
-
-    linear_velocity = base_transform.rotation().inverse() * linear_velocity;
-
-    this->gripper_velocity.block<3, 1>(0, 0) = angular_velocity;
-    this->gripper_velocity.block<3, 1>(3, 0) = linear_velocity;
+    gripper_velocity.block<3, 1>(0, 0) = U.transpose() * linear_velocity;
+    gripper_velocity.block<3, 1>(3, 0) = U.transpose() * angular_velocity;
 }
 
 void KinematicsHandler::set_master_angles(const std_msgs::Float64MultiArray &master_angles_msg)
 {
+    master_angles.resize(6);
     for (std::size_t i = 0; i < master_angles_msg.data.size(); i++) {
         master_angles[i] = master_angles_msg.data[i];
     }
@@ -184,21 +239,30 @@ void KinematicsHandler::loop_velocity(double dt)
     Eigen::VectorXd joint_velocities;
 
     Eigen::MatrixXd jacobian;
+    // Reference position in end effector frame
     Eigen::Vector3d reference_point_position(0, 0, 0);
     robot_state->getJacobian(
         joint_model_group,
-        robot_state->getLinkModel(joint_model_group->getLinkModelNames().back()),
+        robot_state->getLinkModel("gripper_base_link"),
         reference_point_position,
         jacobian
     );
+    std::cout << "Gripper velocity" << std::endl << gripper_velocity << std::endl;
+    std::cout << "Jacobian" << std::endl << jacobian << std::endl;
+    std::cout << "Inverse Jacobian" << std::endl << jacobian.inverse() << std::endl;
     joint_velocities = jacobian.inverse() * gripper_velocity;
+    std::cout << "Joint vel: ";
+    for (std::size_t i = 0; i < joint_velocities.size(); i++) {
+        std::cout << joint_velocities[i] << " ";
+    }
+    std::cout << std::endl;
 
     // Check that velocity limits aren't exceeded
     robot_state->setJointGroupVelocities(joint_model_group, joint_velocities.data());
     for (auto &joint_model: joint_model_group->getJointModels()) {
         if (!robot_state->satisfiesVelocityBounds(joint_model)) {
-            ROS_INFO("Doesn't satisfy velocity bounds.");
-            return;
+            // ROS_INFO("Doesn't satisfy velocity bounds.");
+            // return;
         }
     }
 
@@ -209,6 +273,15 @@ void KinematicsHandler::loop_velocity(double dt)
     for (std::size_t i = 0; i < trial_joint_positions.size(); i++) {
         trial_joint_positions[i] = joint_positions[i] + joint_velocities[i] * dt;
     }
+
+    // TODO: Make sure it works up to here
+    joint_positions = trial_joint_positions;
+    std::cout << "Joint pos: ";
+    for (std::size_t i = 0; i < joint_positions.size(); i++) {
+        std::cout << joint_positions[i] << " ";
+    }
+    std::cout << std::endl;
+    return;
 
     // To check if the current velocity causes a collision, move with this
     // velocity for a given period of time T, then check if the final state

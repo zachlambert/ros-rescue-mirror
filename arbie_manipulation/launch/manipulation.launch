@@ -13,4 +13,6 @@
         type="manipulation"
         output="screen"
     />
+
+    <include file="$(find arbie_teleop)/launch/teleop.launch"/>
 </launch>

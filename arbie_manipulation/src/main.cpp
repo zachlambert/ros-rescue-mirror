@@ -93,6 +93,9 @@ public:
             &Node::loop,
             this
         );
+
+        control_mode = ControlMode::VELOCITY;
+        command_mode = CommandMode::MOVE;
     }
 
     void joint_states_callback(const sensor_msgs::JointState &joint_states)
