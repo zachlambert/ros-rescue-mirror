@@ -188,13 +188,11 @@ void KinematicsHandler::set_gripper_velocity(const std_msgs::Float64MultiArray &
     // Rotate this such that linear_velocity(0) -> Direction from arm_base -> ee
     linear_velocity = base_rotation * linear_velocity;
 
-    std::cout << "Radius = " << r << std::endl;
-
     // Set angular velocity
 
     double yaw, pitch, roll;
     // Need to pass untransformed rotation to this function
-    rotation_matrix_to_euler(U.transpose()*ee_trans.rotation()*U, &yaw, &pitch, &roll);
+    rotation_matrix_to_euler(ee_trans.rotation(), &yaw, &pitch, &roll);
     std::cout << "Yaw = " << yaw << std::endl;
     std::cout << "Pitch = " << pitch << std::endl;
     std::cout << "Roll = " << roll << std::endl;
@@ -247,15 +245,7 @@ void KinematicsHandler::loop_velocity(double dt)
         reference_point_position,
         jacobian
     );
-    std::cout << "Gripper velocity" << std::endl << gripper_velocity << std::endl;
-    std::cout << "Jacobian" << std::endl << jacobian << std::endl;
-    std::cout << "Inverse Jacobian" << std::endl << jacobian.inverse() << std::endl;
     joint_velocities = jacobian.inverse() * gripper_velocity;
-    std::cout << "Joint vel: ";
-    for (std::size_t i = 0; i < joint_velocities.size(); i++) {
-        std::cout << joint_velocities[i] << " ";
-    }
-    std::cout << std::endl;
 
     // Check that velocity limits aren't exceeded
     robot_state->setJointGroupVelocities(joint_model_group, joint_velocities.data());
@@ -276,11 +266,6 @@ void KinematicsHandler::loop_velocity(double dt)
 
     // TODO: Make sure it works up to here
     joint_positions = trial_joint_positions;
-    std::cout << "Joint pos: ";
-    for (std::size_t i = 0; i < joint_positions.size(); i++) {
-        std::cout << joint_positions[i] << " ";
-    }
-    std::cout << std::endl;
     return;
 
     // To check if the current velocity causes a collision, move with this
