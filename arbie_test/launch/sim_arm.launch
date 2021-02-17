@@ -31,7 +31,7 @@
 
     <!-- Start a window for viewing the robot model, and a window for setting
     the arm joint commands -->
-    <node
+    <!--<node
         name="rviz"
         pkg="rviz"
         type="rviz"
@@ -42,6 +42,6 @@
         name="rqt_gui"
         pkg="rqt_gui"
         type="rqt_gui"
-        args="--perspective-file $(find arbie_test)/config/test_arm_control.perspective"
-    />
+        args="-perspective-file $(find arbie_test)/config/test_arm_control.perspective"
+    />-->
 </launch>
