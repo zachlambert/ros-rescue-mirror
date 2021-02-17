@@ -395,13 +395,10 @@ public:
     void move(double cmd_increment)
     {
         if (!connected) return;
-        double pos;
-        controller1.readPosition(pos);
-        pos += cmd_increment;
-        controller1.writeGoalPosition(pos);
-        controller2.writeGoalPosition(pos);
-        double vel, eff;
+        double pos, vel, eff;
         read(pos, vel, eff); // Just to check if positions deviate
+        pos += cmd_increment;
+        write(pos);
     }
 private:
     bool connected;
