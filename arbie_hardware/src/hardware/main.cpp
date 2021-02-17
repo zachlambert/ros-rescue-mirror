@@ -148,8 +148,10 @@ public:
 
             // Move wrist out the way temporarily, while calibrating arm_3
             // Move at 1 rads, for -0.8 radians, at 0.1s timesteps
+            double pitch_command = 0;
             for (int i = 0; i < 80; i++) {
-                wrist_pitch_handle->move(-0.01);
+                wrist_pitch_handle->write(pitch_command);
+                pitch_command -= 0.01;
                 ros::Duration(0.01).sleep();
             }
             ros::Duration(1).sleep();
@@ -166,7 +168,8 @@ public:
             // Move wrist pitch down again
             // Move at 1 rads, for 0.8 radians, at 0.1s timesteps
             for (int i = 0; i < 80; i++) {
-                wrist_pitch_handle->move(0.01);
+                wrist_pitch_handle->write(pitch_command);
+                pitch_command += 0.01;
                 ros::Duration(0.01).sleep();
             }
             // In case not back at 0 exactly
