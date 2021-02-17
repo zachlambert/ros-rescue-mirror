@@ -64,7 +64,6 @@ public:
 
     bool writeGoalPosition(double angle)
     {
-        // Should be given in radians, but convert to degrees here for simplicity
         angle *= 180/M_PI;
         if (angle > 150) angle = 150;
         if (angle < -150) angle = -150;

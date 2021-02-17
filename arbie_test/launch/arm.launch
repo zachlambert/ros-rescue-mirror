@@ -4,9 +4,14 @@
         name="robot_description"
         command="xacro $(find arbie_description)/model/arbie.urdf.xacro"
     />
+
+    <!-- OMITTED HARDWARE NODE
+    Start manually, and wait for it to finish calibration before launching
+    everything else. Otherwise the controller spawner can timeout. -->
+    <!-- 
     <include file="$(find arbie_hardware)/launch/hardware.launch">
         <arg name="pcb" value="false"/>
-    </include>
+    </include>-->
 
     <!-- Start controllers -->
     <include file="$(find arbie_description)/launch/control.launch"/>

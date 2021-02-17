@@ -25,17 +25,14 @@ catkin_package(CATKIN_DEPENDS
 
 include_directories(
     ${catkin_INCLUDE_DIRS}
-)
-
-add_executable(hardware
-    src/hardware/main.cpp
-)
-target_link_libraries(hardware
-    ${catkin_LIBRARIES}
-)
-target_include_directories(hardware PRIVATE
     include
 )
+
+add_executable(hardware src/hardware/main.cpp)
+target_link_libraries(hardware ${catkin_LIBRARIES})
+
+add_executable(test_ax12a src/test/ax12a.cpp)
+target_link_libraries(test_ax12a ${catkin_LIBRARIES})
 
 add_dependencies(hardware
     arbie_msgs_generate_messages_cpp

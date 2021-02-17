@@ -8,18 +8,21 @@ namespace dxl {
 
 class CommHandler {
 public:
-    CommHandler(const std::string &port, int default_baud_rate = 57600)
+    CommHandler(const std::string &port, int baud_rate = 57600):
+        baud_rate(baud_rate)
     {
         portHandler = dynamixel::PortHandler::getPortHandler(port.c_str());
-
         packetHandler1 = dynamixel::PacketHandler::getPacketHandler(1);
         packetHandler2 = dynamixel::PacketHandler::getPacketHandler(2);
+    }
 
-        if (!portHandler->openPort()) {
-            std::cerr << "Failed to open the port" << std::endl;
+    bool connect()
+    {
+        if (portHandler->openPort()) {
+            setBaudRate(baud_rate);
+            return true;
         }
-
-        setBaudRate(default_baud_rate);
+        return false;
     }
 
     void setBaudRate(int baud_rate)
@@ -45,6 +48,7 @@ public:
     }
 
 private:
+    int baud_rate;
     dynamixel::PortHandler *portHandler;
     dynamixel::PacketHandler *packetHandler1;
     dynamixel::PacketHandler *packetHandler2;

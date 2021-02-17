@@ -327,8 +327,8 @@ public:
         connected = controller1.disable();
         connected &= controller2.disable();
         if (connected) {
-        controller1.enable();
-        controller2.enable();
+            controller1.enable();
+            controller2.enable();
         } else {
             std::cerr << "Joint " << name << " not connected." << std::endl;
         }

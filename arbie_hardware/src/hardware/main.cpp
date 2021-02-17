@@ -15,6 +15,9 @@ public:
         commHandler(dxl_port)
     {
         // TODO: Get IDs from param server
+        if (!commHandler.connect()) {
+            ROS_ERROR("Failed to open serial port for dynamixels.");
+        }
 
         // Arm
         handles.push_back(std::make_unique<handle::xl430::Position>(
