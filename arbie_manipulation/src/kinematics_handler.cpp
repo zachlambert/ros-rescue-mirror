@@ -191,18 +191,17 @@ void KinematicsHandler::set_gripper_velocity(const std_msgs::Float64MultiArray &
     // Set angular velocity
 
     double yaw, pitch, roll;
-    // Need to pass untransformed rotation to this function
     rotation_matrix_to_euler(ee_trans.rotation(), &yaw, &pitch, &roll);
     std::cout << "Yaw = " << yaw << std::endl;
     std::cout << "Pitch = " << pitch << std::endl;
     std::cout << "Roll = " << roll << std::endl;
 
-    // euler_velocity = A * angular_velocity
+    // angular_velocity = A * euler_velocity
     Eigen::Matrix3d A;
     A << -sin(pitch),            0,          1,
           cos(pitch)*sin(roll),  cos(roll),  0,
           cos(pitch)*cos(roll), -sin(pitch), 0;
-    angular_velocity = A.inverse() * euler_velocity;
+    angular_velocity = A * euler_velocity;
     // At this point, angular velocity is defined in the end effector
     // reference frame.
     // Therefore, need to refer to the body frame
@@ -238,7 +237,7 @@ void KinematicsHandler::loop_velocity(double dt)
 
     Eigen::MatrixXd jacobian;
     // Reference position in end effector frame
-    Eigen::Vector3d reference_point_position(0, 0, 0);
+    Eigen::Vector3d reference_point_position(0, 0, 0.1);
     robot_state->getJacobian(
         joint_model_group,
         robot_state->getLinkModel("gripper_base_link"),
