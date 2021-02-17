@@ -34,6 +34,9 @@ target_link_libraries(hardware ${catkin_LIBRARIES})
 add_executable(test_ax12a src/test/ax12a.cpp)
 target_link_libraries(test_ax12a ${catkin_LIBRARIES})
 
+add_executable(test_ax12a_pair src/test/ax12a_pair.cpp)
+target_link_libraries(test_ax12a_pair ${catkin_LIBRARIES})
+
 add_dependencies(hardware
     arbie_msgs_generate_messages_cpp
     arbie_msgs_generate_messages
