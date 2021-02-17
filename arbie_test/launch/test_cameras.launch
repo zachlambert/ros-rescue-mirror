@@ -1,4 +1,7 @@
 <launch>
+    <!-- This launch file tests the realsense cameras on their own,
+    without anything else -->
+
     <!-- Load the robot description and start robot_state_publisher -->
     <param
         name="robot_description"
@@ -17,6 +20,7 @@
         args="-d $(find arbie_test)/config/base.rviz"
     />
     <!-- Command the camera tilt angle manually -->
+    <!-- On the actual robot, this will be read from the hardware -->
     <node
         name="joint_state_publisher_gui"
         pkg="joint_state_publisher_gui"

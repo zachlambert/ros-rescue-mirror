@@ -1,25 +1,6 @@
 <launch>
-    <!-- Load robot description and spawn gazebo model from this -->
-    <param
-        name="robot_description"
-        command="xacro $(find arbie_description)/model/arbie_sim_base.urdf.xacro"
-    />
-    <node
-        name="spawn_model"
-        pkg="gazebo_ros"
-        type="spawn_model"
-        args="-param robot_description -urdf -x 0 -y 0 -z 0 -model arbie -b -gazebo_namespace gzserver"
-    />
-
-    <!-- Start controllers -->
+    <include file="$(find arbie_gazebo)/launch/navigation.launch"/>
     <include file="$(find arbie_description)/launch/control.launch"/>
-    <node
-        name="controller_spawner"
-        pkg="controller_manager"
-        type="spawner"
-        respawn="false"
-        args="joint_state_controller base_controller camera_tilt_controller"
-    />
 
     <!-- Command base velocity -->
     <node

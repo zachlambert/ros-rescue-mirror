@@ -1,47 +1,6 @@
 <launch>
     <!-- Load the robot description and spawn the gazebo model -->
-    <param
-        name="robot_description"
-        command="xacro $(find arbie_description)/model/arbie_sim_arm.urdf.xacro"
-    />
-    <node
-        name="spawn_model"
-        pkg="gazebo_ros"
-        type="spawn_model"
-        args="-param robot_description -urdf -x 0 -y 0 -z 0 -model arbie -b -gazebo_namespace gzserver"
-    />
-
-    <!-- Start controllers -->
-    <include file="$(find arbie_description)/launch/control.launch"/>
-    <node
-        name="controller_spawner"
-        pkg="controller_manager"
-        type="spawner"
-        respawn="false"
-        args="joint_state_controller flippers_front_controller flippers_rear_controller arm_position_controller gripper_position_controller"
-    />
-    <!-- For MoveIt -->
-    <node
-        name="controller_spawner_arm_trajectory"
-        pkg="controller_manager"
-        type="spawner"
-        respawn="false"
-        args="--stopped arm_trajectory_controller gripper_trajectory_controller"
-    />
-
-    <!-- Start a window for viewing the robot model, and a window for setting
-    the arm joint commands -->
-    <!--<node
-        name="rviz"
-        pkg="rviz"
-        type="rviz"
-        args="-d $(find arbie_test)/config/view_model.rviz"
-    />
-    <include file="$(find arbie_webgui)/launch/webgui.launch"/>
-    <node
-        name="rqt_gui"
-        pkg="rqt_gui"
-        type="rqt_gui"
-        args="-perspective-file $(find arbie_test)/config/test_arm_control.perspective"
-    />-->
+    <include file="$(arbie_gazebo)/launch/manipulation.launch"/>
+    <include file="$(arbie_description)/launch/control.launch"/>
+    <include file="$(arbie_webgui)/launch/webgui.launch"/>
 </launch>

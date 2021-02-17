@@ -1,4 +1,5 @@
 <launch>
+    <!-- Start gazebo server -->
     <node name="gzserver" pkg="gazebo_ros" type="gzserver"
         respawn="true"
         args="$(find arbie_gazebo)/worlds/navigation.world"
@@ -6,5 +7,17 @@
     <rosparam
         file="$(find arbie_gazebo)/config/gazebo_control_gains.yaml"
         command="load"
+    />
+
+    <!-- Load robot description and spawn model -->
+    <param
+        name="robot_description"
+        command="xacro $(find arbie_description)/model/arbie_sim_base.urdf.xacro"
+    />
+    <node
+        name="spawn_model"
+        pkg="gazebo_ros"
+        type="spawn_model"
+        args="-param robot_description -urdf -x 0 -y 0 -z 0 -model arbie -b -gazebo_namespace gzserver"
     />
 </launch>

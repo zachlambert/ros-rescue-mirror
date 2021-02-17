@@ -1,0 +1,12 @@
+<launch>
+    <rosparam
+        file="$(find arbie_hardware)/config/usb.yaml"
+        command="load"
+    />
+    <node
+        name="power_board"
+        pkg="rosserial_python"
+        type="serial_node.py">
+        <remap from="~port" to="/usb/pcb"/>
+    </node>
+</launch>

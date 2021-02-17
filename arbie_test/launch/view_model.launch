@@ -1,4 +1,6 @@
 <launch>
+    <!-- Used for checking the urdf model -->
+
     <param
         name="robot_description"
         command="xacro $(find arbie_description)/model/arbie.urdf.xacro"

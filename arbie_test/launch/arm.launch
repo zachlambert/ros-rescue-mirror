@@ -1,35 +1,6 @@
 <launch>
-    <!-- Load robot description and start the hardware -->
-    <param
-        name="robot_description"
-        command="xacro $(find arbie_description)/model/arbie.urdf.xacro"
-    />
-
-    <!-- OMITTED HARDWARE NODE
-    Start manually, and wait for it to finish calibration before launching
-    everything else. Otherwise the controller spawner can timeout. -->
-    <!-- 
-    <include file="$(find arbie_hardware)/launch/hardware.launch">
-        <arg name="pcb" value="false"/>
-    </include>-->
-
-    <!-- Start controllers -->
+    <include file="$(find arbie_hardware)/launch/hardware.launch"/>
     <include file="$(find arbie_description)/launch/control.launch"/>
-    <node
-        name="controller_spawner"
-        pkg="controller_manager"
-        type="spawner"
-        respawn="false"
-        args="joint_state_controller flippers_front_controller flippers_rear_controller arm_position_controller gripper_position_controller"
-    />
-    <!-- For MoveIt -->
-    <node
-        name="controller_spawner_arm_trajectory"
-        pkg="controller_manager"
-        type="spawner"
-        respawn="false"
-        args="--stopped arm_trajectory_controller gripper_trajectory_controller"
-    />
 
     <!-- Start a window for viewing the robot model, and a window for setting
     the arm joint commands -->
