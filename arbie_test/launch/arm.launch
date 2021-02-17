@@ -28,12 +28,12 @@
 
     <!-- Start a window for viewing the robot model, and a window for setting
     the arm joint commands -->
-    <node
+    <!--<node
         name="rviz"
         pkg="rviz"
         type="rviz"
         args="-d $(find arbie_test)/config/view_model.rviz"
-    />
+    />-->
     <node
         name="rqt_gui"
         pkg="rqt_gui"
