@@ -305,6 +305,17 @@ public:
         // eff not implemented
     }
     bool is_connected()const { return connected; }
+
+    // Used for calibration
+    void move(double cmd_increment)
+    {
+        if (!connected) return;
+        double pos;
+        controller.readPosition(pos);
+        pos += cmd_increment;
+        controller.writeGoalPosition(pos);
+    }
+
 private:
     bool connected;
     dxl::ax12a::JointController controller;
@@ -379,6 +390,19 @@ public:
         // eff not implemented
     }
     bool is_connected()const { return connected; }
+
+    // Used for calibration
+    void move(double cmd_increment)
+    {
+        if (!connected) return;
+        double pos;
+        controller1.readPosition(pos);
+        pos += cmd_increment;
+        controller1.writeGoalPosition(pos);
+        controller2.writeGoalPosition(pos);
+        double vel, eff;
+        read(pos, vel, eff); // Just to check if positions deviate
+    }
 private:
     bool connected;
     dxl::ax12a::JointController controller1, controller2;
