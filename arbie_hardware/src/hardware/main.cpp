@@ -148,26 +148,26 @@ public:
 
             // // Move wrist out the way temporarily, while calibrating arm_3
             // // Move at 1 rads, for -0.8 radians, at 0.1s timesteps
-            // for (int i = 0; i < 8; i++) {
-            //     arm_2_handle->move(-0.1);
-            //     ros::Duration(0.1).sleep();
-            // }
-            // ros::Duration(1).sleep();
+            for (int i = 0; i < 8; i++) {
+                arm_2_handle->move(-0.1);
+                ros::Duration(0.1).sleep();
+            }
+            ros::Duration(1).sleep();
 
-            // arm_3_handle->calibrate();
-            // // Move arm_3 back up a bit
-            // arm_3_handle->write(0.24);
-            // ros::Duration(3).sleep();
+            arm_3_handle->calibrate();
+            // Move arm_3 back up a bit
+            arm_3_handle->write(0.24);
+            ros::Duration(3).sleep();
 
-            // // Move wrist pitch down again
-            // // Move at 1 rads, for 0.8 radians, at 0.1s timesteps
-            // for (int i = 0; i < 8; i++) {
-            //     arm_2_handle->move(0.1);
-            //     ros::Duration(0.1).sleep();
-            // }
-            // // In case not back at 0 exactly
-            // wrist_pitch_handle->write(0);
-            // ros::Duration(1).sleep();
+            // Move wrist pitch down again
+            // Move at 1 rads, for 0.8 radians, at 0.1s timesteps
+            for (int i = 0; i < 8; i++) {
+                arm_2_handle->move(0.1);
+                ros::Duration(0.1).sleep();
+            }
+            // In case not back at 0 exactly
+            wrist_pitch_handle->write(0);
+            ros::Duration(1).sleep();
 
             std::cout << "FINISHED CALIBRATING" << std::endl;
         }
