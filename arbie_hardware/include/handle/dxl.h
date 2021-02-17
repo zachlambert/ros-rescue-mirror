@@ -371,9 +371,9 @@ public:
         pos2 = (pos2_reading - origin2)/scale2;
 
         if (fabs(pos2 - pos) > pos_diff_allowance) {
-            // controller1.disable();
-            // controller2.disable();
-            // disabled = true;
+            controller1.disable();
+            controller2.disable();
+            disabled = true;
             ROS_ERROR("Positions don't match: %f, %f", pos, pos2);
         }
         // eff not implemented
