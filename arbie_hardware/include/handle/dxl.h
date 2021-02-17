@@ -285,6 +285,7 @@ public:
     {
         connected = controller.disable(); // If already enabled
         if (connected) {
+            controller.writeComplianceSlope(128);
             controller.enable();
         } else {
             std::cerr << "Joint " << name << " not connected." << std::endl;
