@@ -1,4 +1,7 @@
 <launch>
+    <!-- If true, start rtabmapviz to visualise the slam process -->
+    <arg name="rtabmapviz" default="false"/>
+
     <!-- Start rtabmap_ros
     Builds a 3d map from the d435 camera point cloud.
 
@@ -31,6 +34,7 @@
         <arg name="camera_info_topic" value="/d400/color/camera_info"/>
         <arg name="approx_rgbd_sync" value="false"/>
         <arg name="visual_odometry" value="false"/>
+        <arg name="rtabmapviz" value="$(arg rtabmapviz)"/>
     </include>
 
     <!-- Sets the odom->base_link transform, from the /t265/odom/sample topic -->

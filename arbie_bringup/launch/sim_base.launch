@@ -1,6 +1,8 @@
 <launch>
-    <include file="$(find arbie_gazebo)/launch/navigation.launch"/>
-    <include file="$(find arbie_description)/launch/control.launch"/>
+    <include file="$(find arbie_description)/launch/control.launch">
+        <arg name="all" value="false"/>
+        <arg name="base" value="true"/>
+    </include>
 
     <!-- Command base velocity -->
     <node
@@ -16,4 +18,6 @@
         type="rviz"
         args="-d $(find arbie_test)/config/base.rviz"
     />
+
+    <include file="$(find arbie_slam)/launch/slam.launch"/>
 </launch>

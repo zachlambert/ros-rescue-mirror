@@ -1,0 +1,9 @@
+<launch>
+    <!-- Load the robot description and spawn the gazebo model -->
+    <include file="$(find arbie_description)/launch/control.launch">
+        <arg name="all" value="false"/>
+        <arg name="arm" value="true"/>
+    </include>
+    <include file="$(find arbie_webgui)/launch/webgui.launch"/>
+    <include file="$(find arbie_manipulation)/launch/manipulation.launch"/>
+</launch>

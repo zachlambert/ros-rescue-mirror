@@ -1,4 +1,9 @@
 <launch>
+    <!-- Some arguments for choosing the set of controllers to start -->
+    <arg name="all" default="true"/>
+    <arg name="arm" default="false"/>
+    <arg name="base" default="false"/>
+
     <node
         name="robot_state_publisher"
         pkg="robot_state_publisher"
@@ -12,6 +17,10 @@
         command="load"
     />
 
+    <!-- ALL
+    Load all joint controllers, including stopped trajectory controllers for MoveIt
+    -->
+    <group if="$(arg all)">
     <node
         name="controller_spawner"
         pkg="controller_manager"
@@ -19,8 +28,6 @@
         respawn="false"
         args="joint_state_controller base_controller camera_tilt_controller flippers_front_controller flippers_rear_controller arm_position_controller gripper_position_controller"
     />
-
-    <!-- For MoveIt -->
     <node
         name="controller_spawner_arm_trajectory"
         pkg="controller_manager"
@@ -28,5 +35,41 @@
         respawn="false"
         args="--stopped arm_trajectory_controller gripper_trajectory_controller"
     />
+    </group>
+
+    <!-- ARM
+    Load all controllers except base_controller and camera_tilt_controller.
+    Leave flipper controllers to test for collision avoidance between arm and flippers.
+    -->
+    <group if="$(arg arm)">
+    <node
+        name="controller_spawner"
+        pkg="controller_manager"
+        type="spawner"
+        respawn="false"
+        args="joint_state_controller flippers_front_controller flippers_rear_controller arm_position_controller gripper_position_controller"
+    />
+    <node
+        name="controller_spawner_arm_trajectory"
+        pkg="controller_manager"
+        type="spawner"
+        respawn="false"
+        args="--stopped arm_trajectory_controller gripper_trajectory_controller"
+    />
+    </group>
+
+    <!-- BASE
+    Only load base_controller and camera_tilt_controller
+    Arm and flippers not used.
+    -->
+    <group if="$(arg base)">
+    <node
+        name="controller_spawner"
+        pkg="controller_manager"
+        type="spawner"
+        respawn="false"
+        args="joint_state_controller base_controller camera_tilt_controller"
+    />
+    </group>
 
 </launch>

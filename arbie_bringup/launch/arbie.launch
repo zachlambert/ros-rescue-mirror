@@ -1,22 +1,22 @@
 <launch>
-    <param
-        name="robot_description"
-        command="xacro $(find arbie_description)/model/arbie.urdf.xacro"
-    />
+    <!-- Load urdf, start hardware interface -->
+    <include file="$(find arbie_hardware)/launch/hardware.launch"/>
 
-    <!-- Start hardware. Only use odrives at the moment -->
-    <include file="$(find arbie_hardware)/launch/hardware.launch">
-        <arg name="pcb" value="false"/>
-    </include>
+    <!-- Start main pcb -->
+    <include file="$(find arbie_hardware)/launch/pcb.launch"/>
 
-    <include file="$(find arbie_description)/launch/control.launch">
-        <arg name="start_controllers" value="true"/>
-    </include>
+    <!-- Start control: Start state publisher and spawn controllers
+    to allow reading/writing joints and viewing resultant robot model -->
+    <include file="$(find arbie_description)/launch/control.launch"/>
 
+    <!-- Webui and teleop for interpreting joystick input -->
     <include file="$(find arbie_webgui)/launch/webgui.launch"/>
     <include file="$(find arbie_teleop)/launch/teleop.launch"/>
-    <!--
+
+    <!-- Start arm control -->
     <include file="$(find arbie_manipulation)/launch/manipulation.launch"/>
+
+    <!-- Start realsense cameras and slam -->
+    <include file="$(find arbie_slam)/launch/cameras.launch"/>
     <include file="$(find arbie_slam)/launch/slam.launch"/>
-    -->
 </launch>

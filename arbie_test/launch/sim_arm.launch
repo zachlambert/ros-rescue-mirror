@@ -1,6 +1,0 @@
-<launch>
-    <!-- Load the robot description and spawn the gazebo model -->
-    <include file="$(arbie_gazebo)/launch/manipulation.launch"/>
-    <include file="$(arbie_description)/launch/control.launch"/>
-    <include file="$(arbie_webgui)/launch/webgui.launch"/>
-</launch>
