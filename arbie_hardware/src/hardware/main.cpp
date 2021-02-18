@@ -1,18 +1,19 @@
 #include <array>
 
-#include "ros/ros.h"
-#include "ros/callback_queue.h"
+#include <ros/ros.h>
+#include <ros/callback_queue.h>
 #include <hardware_interface/joint_command_interface.h>
 #include <hardware_interface/joint_state_interface.h>
 #include <hardware_interface/robot_hw.h>
 #include <controller_manager/controller_manager.h>
+#include <std_srvs/Trigger.h>
 
 #include "handle/dxl.h"
 
 class Hardware: public hardware_interface::RobotHW {
 public:
     Hardware(ros::NodeHandle &n, const std::string &dxl_port):
-        commHandler(dxl_port) {}
+        commHandler(dxl_port), calibrated(false) {}
 
     bool initialise(ros::NodeHandle &n)
     {
@@ -171,10 +172,10 @@ public:
         return true;
     }
 
-    void calibrate() {
-        if (!arm_2_handle->is_connected()) return;
-        if (!arm_3_handle->is_connected()) return;
-        if (!wrist_pitch_handle->is_connected()) return;
+    bool calibrate() {
+        if (!arm_2_handle->is_connected()) return false;
+        if (!arm_3_handle->is_connected()) return false;
+        if (!wrist_pitch_handle->is_connected()) return false;
 
         ROS_INFO("Calibrating arm");
 
@@ -199,6 +200,8 @@ public:
         ros::Duration(1).sleep();
 
         ROS_INFO("Finished calibrating arm");
+        calibrated = true;
+        return true;
     }
 
     void read()
@@ -210,6 +213,7 @@ public:
 
     void write()
     {
+        if (!calibrated) return;
         for (auto &handle: handles) {
             handle->write();
         }
@@ -220,6 +224,7 @@ private:
     handle::Interfaces interfaces;
     std::vector<std::unique_ptr<handle::Handle>> handles;
 
+    bool calibrated;
     // For calibration - have no ownership
     handle::xl430::Position *arm_2_handle, *arm_3_handle;
     handle::ax12a::PositionPair *wrist_pitch_handle;
@@ -242,6 +247,9 @@ public:
             ROS_ERROR("Failed to initialise hardware");
         }
 
+        calibrate_server = ros::ServiceServer(
+            n, "calibrate", boost::bind(&Node::calibrate_callback, this, _1), false
+        );
         hw.calibrate();
     }
 
@@ -257,10 +265,19 @@ public:
         hw.write();
     }
 
+    bool calibrate_callback(
+        std_srvs::TriggerRequest &req,
+        std_srvs::TriggerResponse &res)
+    {
+        res.success = hw.calibrate();
+        return true;
+    }
+
 private:
     Hardware hw;
     controller_manager::ControllerManager cm;
     ros::Timer loop_timer;
+    ros::ServiceClient calibrate_server;
     bool successful;
 };
 
