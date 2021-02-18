@@ -25,34 +25,13 @@ enum class Type {
     EFF
 };
 
+
 class Handle {
 public:
 
-    Handle(const std::string &name, Interfaces &interface, Type type):
-        pos(0), vel(0), eff(0), cmd(0)
-    {
-        interface.state.registerHandle(hardware_interface::JointStateHandle(
-                name, &pos, &vel, &eff
-        ));
-        switch (type) {
-            case Type::POS:
-                interface.pos.registerHandle(hardware_interface::JointHandle(
-                        interface.state.getHandle(name), &cmd
-                ));
-                break;
-            case Type::VEL:
-                interface.vel.registerHandle(hardware_interface::JointHandle(
-                        interface.state.getHandle(name), &cmd
-                ));
-                break;
-            case Type::EFF:
-                interface.eff.registerHandle(hardware_interface::JointHandle(
-                        interface.state.getHandle(name), &cmd
-                ));
-                break;
-        }
-    }
+    Handle(const std::string &name, Interfaces &interface, Type type);
     virtual ~Handle() {}
+
     void write() {
         write(cmd);
     }
@@ -66,39 +45,17 @@ protected:
     double pos, vel, eff, cmd;
 };
 
+
 class Service: public Handle {
 public:
     Service(
-            const std::string &name,
-            Interfaces &interface,
-            Type handle_type,
-            const std::string &service_name,
-            ros::NodeHandle &n):
-        Handle(name, interface, handle_type)
-    {
-        std::stringstream write_name;
-        write_name << service_name << "/write";
-        write_client = n.serviceClient<arbie_msgs::WriteHardware>(write_name.str());
-
-        std::stringstream read_name;
-        read_name << service_name << "/read";
-        read_client = n.serviceClient<arbie_msgs::ReadHardware>(read_name.str());
-    }
-
-    void write(double cmd)
-    {
-        write_msg.request.cmd.data = cmd;
-        write_client.call(write_msg);
-    }
-
-    void read(double &pos, double &vel, double &eff)
-    {
-        if(read_client.call(read_msg) && read_msg.response.success) {
-            pos = read_msg.response.pos.data;
-            vel = read_msg.response.vel.data;
-            eff = read_msg.response.eff.data;
-        }
-    }
+        const std::string &name,
+        Interfaces &interface,
+        Type handle_type,
+        const std::string &service_name,
+        ros::NodeHandle &n);
+    void write(double cmd);
+    void read(double &pos, double &vel, double &eff);
 
 private:
     ros::ServiceClient write_client;
@@ -107,19 +64,17 @@ private:
     arbie_msgs::ReadHardware read_msg;
 };
 
+
 class PosDummy: public Handle {
 public:
     PosDummy(const std::string &name, Interfaces &interface):
         Handle(name, interface, Type::POS)
     {}
 
-    void write(double cmd)
-    {
+    void write(double cmd) { 
         pos = cmd;
     }
-
-    void read(double &pos, double &vel, double &eff)
-    {
+    void read(double &pos, double &vel, double &eff) {
         pos = this->pos;
         vel = 0;
         eff = 0;
@@ -128,6 +83,7 @@ public:
 private:
     double pos;
 };
+
 
 } // namespace handle
 

@@ -11,73 +11,114 @@
 
 class Hardware: public hardware_interface::RobotHW {
 public:
-    Hardware(ros::NodeHandle &n, std::string dxl_port):
-        commHandler(dxl_port)
+    Hardware(ros::NodeHandle &n, const std::string &dxl_port):
+        commHandler(dxl_port) {}
+
+    bool initialise(ros::NodeHandle &n)
     {
+        ROS_INFO("Initialising hardware");
+
         // TODO: Get IDs from param server
+        int arm_1_id = 1;
+        int arm_2_id = 2;
+        int arm_3_id = 3;
+        int wrist_pitch_1_id = 4;
+        int wrist_pitch_2_id = 5;
+        int wrist_yaw_id = 6;
+        int wrist_roll_id = 7;
+        int gripper_1_id = 8;
+        int gripper_2_id = 9;
+
         if (!commHandler.connect()) {
             ROS_ERROR("Failed to open serial port for dynamixels.");
+            return false;
         }
-
         // Arm
+
+        handle::xl430::Position::Config arm_1_config;
+        arm_1_config.scale = 89/14;
         handles.push_back(std::make_unique<handle::xl430::Position>(
             "arm_1_joint",
             interfaces,
-            dxl::xl430::ExtendedPositionController(commHandler, commHandler.PROTOCOL_1, 1),
-            89/14
+            dxl::xl430::ExtendedPositionController(
+                commHandler, commHandler.PROTOCOL_1, arm_1_id),
+            arm_1_config
         ));
 
+        handle::xl430::Position::Config arm_2_config;
+        arm_2_config.scale = 25;
+        arm_2_config.eff2_threshold = 8;
         handles.push_back(std::make_unique<handle::xl430::Position>(
             "arm_2_joint",
             interfaces,
-            dxl::xl430::ExtendedPositionController(commHandler, commHandler.PROTOCOL_1, 2),
-            25,
-            8
+            dxl::xl430::ExtendedPositionController(
+                commHandler, commHandler.PROTOCOL_1, arm_2_id),
+            arm_2_config
         ));
+        // Get the last added handle, and cast to a standard pointer, to get
+        // access to the arm_2 handle for calibration
         arm_2_handle = dynamic_cast<handle::xl430::Position*>(handles.back().get());
 
+        handle::xl430::Position::Config arm_3_config;
+        arm_3_config.scale = 25;
+        arm_3_config.eff2_threshold = 40;
+        arm_3_config.zero_pos = -0.11; // Found by testing to see which works best
         handles.push_back(std::make_unique<handle::xl430::Position>(
             "arm_3_joint",
             interfaces,
-            dxl::xl430::ExtendedPositionController(commHandler, commHandler.PROTOCOL_1, 3),
-            25,
-            40,
-            -0.11 // found empirically - ie: try different values
+            dxl::xl430::ExtendedPositionController(
+                commHandler, commHandler.PROTOCOL_1, arm_3_id),
+            arm_3_config
         ));
         arm_3_handle = dynamic_cast<handle::xl430::Position*>(handles.back().get());
 
         // Wrist
+        handle::ax12a::PositionPair::Config wrist_pitch_config;
+        wrist_pitch_config.origin1 = 0;
+        wrist_pitch_config.origin2 = 0;
+        wrist_pitch_config.scale1 = 1;
+        wrist_pitch_config.scale2 = -1;
         handles.push_back(std::make_unique<handle::ax12a::PositionPair>(
             "wrist_pitch_joint",
             interfaces,
-            dxl::ax12a::JointController(commHandler, commHandler.PROTOCOL_1, 4),
-            dxl::ax12a::JointController(commHandler, commHandler.PROTOCOL_1, 5),
-            0, 0, -1, 1
+            dxl::ax12a::JointController(
+                commHandler, commHandler.PROTOCOL_1, wrist_pitch_1_id),
+            dxl::ax12a::JointController(
+                commHandler, commHandler.PROTOCOL_1, wrist_pitch_2_id),
+            wrist_pitch_config
         ));
+        // Write to the last handle added, to set to the 0 position
         handles.back()->write();
         wrist_pitch_handle = dynamic_cast<handle::ax12a::PositionPair*>(handles.back().get());
 
         handles.push_back(std::make_unique<handle::ax12a::Position>(
             "wrist_yaw_joint",
             interfaces,
-            dxl::ax12a::JointController(commHandler, commHandler.PROTOCOL_1, 6)
+            dxl::ax12a::JointController(
+                commHandler, commHandler.PROTOCOL_1, wrist_yaw_id)
         ));
         handles.back()->write();
 
         handles.push_back(std::make_unique<handle::ax12a::Position>(
             "wrist_roll_joint",
             interfaces,
-            dxl::ax12a::JointController(commHandler, commHandler.PROTOCOL_1, 7)
+            dxl::ax12a::JointController(
+                commHandler, commHandler.PROTOCOL_1, wrist_roll_id)
         ));
         handles.back()->write();
 
         // Gripper
+        handle::ax12a::PositionPair::Config gripper_config;
+        gripper_config.origin1 = 0.348;
+        gripper_config.origin2 = -0.317;
+        gripper_config.scale1 = -1;
+        gripper_config.scale2 = 1;
         handles.push_back(std::make_unique<handle::ax12a::PositionPair>(
             "gripper_joint",
             interfaces,
-            dxl::ax12a::JointController(commHandler, commHandler.PROTOCOL_1, 8),
-            dxl::ax12a::JointController(commHandler, commHandler.PROTOCOL_1, 9),
-            0.348, -0.317, -1, 1
+            dxl::ax12a::JointController(commHandler, commHandler.PROTOCOL_1, gripper_1_id),
+            dxl::ax12a::JointController(commHandler, commHandler.PROTOCOL_1, gripper_2_id),
+            gripper_config
         ));
 
         // Odrives
@@ -126,58 +167,38 @@ public:
         registerInterface(&interfaces.vel);
         registerInterface(&interfaces.eff);
 
-        std::cout << "FINISHED REGISTERING" << std::endl;
+        ROS_INFO("Finished initialising hardware");
+        return true;
+    }
 
-        // Calibrate
+    void calibrate() {
+        if (!arm_2_handle->is_connected()) return;
+        if (!arm_3_handle->is_connected()) return;
+        if (!wrist_pitch_handle->is_connected()) return;
 
-        if (arm_2_handle->is_connected() && arm_3_handle->is_connected()
-            & wrist_pitch_handle->is_connected()) {
+        ROS_INFO("Calibrating arm");
 
+        ros::Duration(1).sleep();
 
-            std::cout << "CALIBRATING" << std::endl;
-            ros::Duration(1).sleep();
+        arm_2_handle->calibrate();
+        // Move arm_2 back up a bit
+        arm_2_handle->move(1.2, 1);
+        ros::Duration(2.5).sleep();
 
-            arm_2_handle->calibrate();
-            // Move arm_2 back up a bit
-            // Move at 1 rad/s, for 1.2 radians, at 0.1s timesteps
-            for (int i = 0; i < 12; i++) {
-                arm_2_handle->move(0.1);
-                ros::Duration(0.1).sleep();
-            }
-            ros::Duration(2.5).sleep();
+        // Move wrist out the way temporarily, while calibrating arm_3
+        wrist_pitch_handle->move(-0.8, 1);
+        ros::Duration(1).sleep();
 
-            // Move wrist out the way temporarily, while calibrating arm_3
-            // Move at 1 rads, for -0.8 radians, at 0.1s timesteps
-            double pitch_command = 0;
-            for (int i = 0; i < 80; i++) {
-                wrist_pitch_handle->write(pitch_command);
-                pitch_command -= 0.01;
-                ros::Duration(0.01).sleep();
-            }
-            ros::Duration(1).sleep();
+        arm_3_handle->calibrate();
+        // Move arm_3 back up a bit
+        arm_2_handle->move(0.24, 1);
+        ros::Duration(3).sleep();
 
-            arm_3_handle->calibrate();
-            // Move arm_3 back up a bit
-            // Move at 1 rad/s, for 0.24 radians, at 0.06s timesteps
-            for (int i = 0; i < 4; i++) {
-                arm_2_handle->move(0.06);
-                ros::Duration(0.06).sleep();
-            }
-            ros::Duration(3).sleep();
+        // Move wrist pitch down again
+        wrist_pitch_handle->move(0.8, 1);
+        ros::Duration(1).sleep();
 
-            // Move wrist pitch down again
-            // Move at 1 rads, for 0.8 radians, at 0.1s timesteps
-            for (int i = 0; i < 80; i++) {
-                wrist_pitch_handle->write(pitch_command);
-                pitch_command += 0.01;
-                ros::Duration(0.01).sleep();
-            }
-            // In case not back at 0 exactly
-            wrist_pitch_handle->write(0);
-            ros::Duration(1).sleep();
-
-            std::cout << "FINISHED CALIBRATING" << std::endl;
-        }
+        ROS_INFO("Finished calibrating arm");
     }
 
     void read()
@@ -190,7 +211,7 @@ public:
     void write()
     {
         for (auto &handle: handles) {
-            // handle->write();
+            handle->write();
         }
     }
 
@@ -207,17 +228,27 @@ private:
 
 class Node {
 public:
-    Node(ros::NodeHandle& n, const std::string &port): hw(n, port), cm(&hw, n)
+    Node(ros::NodeHandle& n, const std::string &port):
+        hw(n, port),
+        cm(&hw, n)
     {
         loop_timer = n.createTimer(
             ros::Duration(1.0/50),
             &Node::loop,
             this
         );
+        successful = hw.initialise(n);
+        if (!successful) {
+            ROS_ERROR("Failed to initialise hardware");
+        }
+
+        hw.calibrate();
     }
 
     void loop(const ros::TimerEvent &timer)
     {
+        if (!successful) return;
+
         hw.read();
         cm.update(
             ros::Time::now(),
@@ -225,10 +256,12 @@ public:
         );
         hw.write();
     }
+
 private:
     Hardware hw;
     controller_manager::ControllerManager cm;
     ros::Timer loop_timer;
+    bool successful;
 };
 
 
