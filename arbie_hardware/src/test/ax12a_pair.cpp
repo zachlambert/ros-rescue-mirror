@@ -17,32 +17,31 @@ public:
     Node(ros::NodeHandle &n, dxl::CommHandler &comm_handler, int id1, int id2):
         controller1(comm_handler, dxl::CommHandler::PROTOCOL_1, id1),
         controller2(comm_handler, dxl::CommHandler::PROTOCOL_1, id2),
-        interfaces(),
-        pair_handle(
-            "joint_name", interfaces, controller1, controller2,
-            0, 0, -1, 1
-        )
+        interfaces()
     {
+        handle::ax12a::PositionPair::Config config;
+        config.scale1 = 1;
+        config.scale2 = -1;
+        pair_handle = std::make_unique<handle::ax12a::PositionPair>(
+            "joiwt_name", interfaces, controller1, controller2, config
+        );
+
         command_sub = n.subscribe(
             "ax12a_pair_command", 1, &Node::command_callback, this);
-        controller1.enable();
-        controller2.enable();
-        controller1.writeComplianceSlope(128);
-        controller2.writeComplianceSlope(128);
     }
 
     void command_callback(const std_msgs::Float64 &msg)
     {
         double pos, vel, eff;
-        pair_handle.read(pos, vel, eff);
-        pair_handle.write(msg.data);
+        pair_handle->read(pos, vel, eff);
+        pair_handle->write(msg.data);
     }
 
 private:
     dxl::ax12a::JointController controller1;
     dxl::ax12a::JointController controller2;
     handle::Interfaces interfaces;
-    handle::ax12a::PositionPair pair_handle;
+    std::unique_ptr<handle::ax12a::PositionPair> pair_handle;
     ros::Subscriber command_sub;
 };
 

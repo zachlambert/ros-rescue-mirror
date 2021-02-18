@@ -58,11 +58,11 @@ target_link_libraries(hardware handles ${catkin_LIBRARIES})
 # 4. Compile some test nodes. These either test the dynamixel drivers individually
 # or test a handle.
 
-# add_executable(test_ax12a src/test/ax12a.cpp)
-# target_link_libraries(test_ax12a dxl ${catkin_LIBRARIES})
-# 
-# add_executable(test_ax12a_pair src/test/ax12a_pair.cpp)
-# target_link_libraries(test_ax12a_pair handles ${catkin_LIBRARIES})
+add_executable(test_ax12a src/test/ax12a.cpp)
+target_link_libraries(test_ax12a dxl ${catkin_LIBRARIES})
+
+add_executable(test_ax12a_pair src/test/ax12a_pair.cpp)
+target_link_libraries(test_ax12a_pair handles ${catkin_LIBRARIES})
 
 install(PROGRAMS
   nodes/odrives

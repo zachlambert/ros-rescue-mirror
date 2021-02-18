@@ -11,7 +11,6 @@ public:
         command_sub = n.subscribe(
             "ax12a_command", 1, &Node::command_callback, this);
         controller.enable();
-        controller.writeComplianceSlope(128);
     }
 
     void command_callback(const std_msgs::Float64 &msg)
