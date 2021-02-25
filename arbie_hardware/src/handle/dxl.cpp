@@ -118,7 +118,7 @@ void Position::move(double change, double speed, double dt)
         t += dt;
         ros::Duration(dt).sleep();
     }
-    controller.writeGoalPosition(final_cmd);
+    write(final_cmd);
 }
 
 void Position::write(double cmd)
@@ -268,7 +268,7 @@ void Position::move(double change, double speed, double dt)
         t += dt;
         ros::Duration(dt).sleep();
     }
-    controller.writeGoalPosition(final_cmd);
+    write(final_cmd);
 }
 
 
