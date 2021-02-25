@@ -77,8 +77,8 @@ public:
         handle::ax12a::PositionPair::Config wrist_pitch_config;
         wrist_pitch_config.origin1 = 0;
         wrist_pitch_config.origin2 = 0;
-        wrist_pitch_config.scale1 = 1;
-        wrist_pitch_config.scale2 = -1;
+        wrist_pitch_config.scale1 = -1;
+        wrist_pitch_config.scale2 = 1;
         handles.push_back(std::make_unique<handle::ax12a::PositionPair>(
             "wrist_pitch_joint",
             interfaces,
