@@ -133,9 +133,9 @@ void Position::write(double cmd)
     if (!connected) return;
     // controller.writeGoalPosition(origin + config.scale*(cmd-config.zero_pos));
     std::cout << "WRITING" << std::endl;
-    std::cout << "Origin = " << origin << std::endl;
-    std::cout << "Scale = " << config.scale << std::endl;
-    std::cout << "Zero pos = " << config.zero_pos << std::endl;
+    // std::cout << "Origin = " << origin << std::endl;
+    // std::cout << "Scale = " << config.scale << std::endl;
+    // std::cout << "Zero pos = " << config.zero_pos << std::endl;
     std::cout << "Pos (rad) = " << cmd << std::endl;
     std::cout << "Pos (for dxl) = " << origin+config.scale*(cmd-config.zero_pos) << std::endl;
 }
