@@ -185,22 +185,20 @@ public:
 
         arm_2_handle->calibrate();
         // Move arm_2 back up a bit
-        arm_2_handle->move(0.2, 0.4);
-        calibrating = false;
-        return false;
+        arm_2_handle->move(0.1, 0.4);
         ros::Duration(2.5).sleep();
 
         // Move wrist out the way temporarily, while calibrating arm_3
-        wrist_pitch_handle->move(-0.8, 1);
+        wrist_pitch_handle->move(-0.3, 0.4);
         ros::Duration(1).sleep();
 
         arm_3_handle->calibrate();
         // Move arm_3 back up a bit
-        arm_2_handle->move(0.24, 1);
-        ros::Duration(3).sleep();
+        arm_2_handle->move(0.1, 0.4);
+        ros::Duration(2.5).sleep();
 
         // Move wrist pitch down again
-        wrist_pitch_handle->move(0.8, 1);
+        wrist_pitch_handle->move(-0.3, 0.4);
         ros::Duration(1).sleep();
 
         ROS_INFO("Finished calibrating arm");
