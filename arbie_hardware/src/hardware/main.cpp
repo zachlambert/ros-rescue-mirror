@@ -38,7 +38,7 @@ public:
         // Arm
 
         handle::xl430::Position::Config arm_1_config;
-        arm_1_config.scale = 89/14;
+        arm_1_config.scale = 89.0/14;
         handles.push_back(std::make_unique<handle::xl430::Position>(
             "arm_1_joint",
             interfaces,
@@ -65,7 +65,7 @@ public:
         handle::xl430::Position::Config arm_3_config;
         arm_3_config.scale = 25;
         arm_3_config.eff2_threshold = 40;
-        arm_3_config.zero_pos = -0.11; // Found by testing to see which works best
+        // arm_3_config.zero_pos = -0.11; // Found by testing to see which works best
         handles.push_back(std::make_unique<handle::xl430::Position>(
             "arm_3_joint",
             interfaces,
