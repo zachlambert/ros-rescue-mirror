@@ -316,12 +316,17 @@ void PositionPair::read(double &pos, double &vel, double &eff)
     // the same cmd, pos, vel
     // The scale and origin determine how these correspond
     // to the actual cmd, pos, vel of both joints
+    
+    std::cout << "Origin 1: " << config.origin1 << " Origin 2: " << config.origin2 << std::endl;
+    std::cout << "Scale 1: " << config.scale1 << " Scale 2: " << config.scale2 << std::endl;
 
     // Assume positions and velocities are consistent
     // so only read one joint
     double pos_reading;
+    std::cout << "Pos 1 reading: " << pos_reading << std::endl;
     controller1.readPosition(pos_reading);
     pos = (pos_reading - config.origin1)/config.scale1;
+    std::cout << "Pos 1: " << pos << std::endl;
 
     double vel_reading;
     controller1.readVelocity(vel_reading);
@@ -329,8 +334,10 @@ void PositionPair::read(double &pos, double &vel, double &eff)
 
     // If positions not consistent, disable controller
     double pos2_reading, pos2;
+    std::cout << "Pos 2 reading: " << pos2_reading << std::endl;
     controller2.readPosition(pos2_reading);
     pos2 = (pos2_reading - config.origin2)/config.scale2;
+    std::cout << "Pos 2: " << pos2 << std::endl;
 
     if (fabs(pos2 - pos) > config.pos_diff_allowance) {
         controller1.disable();
