@@ -186,6 +186,13 @@ public:
         // TODO: Add proper calibration for arm_1
         arm_1_handle->set_as_origin();
 
+        // temporary
+        arm_2_handle->set_as_origin();
+        arm_3_handle->set_as_origin();
+        calibrating = false;
+        calibrated = true;
+        return true;
+
         ros::Duration(1).sleep();
 
         arm_2_handle->calibrate();
@@ -216,6 +223,7 @@ public:
     void read()
     {
         if (calibrating) return;
+        std::cout << "READING" << std::endl;
         for (auto &handle: handles) {
             handle->read();
         }
@@ -300,7 +308,7 @@ int main(int argc, char **argv)
     std::string port = "/dev/ttyUSB0";
     Node node(n, port);
 
-    ros::AsyncSpinner spinner(4);
+    ros::AsyncSpinner spinner(5);
     spinner.start();
     ros::waitForShutdown();
     return 0;
