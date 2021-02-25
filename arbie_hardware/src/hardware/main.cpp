@@ -13,7 +13,7 @@
 class Hardware: public hardware_interface::RobotHW {
 public:
     Hardware(ros::NodeHandle &n, const std::string &dxl_port):
-        commHandler(dxl_port), calibrated(false) {}
+        commHandler(dxl_port), calibrating(false), calibrated(false) {}
 
     bool initialise(ros::NodeHandle &n)
     {
@@ -174,6 +174,7 @@ public:
     }
 
     bool calibrate() {
+        calibrating = true;
         if (!arm_2_handle->is_connected()) return false;
         if (!arm_3_handle->is_connected()) return false;
         if (!wrist_pitch_handle->is_connected()) return false;
@@ -184,6 +185,7 @@ public:
 
         arm_2_handle->calibrate();
         // Move arm_2 back up a bit
+        calibrating = false;
         return false;
         arm_2_handle->move(1.2, 1);
         ros::Duration(2.5).sleep();
@@ -203,11 +205,13 @@ public:
 
         ROS_INFO("Finished calibrating arm");
         calibrated = true;
+        calibrating = false;
         return true;
     }
 
     void read()
     {
+        if (calibrating) return;
         for (auto &handle: handles) {
             handle->read();
         }
@@ -215,6 +219,7 @@ public:
 
     void write()
     {
+        if (calibrating) return;
         if (!calibrated) return;
         for (auto &handle: handles) {
             // handle->write();
@@ -226,6 +231,7 @@ private:
     handle::Interfaces interfaces;
     std::vector<std::unique_ptr<handle::Handle>> handles;
 
+    bool calibrating;
     bool calibrated;
     // For calibration - have no ownership
     handle::xl430::Position *arm_2_handle, *arm_3_handle;
