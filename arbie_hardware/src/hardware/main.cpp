@@ -194,7 +194,7 @@ public:
 
         arm_3_handle->calibrate();
         // Move arm_3 back up a bit
-        arm_3_handle->move(0.1, 0.4);
+        arm_3_handle->move(0.2, 0.4);
         ros::Duration(2.5).sleep();
 
         // Move wrist pitch down again
