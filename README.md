@@ -2,9 +2,13 @@
 
 The `arbie_bringup` package contains launch files for running the robot:  
 `roslaunch arbie_bringup arbie.launch` - Starts everything  
-`roslaunch arbie_arm` - Starts the arm hardware and manipulation  
-`roslaunch sim_arm` - Starts Gazebo with the arm simulation  
-`roslaunch sim_base` - Starts Gazebo with the base simulation  
+`roslaunch arbie_bringup arm.launch` - Starts the arm hardware and manipulation  
+`roslaunch arbie_bringup sim_arm.launch` - Starts Gazebo with the arm simulation  
+`roslaunch arbie_bringup sim_base.launch` - Starts Gazebo with the base simulation  
+
+If using the simulated robots, before running the above, must start the appropriate simulation:  
+`roslaunch arbie_gazebo sim_arm.launch`  
+`roslaunch arbie_gazebo sim_base.launch`  
 
 This uses a webserver for teleoperation, which can be viewed at:  
 `localhost:8000/arbie_webgui`
