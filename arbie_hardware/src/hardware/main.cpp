@@ -173,6 +173,7 @@ public:
     }
 
     bool calibrate() {
+        return false;
         if (!arm_2_handle->is_connected()) return false;
         if (!arm_3_handle->is_connected()) return false;
         if (!wrist_pitch_handle->is_connected()) return false;
@@ -215,7 +216,7 @@ public:
     {
         if (!calibrated) return;
         for (auto &handle: handles) {
-            handle->write();
+            // handle->write();
         }
     }
 
