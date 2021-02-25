@@ -132,11 +132,12 @@ void Position::write(double cmd)
 {
     if (!connected) return;
     // controller.writeGoalPosition(origin + config.scale*(cmd-config.zero_pos));
+    std::cout << "WRITING" << std::endl;
     std::cout << "Origin = " << origin << std::endl;
     std::cout << "Scale = " << config.scale << std::endl;
     std::cout << "Zero pos = " << config.zero_pos << std::endl;
-    std::cout << "cmd = " << cmd << std::endl;
-    std::cout << "Goal pos = " << origin+config.scale*(cmd-config.zero_pos) << std::endl;
+    std::cout << "Pos (rad) = " << cmd << std::endl;
+    std::cout << "Pos (for dxl) = " << origin+config.scale*(cmd-config.zero_pos) << std::endl;
 }
 
 void Position::read(double &pos, double &vel, double &eff)
@@ -146,6 +147,9 @@ void Position::read(double &pos, double &vel, double &eff)
     double pos_reading;
     controller.readPosition(pos_reading);
     pos = config.zero_pos + (pos_reading - origin)/config.scale;
+    std::cout << "READING" << std::endl;
+    std::cout << "Pos (from dxl) = " << pos_reading << std::endl;
+    std::cout << "Pos (rad) = " << pos << std::endl;
 
     double vel_reading;
     controller.readVelocity(vel_reading);
@@ -213,7 +217,7 @@ void Velocity::calibrate(double cmd_vel) {
 void Velocity::write(double cmd)
 {
     if (!connected) return;
-    controller.writeGoalVelocity(cmd*config.scale);
+    // controller.writeGoalVelocity(cmd*config.scale);
 }
 
 void Velocity::read(double &pos, double &vel, double &eff)
