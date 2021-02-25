@@ -357,7 +357,7 @@ void PositionPair::move(double change, double speed, double dt)
     while (t < T) {
         cmd += speed * dt;
         write(cmd);
-        // read(pos, vel, eff); // Make sure positions don't deviate
+        read(pos, vel, eff); // Make sure positions don't deviate
         t += dt;
         ros::Duration(dt).sleep();
     }

@@ -221,7 +221,7 @@ public:
         if (calibrating) return;
         if (!calibrated) return;
         for (auto &handle: handles) {
-            // handle->write();
+            handle->write();
         }
     }
 
