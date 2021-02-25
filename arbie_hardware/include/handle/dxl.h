@@ -106,7 +106,7 @@ public:
     ~Position();
     void write(double cmd);
     void read(double &pos, double &vel, double &eff);
-    void move(double change, double speed, double dt=0.01);
+    void move(double change, double speed, double dt=0.1);
     bool is_connected()const { return connected; }
 
 private:
@@ -137,7 +137,7 @@ public:
     ~PositionPair();
     void write(double cmd);
     void read(double &pos, double &vel, double &eff);
-    void move(double change, double speed, double dt=0.01);
+    void move(double change, double speed, double dt=0.1);
     bool is_connected()const { return connected; }
 
 private:
