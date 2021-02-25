@@ -40,7 +40,7 @@ Position::Position(
 {
     connected = controller.disable(); // If already enabled
     if (connected) {
-        controller.enable();
+        // controller.enable();
         controller.readPosition(origin);
     } else {
         std::cerr << "Joint " << name << " not connected." << std::endl;
@@ -131,7 +131,7 @@ void Position::move(double change, double speed, double dt)
 void Position::write(double cmd)
 {
     if (!connected) return;
-    // controller.writeGoalPosition(origin + config.scale*(cmd-config.zero_pos));
+    controller.writeGoalPosition(origin + config.scale*(cmd-config.zero_pos));
     std::cout << "WRITING" << std::endl;
     // std::cout << "Origin = " << origin << std::endl;
     // std::cout << "Scale = " << config.scale << std::endl;
@@ -173,7 +173,7 @@ Velocity::Velocity(
 {
     connected = controller.disable(); // If already enabled
     if (connected) {
-        controller.enable();
+        // controller.enable();
         controller.readPosition(origin);
     } else {
         std::cerr << "Joint " << name << " not connected." << std::endl;
@@ -249,7 +249,7 @@ Position::Position(
 {
     connected = controller.disable(); // If already enabled
     if (connected) {
-        controller.enable();
+        // controller.enable();
     } else {
         std::cerr << "Joint " << name << " not connected." << std::endl;
     }
@@ -303,8 +303,8 @@ PositionPair::PositionPair(
     connected = controller1.disable();
     connected &= controller2.disable();
     if (connected) {
-        controller1.enable();
-        controller2.enable();
+        // controller1.enable();
+        // controller2.enable();
     } else {
         std::cerr << "Joint " << name << " not connected." << std::endl;
     }

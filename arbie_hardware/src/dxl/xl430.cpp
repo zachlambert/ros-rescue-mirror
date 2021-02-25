@@ -62,6 +62,7 @@ bool ExtendedPositionController::writeGoalPosition(double pos)
     uint32_t value = 4096 * pos/(2*M_PI);
     std::cout << "Write XL430 value = " << value << std::endl;
     std::cout << "Write XL430 pos = " << pos << std::endl;
+    return true;
     return write4Byte(ADDR_GOAL_POSITION, value);
 }
 
