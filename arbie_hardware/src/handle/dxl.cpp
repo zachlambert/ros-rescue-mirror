@@ -108,7 +108,13 @@ void Position::calibrate(double cmd_vel) {
 
 void Position::set_as_origin()
 {
+    std::cout << "SETTING ORIGIN" << std::endl;
+    std::cout << "Current origin = " << std::endl;
+    double reading;
+    controller.readPosition(reading);
+    std::cout << "Reading = " << reading << std::endl;
     controller.readPosition(origin);
+    std::cout << "New origin = " << std::endl;
 }
 
 void Position::move(double change, double speed, double dt)
@@ -140,7 +146,11 @@ void Position::read(double &pos, double &vel, double &eff)
 
     double pos_reading;
     controller.readPosition(pos_reading);
+    std::cout << "Pos reading: " << pos_reading << std::endl;
     pos = config.zero_pos + (pos_reading - origin)/config.scale;
+    std::cout << "Zero pos: " << config.zero_pos << std::endl;
+    std::cout << "Origin: " << config.zero_pos << std::endl;
+    std::cout << "Pos: " << pos << std::endl;
 
     double vel_reading;
     controller.readVelocity(vel_reading);
