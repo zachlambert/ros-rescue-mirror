@@ -114,6 +114,7 @@ public:
         gripper_config.origin2 = -0.317;
         gripper_config.scale1 = -1;
         gripper_config.scale2 = 1;
+        gripper_config.enforce_matching = false;
         handles.push_back(std::make_unique<handle::ax12a::PositionPair>(
             "gripper_joint",
             interfaces,

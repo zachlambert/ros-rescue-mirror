@@ -122,9 +122,11 @@ public:
         double scale1;
         double scale2;
         double pos_diff_allowance;
+        bool enforce_matching;
         Config():
             origin1(0), origin2(0), scale1(1), scale2(1),
-            pos_diff_allowance(0.15)
+            pos_diff_allowance(0.15),
+            enforce_matching(true)
         {}
     };
 
