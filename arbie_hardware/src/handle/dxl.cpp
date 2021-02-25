@@ -86,6 +86,7 @@ void Position::calibrate(double cmd_vel) {
         ROS_INFO("Write: %f", cmd);
         ros::Duration(dt).sleep();
     }
+    return;
 
     double mean_eff2;
     std::size_t i = 0;
