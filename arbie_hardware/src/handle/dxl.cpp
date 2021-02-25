@@ -66,6 +66,7 @@ void Position::calibrate(double cmd_vel) {
 
     double cmd, _v, _e; // Vel and eff readings not used
     read(cmd, _v, _e);
+    ROS_INFO("Read: %f", cmd);
 
     // Use a moving average of N samples of effort squared
     // At dt=0.01, N=50, this is the average over 0.5 seconds
@@ -82,6 +83,7 @@ void Position::calibrate(double cmd_vel) {
         eff2[i] = pow(result, 2);
         cmd += cmd_vel * dt;
         write(cmd);
+        ROS_INFO("Write: %f", cmd);
         ros::Duration(dt).sleep();
     }
 
