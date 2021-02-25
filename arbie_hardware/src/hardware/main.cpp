@@ -173,7 +173,6 @@ public:
     }
 
     bool calibrate() {
-        return false;
         if (!arm_2_handle->is_connected()) return false;
         if (!arm_3_handle->is_connected()) return false;
         if (!wrist_pitch_handle->is_connected()) return false;
@@ -251,7 +250,6 @@ public:
         calibrate_server = n.advertiseService(
             "calibrate", &Node::calibrate_callback, this
         );
-        hw.calibrate();
     }
 
     void loop(const ros::TimerEvent &timer)
