@@ -108,13 +108,7 @@ void Position::calibrate(double cmd_vel) {
 
 void Position::set_as_origin()
 {
-    std::cout << "SETTING ORIGIN" << std::endl;
-    std::cout << "Current origin = " << std::endl;
-    double reading;
-    controller.readPosition(reading);
-    std::cout << "Reading = " << reading << std::endl;
     controller.readPosition(origin);
-    std::cout << "New origin = " << std::endl;
 }
 
 void Position::move(double change, double speed, double dt)
@@ -137,7 +131,12 @@ void Position::move(double change, double speed, double dt)
 void Position::write(double cmd)
 {
     if (!connected) return;
-    controller.writeGoalPosition(origin + config.scale*(cmd-config.zero_pos));
+    // controller.writeGoalPosition(origin + config.scale*(cmd-config.zero_pos));
+    std::cout << "Origin = " << origin << std::endl;
+    std::cout << "Scale = " << config.scale << std::endl;
+    std::cout << "Zero pos = " << config.zero_pos << std::endl;
+    std::cout << "cmd = " << cmd << std::endl;
+    std::cout << "Goal pos = " << origin+config.scale*(cmd-config.zero_pos) << std::endl;
 }
 
 void Position::read(double &pos, double &vel, double &eff)
@@ -146,11 +145,7 @@ void Position::read(double &pos, double &vel, double &eff)
 
     double pos_reading;
     controller.readPosition(pos_reading);
-    std::cout << "Pos reading: " << pos_reading << std::endl;
     pos = config.zero_pos + (pos_reading - origin)/config.scale;
-    std::cout << "Zero pos: " << config.zero_pos << std::endl;
-    std::cout << "Origin: " << config.zero_pos << std::endl;
-    std::cout << "Pos: " << pos << std::endl;
 
     double vel_reading;
     controller.readVelocity(vel_reading);
@@ -261,7 +256,7 @@ Position::~Position() {
 
 void Position::write(double cmd) {
     if (!connected) return;
-    controller.writeGoalPosition(cmd);
+    // controller.writeGoalPosition(cmd);
 }
 
 void Position::read(double &pos, double &vel, double &eff) {
@@ -320,8 +315,8 @@ PositionPair::~PositionPair()
 void PositionPair::write(double cmd)
 {
     if (!connected || disabled) return;
-    controller1.writeGoalPosition(config.origin1 + cmd*config.scale1);
-    controller2.writeGoalPosition(config.origin2 + cmd*config.scale2);
+    // controller1.writeGoalPosition(config.origin1 + cmd*config.scale1);
+    // controller2.writeGoalPosition(config.origin2 + cmd*config.scale2);
 }
 
 void PositionPair::read(double &pos, double &vel, double &eff)
