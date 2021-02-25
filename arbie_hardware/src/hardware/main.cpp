@@ -247,8 +247,8 @@ public:
             ROS_ERROR("Failed to initialise hardware");
         }
 
-        calibrate_server = ros::ServiceServer(
-            n, "calibrate", boost::bind(&Node::calibrate_callback, this, _1), false
+        calibrate_server = n.advertiseService(
+            "calibrate", &Node::calibrate_callback, this
         );
         hw.calibrate();
     }
@@ -277,7 +277,7 @@ private:
     Hardware hw;
     controller_manager::ControllerManager cm;
     ros::Timer loop_timer;
-    ros::ServiceClient calibrate_server;
+    ros::ServiceServer calibrate_server;
     bool successful;
 };
 
