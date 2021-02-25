@@ -237,9 +237,9 @@ public:
 
     void write()
     {
+        if (!calibrated) return;
         if (!hardware_mutex.try_lock()) return;
         ROS_INFO("Write: mutex lock");
-        if (!calibrated) return;
         for (auto &handle: handles) {
             // handle->write();
         }
