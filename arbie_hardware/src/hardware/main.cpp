@@ -186,6 +186,8 @@ public:
         arm_2_handle->calibrate();
         // Move arm_2 back up a bit
         arm_2_handle->move(1.2, 1);
+        calibrating = false;
+        return false;
         ros::Duration(2.5).sleep();
 
         // Move wrist out the way temporarily, while calibrating arm_3

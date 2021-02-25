@@ -109,8 +109,8 @@ void Position::calibrate(double cmd_vel) {
 void Position::move(double change, double speed, double dt)
 {
     if (!connected) return;
-    double cmd, final_cmd;
-    controller.readPosition(cmd);
+    double cmd, final_cmd, _v, _e;
+    read(cmd, _v, _e);
     final_cmd = cmd + change;
     const double T = change/speed;
     double t = 0;
@@ -259,8 +259,8 @@ void Position::read(double &pos, double &vel, double &eff) {
 void Position::move(double change, double speed, double dt)
 {
     if (!connected) return;
-    double cmd, final_cmd;
-    controller.readPosition(cmd);
+    double cmd, final_cmd, _v, _e;
+    read(cmd, _v, _e);
     final_cmd = cmd + change;
     const double T = change/speed;
     double t = 0;
