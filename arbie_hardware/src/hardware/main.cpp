@@ -241,7 +241,7 @@ public:
         if (!hardware_mutex.try_lock()) return;
         ROS_INFO("Write: mutex lock");
         for (auto &handle: handles) {
-            // handle->write();
+            handle->write();
         }
         hardware_mutex.unlock();
         ROS_INFO("Write: mutex unlock");
