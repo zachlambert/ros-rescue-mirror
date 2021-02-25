@@ -185,8 +185,6 @@ public:
 
         arm_2_handle->calibrate();
         // Move arm_2 back up a bit
-        calibrating = false;
-        return false;
         arm_2_handle->move(1.2, 1);
         ros::Duration(2.5).sleep();
 
