@@ -1,4 +1,5 @@
 #include <array>
+#include <mutex>
 
 #include <ros/ros.h>
 #include <ros/callback_queue.h>
@@ -175,7 +176,7 @@ public:
     }
 
     bool calibrate() {
-        calibrating = true;
+        hardware_mutex.lock();
         if (!arm_2_handle->is_connected()) return false;
         if (!arm_3_handle->is_connected()) return false;
         if (!wrist_pitch_handle->is_connected()) return false;
@@ -189,8 +190,8 @@ public:
         // temporary
         arm_2_handle->set_as_origin();
         arm_3_handle->set_as_origin();
-        calibrating = false;
         calibrated = true;
+        hardware_mutex.unlock();
         return true;
 
         ros::Duration(1).sleep();
@@ -216,26 +217,28 @@ public:
 
         ROS_INFO("Finished calibrating arm");
         calibrated = true;
-        calibrating = false;
+        hardware_mutex.unlock();
         return true;
     }
 
     void read()
     {
-        if (calibrating) return;
+        if (!hardware_mutex.try_lock()) return;
         std::cout << "READING" << std::endl;
         for (auto &handle: handles) {
             handle->read();
         }
+        hardware_mutex.unlock();
     }
 
     void write()
     {
-        if (calibrating) return;
+        if (!hardware_mutex.try_lock()) return;
         if (!calibrated) return;
         for (auto &handle: handles) {
             // handle->write();
         }
+        hardware_mutex.unlock();
     }
 
 private:
@@ -243,7 +246,7 @@ private:
     handle::Interfaces interfaces;
     std::vector<std::unique_ptr<handle::Handle>> handles;
 
-    bool calibrating;
+    std::mutex hardware_mutex;
     bool calibrated;
     // For calibration - have no ownership
     handle::xl430::Position *arm_1_handle, *arm_2_handle, *arm_3_handle;
@@ -308,7 +311,7 @@ int main(int argc, char **argv)
     std::string port = "/dev/ttyUSB0";
     Node node(n, port);
 
-    ros::AsyncSpinner spinner(5);
+    ros::AsyncSpinner spinner(4);
     spinner.start();
     ros::waitForShutdown();
     return 0;
