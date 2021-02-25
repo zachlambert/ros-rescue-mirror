@@ -106,6 +106,11 @@ void Position::calibrate(double cmd_vel) {
     controller.readPosition(origin);
 }
 
+void Position::set_as_origin()
+{
+    controller.readPosition(origin);
+}
+
 void Position::move(double change, double speed, double dt)
 {
     if (!connected) return;

@@ -54,6 +54,7 @@ public:
     void read(double &pos, double &vel, double &eff);
     void move(double change, double speed, double dt=0.01);
     void calibrate(double cmd_vel=-0.04);
+    void set_as_origin();
     bool is_connected()const { return connected; }
 
 private:

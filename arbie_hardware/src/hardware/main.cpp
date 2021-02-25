@@ -45,6 +45,9 @@ public:
                 commHandler, commHandler.PROTOCOL_1, arm_1_id),
             arm_1_config
         ));
+        // Get the last added handle, and cast to a standard pointer, to get
+        // access to the arm_1 handle for calibration
+        arm_1_handle = dynamic_cast<handle::xl430::Position*>(handles.back().get());
 
         handle::xl430::Position::Config arm_2_config;
         arm_2_config.scale = 25;
@@ -56,8 +59,6 @@ public:
                 commHandler, commHandler.PROTOCOL_1, arm_2_id),
             arm_2_config
         ));
-        // Get the last added handle, and cast to a standard pointer, to get
-        // access to the arm_2 handle for calibration
         arm_2_handle = dynamic_cast<handle::xl430::Position*>(handles.back().get());
 
         handle::xl430::Position::Config arm_3_config;
@@ -181,6 +182,10 @@ public:
 
         ROS_INFO("Calibrating arm");
 
+        // For now, just register current position as the origin.
+        // TODO: Add proper calibration for arm_1
+        arm_1_handle->set_as_origin();
+
         ros::Duration(1).sleep();
 
         arm_2_handle->calibrate();
@@ -221,7 +226,7 @@ public:
         if (calibrating) return;
         if (!calibrated) return;
         for (auto &handle: handles) {
-            handle->write();
+            // handle->write();
         }
     }
 
@@ -233,7 +238,7 @@ private:
     bool calibrating;
     bool calibrated;
     // For calibration - have no ownership
-    handle::xl430::Position *arm_2_handle, *arm_3_handle;
+    handle::xl430::Position *arm_1_handle, *arm_2_handle, *arm_3_handle;
     handle::ax12a::PositionPair *wrist_pitch_handle;
 };
 
