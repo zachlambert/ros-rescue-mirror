@@ -73,7 +73,7 @@ void Position::calibrate(double cmd_vel) {
     static constexpr std::size_t N = 50;
     std::array<double, N> eff2;
     double result;
-    double dt = 0.1;
+    double dt = 0.01;
 
     // Start moving, and get an initial set of measurements.
     // Don't measure the mean eff2 before moving, since the load experienced
@@ -86,7 +86,6 @@ void Position::calibrate(double cmd_vel) {
         ROS_INFO("Write: %f", cmd);
         ros::Duration(dt).sleep();
     }
-    return;
 
     double mean_eff2;
     std::size_t i = 0;
