@@ -10,6 +10,8 @@ bool BaseController::readPosition(double &result)
     int32_t value;
     if (read4Byte(ADDR_PRESENT_POSITION, (uint32_t*)&value)) {
         result = ((double)value / 4096) * 2*M_PI;
+        std::cout << "Read XL430 value = " << value << std::endl;
+        std::cout << "Read XL430 pos = " << result << std::endl;
         return true;
     } else {
         result = 0;
@@ -58,6 +60,8 @@ ExtendedPositionController::ExtendedPositionController(
 bool ExtendedPositionController::writeGoalPosition(double pos)
 {
     uint32_t value = 4096 * pos/(2*M_PI);
+    std::cout << "Write XL430 value = " << value << std::endl;
+    std::cout << "Write XL430 pos = " << pos << std::endl;
     return write4Byte(ADDR_GOAL_POSITION, value);
 }
 
