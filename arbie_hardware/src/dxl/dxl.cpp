@@ -10,10 +10,12 @@ CommHandler::CommHandler(const std::string &port, int baud_rate):
     portHandler = dynamixel::PortHandler::getPortHandler(port.c_str());
     packetHandler1 = dynamixel::PacketHandler::getPacketHandler(1);
     packetHandler2 = dynamixel::PacketHandler::getPacketHandler(2);
+    std::cout << "CREATING A COMM HANDLER OBJECT" << std::endl;
 }
 
 bool CommHandler::connect()
 {
+    std::cout << "CONNECTING COMM HANDLER" << std::endl;
     if (!portHandler->openPort()) {
         std::cerr << "Failed to connect to serial port for dynamixels" << std::endl;
         return false;
