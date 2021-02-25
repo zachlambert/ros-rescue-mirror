@@ -172,15 +172,17 @@ public:
         registerInterface(&interfaces.eff);
 
         ROS_INFO("Finished initialising hardware");
+        hardware_mutex.unlock();
         return true;
     }
 
     bool calibrate() {
-        hardware_mutex.lock();
         if (!arm_2_handle->is_connected()) return false;
         if (!arm_3_handle->is_connected()) return false;
         if (!wrist_pitch_handle->is_connected()) return false;
 
+        ROS_INFO("Calibration waiting for mutex to unlock");
+        hardware_mutex.lock();
         ROS_INFO("Calibrating arm");
 
         // For now, just register current position as the origin.
@@ -224,21 +226,25 @@ public:
     void read()
     {
         if (!hardware_mutex.try_lock()) return;
+        ROS_INFO("Read: mutex lock");
         std::cout << "READING" << std::endl;
         for (auto &handle: handles) {
             handle->read();
         }
         hardware_mutex.unlock();
+        ROS_INFO("Read: mutex unlock");
     }
 
     void write()
     {
         if (!hardware_mutex.try_lock()) return;
+        ROS_INFO("Write: mutex lock");
         if (!calibrated) return;
         for (auto &handle: handles) {
             // handle->write();
         }
         hardware_mutex.unlock();
+        ROS_INFO("Write: mutex unlock");
     }
 
 private:
