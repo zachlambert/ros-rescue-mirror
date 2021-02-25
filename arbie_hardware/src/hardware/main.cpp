@@ -226,25 +226,20 @@ public:
     void read()
     {
         if (!hardware_mutex.try_lock()) return;
-        ROS_INFO("Read: mutex lock");
-        std::cout << "READING" << std::endl;
         for (auto &handle: handles) {
             handle->read();
         }
         hardware_mutex.unlock();
-        ROS_INFO("Read: mutex unlock");
     }
 
     void write()
     {
         if (!calibrated) return;
         if (!hardware_mutex.try_lock()) return;
-        ROS_INFO("Write: mutex lock");
         for (auto &handle: handles) {
             handle->write();
         }
         hardware_mutex.unlock();
-        ROS_INFO("Write: mutex unlock");
     }
 
 private:

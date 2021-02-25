@@ -33,7 +33,8 @@ public:
     virtual ~Handle() {}
 
     void write() {
-        write(cmd);
+        // write(cmd);
+        std::cout << "CMD = " << cmd << std::endl;
     }
     virtual void write(double cmd) = 0;
 
