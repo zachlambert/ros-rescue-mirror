@@ -43,8 +43,6 @@ public:
         CommHandler::Protocol protocol,
         uint32_t id);
     bool writeGoalPosition(double pos);
-// private:
-//     double initial_pos;
 };
 
 
