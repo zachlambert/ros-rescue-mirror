@@ -53,8 +53,6 @@ ExtendedPositionController::ExtendedPositionController(
         BaseController(commHandler, protocol, id)
 {
     write1Byte(ADDR_OPERATING_MODE, 4);
-    // readPosition(initial_pos);
-    // std::cout << "Initial pos: " << initial_pos << std::endl;
 }
 
 bool ExtendedPositionController::writeGoalPosition(double pos)
@@ -62,7 +60,7 @@ bool ExtendedPositionController::writeGoalPosition(double pos)
     uint32_t value = 4096 * pos/(2*M_PI);
     std::cout << "Write XL430 value = " << value << std::endl;
     std::cout << "Write XL430 pos = " << pos << std::endl;
-    return true;
+    // TESTING - May have erratic behaviour
     return write4Byte(ADDR_GOAL_POSITION, value);
 }
 

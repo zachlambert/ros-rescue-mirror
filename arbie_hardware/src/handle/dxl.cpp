@@ -40,7 +40,7 @@ Position::Position(
 {
     connected = controller.disable(); // If already enabled
     if (connected) {
-        // controller.enable();
+        controller.enable();
         controller.readPosition(origin);
     } else {
         std::cerr << "Joint " << name << " not connected." << std::endl;
@@ -133,9 +133,6 @@ void Position::write(double cmd)
     if (!connected) return;
     controller.writeGoalPosition(origin + config.scale*(cmd-config.zero_pos));
     std::cout << "WRITING" << std::endl;
-    // std::cout << "Origin = " << origin << std::endl;
-    // std::cout << "Scale = " << config.scale << std::endl;
-    // std::cout << "Zero pos = " << config.zero_pos << std::endl;
     std::cout << "Pos (rad) = " << cmd << std::endl;
     std::cout << "Pos (for dxl) = " << origin+config.scale*(cmd-config.zero_pos) << std::endl;
 }
@@ -173,7 +170,7 @@ Velocity::Velocity(
 {
     connected = controller.disable(); // If already enabled
     if (connected) {
-        // controller.enable();
+        // controller.enable(); TEMPORARY
         controller.readPosition(origin);
     } else {
         std::cerr << "Joint " << name << " not connected." << std::endl;
@@ -249,7 +246,7 @@ Position::Position(
 {
     connected = controller.disable(); // If already enabled
     if (connected) {
-        // controller.enable();
+        // controller.enable(); TEMPORARY
     } else {
         std::cerr << "Joint " << name << " not connected." << std::endl;
     }
@@ -303,8 +300,8 @@ PositionPair::PositionPair(
     connected = controller1.disable();
     connected &= controller2.disable();
     if (connected) {
-        // controller1.enable();
-        // controller2.enable();
+        // controller1.enable(); TEMPORARY
+        // controller2.enable(); TEMPORARY
     } else {
         std::cerr << "Joint " << name << " not connected." << std::endl;
     }
@@ -319,6 +316,7 @@ PositionPair::~PositionPair()
 void PositionPair::write(double cmd)
 {
     if (!connected || disabled) return;
+    // TEMPORARY
     // controller1.writeGoalPosition(config.origin1 + cmd*config.scale1);
     // controller2.writeGoalPosition(config.origin2 + cmd*config.scale2);
 }
