@@ -271,9 +271,9 @@ public:
             ROS_ERROR("Failed to initialise hardware");
         }
 
-        calibrate_server = n.advertiseService(
-            "calibrate", &Node::calibrate_callback, this
-        );
+        // calibrate_server = n.advertiseService(
+        //     "calibrate", &Node::calibrate_callback, this
+        // );
     }
 
     void loop(const ros::TimerEvent &timer)
