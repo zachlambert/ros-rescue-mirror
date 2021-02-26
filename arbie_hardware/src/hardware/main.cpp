@@ -271,10 +271,9 @@ public:
             ROS_ERROR("Failed to initialise hardware");
         }
 
-        // calibrate_server = n.advertiseService(
-        //     "calibrate", &Node::calibrate_callback, this
-        // );
-        hw.calibrate();
+        calibrate_server = n.advertiseService(
+            "calibrate", &Node::calibrate_callback, this
+        );
     }
 
     void loop(const ros::TimerEvent &timer)
@@ -313,7 +312,7 @@ int main(int argc, char **argv)
     std::string port = "/dev/ttyUSB0";
     Node node(n, port);
 
-    ros::AsyncSpinner spinner(4);
+    ros::AsyncSpinner spinner(6);
     spinner.start();
     ros::waitForShutdown();
     return 0;
