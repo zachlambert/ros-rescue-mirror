@@ -194,6 +194,7 @@ public:
         // Move arm_2 back up a bit
         arm_2_handle->move(0.1, 0.2);
         ros::Duration(2.5).sleep();
+        arm_2_handle->set_as_origin();
 
         // Move wrist out the way temporarily, while calibrating arm_3
         wrist_pitch_handle->move(-0.5, 0.4);
@@ -203,6 +204,7 @@ public:
         // Move arm_3 back up a bit
         arm_3_handle->move(0.2, 0.2);
         ros::Duration(2.5).sleep();
+        arm_3_handle->set_as_origin();
 
         // Move wrist pitch down again
         wrist_pitch_handle->move(0.5, 0.4);
