@@ -266,10 +266,6 @@ void KinematicsHandler::loop_velocity(double dt)
         trial_joint_positions[i] = joint_positions[i] + joint_velocities[i] * dt;
     }
 
-    // TODO: Make sure it works up to here
-    joint_positions = trial_joint_positions;
-    return;
-
     // To check if the current velocity causes a collision, move with this
     // velocity for a given period of time T, then check if the final state
     // is valid.
@@ -345,9 +341,16 @@ bool KinematicsHandler::validate_state()
     // validates the current state of robot_state, so assumes
     // robot_state has already been set with positions and velocities
 
-    if(!robot_state->satisfiesBounds()){
-        ROS_INFO("IK solution found but exceeds joint limits");
-        return false;
+    for (const auto &j: joint_model_group->getJointModels()) {
+        if (!robot_state->satisfiesPositionBounds(j)) {
+            ROS_INFO("%s outside position bounds", j->getName().c_str());
+            return false;
+        }
+        if (!robot_state->satisfiesVelocityBounds(j)) {
+            ROS_INFO("%s outside velocity bounds", j->getName().c_str());
+            ROS_INFO("Type = %s", j->getTypeName().c_str());
+            return false;
+        }
     }
 
     g_planning_scene->checkCollision(c_req, c_res, *robot_state);
