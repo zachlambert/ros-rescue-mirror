@@ -181,7 +181,6 @@ public:
         if (!arm_3_handle->is_connected()) return false;
         if (!wrist_pitch_handle->is_connected()) return false;
 
-        ROS_INFO("Calibration waiting for mutex to unlock");
         hardware_mutex.lock();
         ROS_INFO("Calibrating arm");
 

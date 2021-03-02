@@ -54,7 +54,7 @@ Position::~Position()
 
 void Position::calibrate(double cmd_vel) {
     if (!connected) return;
-    ROS_INFO("CALIBRATING");
+    ROS_INFO("Calibrating XL430 Extended Position Controller");
 
     // * important *
     // The write and read functions use the origin variable, which is
@@ -66,7 +66,6 @@ void Position::calibrate(double cmd_vel) {
 
     double cmd, _v, _e; // Vel and eff readings not used
     read(cmd, _v, _e);
-    ROS_INFO("Read: %f", cmd);
 
     // Use a moving average of N samples of effort squared
     // At dt=0.01, N=50, this is the average over 0.5 seconds
@@ -83,7 +82,6 @@ void Position::calibrate(double cmd_vel) {
         eff2[i] = pow(result, 2);
         cmd += cmd_vel * dt;
         write(cmd);
-        ROS_INFO("Write: %f", cmd);
         ros::Duration(dt).sleep();
     }
 
@@ -94,7 +92,7 @@ void Position::calibrate(double cmd_vel) {
         eff2[i] = pow(result, 2);
         i = (i+1)%N;
         mean_eff2 = std::accumulate(eff2.begin(), eff2.end(), 0.0f)/N;
-        ROS_INFO("Load2: %f", mean_eff2);
+        ROS_INFO("Load^2: %f", mean_eff2);
         cmd += cmd_vel * dt;
         write(cmd);
         ros::Duration(dt).sleep();
@@ -132,9 +130,6 @@ void Position::write(double cmd)
 {
     if (!connected) return;
     controller.writeGoalPosition(origin + config.scale*(cmd-config.zero_pos));
-    std::cout << "WRITING" << std::endl;
-    std::cout << "Pos (rad) = " << cmd << std::endl;
-    std::cout << "Pos (for dxl) = " << origin+config.scale*(cmd-config.zero_pos) << std::endl;
 }
 
 void Position::read(double &pos, double &vel, double &eff)
@@ -144,9 +139,6 @@ void Position::read(double &pos, double &vel, double &eff)
     double pos_reading;
     controller.readPosition(pos_reading);
     pos = config.zero_pos + (pos_reading - origin)/config.scale;
-    std::cout << "READING" << std::endl;
-    std::cout << "Pos (from dxl) = " << pos_reading << std::endl;
-    std::cout << "Pos (rad) = " << pos << std::endl;
 
     double vel_reading;
     controller.readVelocity(vel_reading);
@@ -185,7 +177,7 @@ Velocity::~Velocity()
 void Velocity::calibrate(double cmd_vel) {
     if (!connected) return;
 
-    ROS_INFO("CALIBRATING");
+    ROS_INFO("Calibrating XL430 Velocity Controller");
     write(cmd_vel);
     ros::Duration(0.25).sleep();
     static constexpr std::size_t N = 10;
@@ -204,7 +196,7 @@ void Velocity::calibrate(double cmd_vel) {
         eff2[i] = pow(result, 2);
         i = (i+1)%N;
         mean_eff2 = std::accumulate(eff2.begin(), eff2.end(), 0.0f)/N;
-        ROS_INFO("Load2: %f", mean_eff2);
+        ROS_INFO("Load^2: %f", mean_eff2);
         ros::Duration(0.1).sleep();
     } while(mean_eff2 < config.eff2_threshold);
     write(0);
