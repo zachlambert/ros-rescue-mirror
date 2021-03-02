@@ -40,7 +40,11 @@ public:
         double scale;
         double eff2_threshold;
         double zero_pos;
-        Config(): scale(1), eff2_threshold(2), zero_pos(0) {}
+        double max_pos_change;
+        Config():
+            scale(1), eff2_threshold(2), zero_pos(0),
+            max_pos_change(0.3) {}
+            // 0.3 rad ~= 17 deg, somewhat arbitrary
     };
 
     Position(
@@ -100,10 +104,15 @@ namespace ax12a {
 
 class Position: public Handle {
 public:
+    struct Config {
+        double max_pos_change;
+        Config(): max_pos_change(0.3) {}
+    };
     Position(
         const std::string &name,
         Interfaces &interface,
-        dxl::ax12a::JointController controller);
+        dxl::ax12a::JointController controller,
+        Config config = Config());
     ~Position();
     void write(double cmd);
     void read(double &pos, double &vel, double &eff);
@@ -113,6 +122,7 @@ public:
 private:
     bool connected;
     dxl::ax12a::JointController controller;
+    Config config;
 };
 
 class PositionPair: public Handle {
@@ -124,10 +134,12 @@ public:
         double scale2;
         double pos_diff_allowance;
         bool enforce_matching;
+        double max_pos_change;
         Config():
             origin1(0), origin2(0), scale1(1), scale2(1),
             pos_diff_allowance(0.15),
-            enforce_matching(true)
+            enforce_matching(true),
+            max_pos_change(0.3)
         {}
     };
 

@@ -45,7 +45,10 @@ protected:
     // Used in write(double cmd) if the handle wants to verify that
     // there isn't a large jump between the current position and next command
     double get_current_pos()const { return pos; }
+    // Used for logging
+    const std::string &get_name()const { return name; }
 private:
+    std::string name;
     double pos, vel, eff, cmd;
 };
 

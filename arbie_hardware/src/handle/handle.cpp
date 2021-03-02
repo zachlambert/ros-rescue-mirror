@@ -6,7 +6,7 @@ namespace handle {
 // ===== Handle =====
 
 Handle::Handle(const std::string &name, Interfaces &interface, Type type):
-    pos(0), vel(0), eff(0), cmd(0)
+    name(name), pos(0), vel(0), eff(0), cmd(0)
 {
     interface.state.registerHandle(hardware_interface::JointStateHandle(
             name, &pos, &vel, &eff

@@ -43,7 +43,7 @@ Position::Position(
         controller.enable();
         controller.readPosition(origin);
     } else {
-        std::cerr << "Joint " << name << " not connected." << std::endl;
+        ROS_ERROR("%s: Controller not connected", get_name().c_str());
     }
 }
 
@@ -54,7 +54,7 @@ Position::~Position()
 
 void Position::calibrate(double cmd_vel) {
     if (!connected) return;
-    ROS_INFO("Calibrating XL430 Extended Position Controller");
+    ROS_INFO("%s: Calibrating XL430 position controller", get_name().c_str());
 
     // * important *
     // The write and read functions use the origin variable, which is
@@ -92,7 +92,7 @@ void Position::calibrate(double cmd_vel) {
         eff2[i] = pow(result, 2);
         i = (i+1)%N;
         mean_eff2 = std::accumulate(eff2.begin(), eff2.end(), 0.0f)/N;
-        ROS_INFO("Load^2: %f", mean_eff2);
+        ROS_INFO("%s: Load^2: %f", get_name().c_str(), mean_eff2);
         cmd += cmd_vel * dt;
         write(cmd);
         ros::Duration(dt).sleep();
@@ -129,6 +129,11 @@ void Position::move(double change, double speed, double dt)
 void Position::write(double cmd)
 {
     if (!connected) return;
+    if (std::fabs(cmd - get_current_pos()) > config.max_pos_change) {
+        ROS_ERROR("%s: Attempted to move from %f to %f, exceeds maximum change %f",
+            get_name().c_str(), get_current_pos(), cmd, config.max_pos_change);
+        return;
+    }
     controller.writeGoalPosition(origin + config.scale*(cmd-config.zero_pos));
 }
 
@@ -162,10 +167,10 @@ Velocity::Velocity(
 {
     connected = controller.disable(); // If already enabled
     if (connected) {
-        // controller.enable(); TEMPORARY
+        controller.enable();
         controller.readPosition(origin);
     } else {
-        std::cerr << "Joint " << name << " not connected." << std::endl;
+        ROS_ERROR("%s: Controller not connected", get_name().c_str());
     }
 }
 
@@ -177,7 +182,7 @@ Velocity::~Velocity()
 void Velocity::calibrate(double cmd_vel) {
     if (!connected) return;
 
-    ROS_INFO("Calibrating XL430 Velocity Controller");
+    ROS_INFO("%s: Calibrating XL430 Velocity Controller", get_name().c_str());
     write(cmd_vel);
     ros::Duration(0.25).sleep();
     static constexpr std::size_t N = 10;
@@ -206,7 +211,7 @@ void Velocity::calibrate(double cmd_vel) {
 void Velocity::write(double cmd)
 {
     if (!connected) return;
-    // controller.writeGoalVelocity(cmd*config.scale);
+    controller.writeGoalVelocity(cmd*config.scale);
 }
 
 void Velocity::read(double &pos, double &vel, double &eff)
@@ -232,15 +237,17 @@ namespace ax12a {
 Position::Position(
     const std::string &name,
     Interfaces &interface,
-    dxl::ax12a::JointController controller):
+    dxl::ax12a::JointController controller,
+    Config config):
         Handle(name, interface, Type::POS),
-        controller(controller)
+        controller(controller),
+        config(config)
 {
     connected = controller.disable(); // If already enabled
     if (connected) {
-        // controller.enable(); TEMPORARY
+        controller.enable();
     } else {
-        std::cerr << "Joint " << name << " not connected." << std::endl;
+        ROS_ERROR("%s: Controller not connected", get_name().c_str());
     }
 }
 Position::~Position() {
@@ -249,14 +256,19 @@ Position::~Position() {
 
 void Position::write(double cmd) {
     if (!connected) return;
-    // controller.writeGoalPosition(cmd);
+    if (std::fabs(cmd - get_current_pos()) > config.max_pos_change) {
+        ROS_ERROR("%s: Attempted to move from %f to %f, exceeds maximum change %f",
+            get_name().c_str(), get_current_pos(), cmd, config.max_pos_change);
+        return;
+    }
+    controller.writeGoalPosition(cmd);
 }
 
 void Position::read(double &pos, double &vel, double &eff) {
     if (!connected) return;
     controller.readPosition(pos);
     controller.readVelocity(vel);
-    // eff not implemented
+    controller.readLoad(eff);
 }
 
 void Position::move(double change, double speed, double dt)
@@ -292,10 +304,10 @@ PositionPair::PositionPair(
     connected = controller1.disable();
     connected &= controller2.disable();
     if (connected) {
-        // controller1.enable(); TEMPORARY
-        // controller2.enable(); TEMPORARY
+        controller1.enable();
+        controller2.enable();
     } else {
-        std::cerr << "Joint " << name << " not connected." << std::endl;
+        ROS_ERROR("%s: Controller not connected", get_name().c_str());
     }
 }
 
@@ -308,9 +320,13 @@ PositionPair::~PositionPair()
 void PositionPair::write(double cmd)
 {
     if (!connected || disabled) return;
-    // TEMPORARY
-    // controller1.writeGoalPosition(config.origin1 + cmd*config.scale1);
-    // controller2.writeGoalPosition(config.origin2 + cmd*config.scale2);
+    if (std::fabs(cmd - get_current_pos()) > config.max_pos_change) {
+        ROS_ERROR("%s: Attempted to move from %f to %f, exceeds maximum change %f",
+            get_name().c_str(), get_current_pos(), cmd, config.max_pos_change);
+        return;
+    }
+    controller1.writeGoalPosition(config.origin1 + cmd*config.scale1);
+    controller2.writeGoalPosition(config.origin2 + cmd*config.scale2);
 }
 
 void PositionPair::read(double &pos, double &vel, double &eff)
@@ -342,7 +358,7 @@ void PositionPair::read(double &pos, double &vel, double &eff)
         controller1.disable();
         controller2.disable();
         disabled = true;
-        ROS_ERROR("Positions don't match: %f, %f", pos, pos2);
+        ROS_ERROR("%s: Positions don't match: %f, %f", get_name().c_str(), pos, pos2);
     }
     // eff not implemented
 }
