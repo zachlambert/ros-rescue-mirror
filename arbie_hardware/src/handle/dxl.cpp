@@ -129,11 +129,11 @@ void Position::move(double change, double speed, double dt)
 void Position::write(double cmd)
 {
     if (!connected) return;
-    if (std::fabs(cmd - get_current_pos()) > config.max_pos_change) {
-        ROS_ERROR("%s: Attempted to move from %f to %f, exceeds maximum change %f",
-            get_name().c_str(), get_current_pos(), cmd, config.max_pos_change);
-        return;
-    }
+    // if (std::fabs(cmd - get_current_pos()) > config.max_pos_change) {
+    //     ROS_ERROR("%s: Attempted to move from %f to %f, exceeds maximum change %f",
+    //         get_name().c_str(), get_current_pos(), cmd, config.max_pos_change);
+    //     return;
+    // }
     controller.writeGoalPosition(origin + config.scale*(cmd-config.zero_pos));
 }
 
@@ -256,11 +256,11 @@ Position::~Position() {
 
 void Position::write(double cmd) {
     if (!connected) return;
-    if (std::fabs(cmd - get_current_pos()) > config.max_pos_change) {
-        ROS_ERROR("%s: Attempted to move from %f to %f, exceeds maximum change %f",
-            get_name().c_str(), get_current_pos(), cmd, config.max_pos_change);
-        return;
-    }
+    // if (std::fabs(cmd - get_current_pos()) > config.max_pos_change) {
+    //     ROS_ERROR("%s: Attempted to move from %f to %f, exceeds maximum change %f",
+    //         get_name().c_str(), get_current_pos(), cmd, config.max_pos_change);
+    //     return;
+    // }
     controller.writeGoalPosition(cmd);
 }
 
@@ -320,11 +320,11 @@ PositionPair::~PositionPair()
 void PositionPair::write(double cmd)
 {
     if (!connected || disabled) return;
-    if (std::fabs(cmd - get_current_pos()) > config.max_pos_change) {
-        ROS_ERROR("%s: Attempted to move from %f to %f, exceeds maximum change %f",
-            get_name().c_str(), get_current_pos(), cmd, config.max_pos_change);
-        return;
-    }
+    // if (std::fabs(cmd - get_current_pos()) > config.max_pos_change) {
+    //     ROS_ERROR("%s: Attempted to move from %f to %f, exceeds maximum change %f",
+    //         get_name().c_str(), get_current_pos(), cmd, config.max_pos_change);
+    //     return;
+    // }
     controller1.writeGoalPosition(config.origin1 + cmd*config.scale1);
     controller2.writeGoalPosition(config.origin2 + cmd*config.scale2);
 }
