@@ -301,11 +301,11 @@ int main(int argc, char **argv)
     std::string port = "/dev/ttyUSB0";
     Node node(n, port);
 
-    ros::MultiThreadedSpinner spinner(4);
+    // ros::MultiThreadedSpinner spinner(4);
     ros::Rate loop_rate(50);
     while (ros::ok()) {
         node.loop(loop_rate.cycleTime());
-        spinner.spin();
+        ros::spinOnce();
         loop_rate.sleep();
     }
     return 0;
