@@ -344,7 +344,7 @@ bool KinematicsHandler::validate_state()
     for (const auto &j: joint_model_group->getJointModels()) {
         if (!robot_state->satisfiesPositionBounds(j)) {
             ROS_INFO("%s outside position bounds", j->getName().c_str());
-            return false;
+            // return false;
         }
         if (!robot_state->satisfiesVelocityBounds(j)) {
             ROS_INFO("%s outside velocity bounds", j->getName().c_str());
