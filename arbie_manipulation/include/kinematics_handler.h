@@ -54,6 +54,7 @@ private:
     std::vector<double> master_angles;
     sensor_msgs::JointState joint_states;
     Eigen::VectorXd gripper_velocity; // 6-dimensional vector = [angular, linear]
+    Eigen::Vector3d ee_reference_point; // Point in end effector frame to find jacobian for
 };
 
 #endif

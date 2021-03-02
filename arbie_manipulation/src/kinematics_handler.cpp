@@ -97,6 +97,7 @@ KinematicsHandler::KinematicsHandler(ros::NodeHandle& n):
 
     gripper_velocity = Eigen::VectorXd(6);
     gripper_velocity.fill(0);
+    ee_reference_point = Eigen::Vector3d(0, 0, 0.1);
 
     joint_positions.resize(6);
     std::fill(joint_positions.begin(), joint_positions.end(), 0);
@@ -166,6 +167,9 @@ void KinematicsHandler::set_gripper_velocity(const std_msgs::Float64MultiArray &
     Eigen::Isometry3d origin_base_trans = robot_state->getFrameTransform("arm_base_link");
     Eigen::Isometry3d origin_ee_trans = robot_state->getFrameTransform("gripper_base_link");
 
+    // Add the transformation from the ee_reference_point to the frame origin
+    origin_ee_trans = origin_ee_trans * Eigen::Translation3d(ee_reference_point);
+
     // 1) Want rotation from body -> arm_base
     Eigen::Matrix3d base_rotation = (origin_body_trans.inverse() * origin_base_trans).rotation();
     // 2) Want rigid-body transformation from arm_base -> gripper (end effector)
@@ -192,9 +196,9 @@ void KinematicsHandler::set_gripper_velocity(const std_msgs::Float64MultiArray &
 
     double yaw, pitch, roll;
     rotation_matrix_to_euler(ee_trans.rotation(), &yaw, &pitch, &roll);
-    std::cout << "Yaw = " << yaw << std::endl;
-    std::cout << "Pitch = " << pitch << std::endl;
-    std::cout << "Roll = " << roll << std::endl;
+    // std::cout << "Yaw = " << yaw << std::endl;
+    // std::cout << "Pitch = " << pitch << std::endl;
+    // std::cout << "Roll = " << roll << std::endl;
 
     // angular_velocity = A * euler_velocity
     Eigen::Matrix3d A;
@@ -237,11 +241,10 @@ void KinematicsHandler::loop_velocity(double dt)
 
     Eigen::MatrixXd jacobian;
     // Reference position in end effector frame
-    Eigen::Vector3d reference_point_position(0, 0, 0.1);
     robot_state->getJacobian(
         joint_model_group,
         robot_state->getLinkModel("gripper_base_link"),
-        reference_point_position,
+        ee_reference_point,
         jacobian
     );
     joint_velocities = jacobian.inverse() * gripper_velocity;
@@ -280,7 +283,7 @@ void KinematicsHandler::loop_velocity(double dt)
         robot_state->getJacobian(
             joint_model_group,
             robot_state->getLinkModel(joint_model_group->getLinkModelNames().back()),
-            reference_point_position,
+            ee_reference_point,
             jacobian
         );
         joint_velocities = jacobian.inverse() * gripper_velocity;
