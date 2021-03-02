@@ -10,6 +10,10 @@ namespace ax12a {
 
 class BaseController: public dxl::BaseController {
 protected:
+    // The operating mode (Joint vs Wheel) is determined
+    // by the values of the angle limits.
+    // If both = 0, (no limits), goes into wheel mode
+    // If neither = 0 (both have valid limits), goes into joint mode.
     static constexpr uint32_t ADDR_CW_ANGLE_LIMIT = 6;
     static constexpr uint32_t ADDR_CCW_ANGLE_LIMIT = 8;
     static constexpr uint32_t ADDR_TORQUE_ENABLE = 24;
@@ -37,16 +41,21 @@ class JointController: public BaseController{
     static constexpr uint32_t ADDR_PRESENT_POSITION = 36;
     static constexpr uint32_t ADDR_PRESENT_VELOCITY = 38;
     static constexpr uint32_t ADDR_PRESENT_LOAD = 40;
+    static constexpr uint32_t ADDR_TORQUE_LIMIT = 34;
+    static constexpr uint32_t ADDR_ALARM_LED = 18;
+    static constexpr uint32_t ADDR_SHUTDOWN = 18;
 
 public:
     struct Config {
         double lower_angle_limit_degrees;
         double upper_angle_limit_degrees;
         int compliance_slope;
+        double torque_limit; // percentage of max
         Config():
             lower_angle_limit_degrees(-150),
             upper_angle_limit_degrees(150),
-            compliance_slope(128)
+            compliance_slope(128),
+            torque_limit(50)
         {}
     };
 
@@ -59,9 +68,11 @@ public:
     bool writeGoalPosition(double angle);
     bool readPosition(double &result);
     bool readVelocity(double &result);
+    bool readLoad(double &result);
 
 private:
     bool writeComplianceSlope(uint8_t slope);
+    bool writeTorqueLimit(double percent);
 };
 
 } // namespace ax12a

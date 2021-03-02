@@ -189,13 +189,6 @@ public:
         // TODO: Add proper calibration for arm_1
         arm_1_handle->set_as_origin();
 
-        // TEMPORARY
-        arm_2_handle->set_as_origin();
-        arm_3_handle->set_as_origin();
-        calibrated = true;
-        hardware_mutex.unlock();
-        return true;
-
         ros::Duration(1).sleep();
 
         arm_2_handle->calibrate();

@@ -30,6 +30,16 @@ JointController::JointController(
     write2Byte(ADDR_CCW_ANGLE_LIMIT, ccw_angle_limit_value);
 
     writeComplianceSlope(config.compliance_slope);
+
+    writeTorqueLimit(config.torque_limit);
+
+    // Write alarm LED and shutdown to active for:
+    // - Bit 5 = overload error (load > maximum)
+    // - Bit 2 = overheating error
+    // - Bit 0 = input voltage error
+    uint8_t flags = (1<<5) | (1<<2) | (1<<0);
+    write1Byte(ADDR_ALARM_LED, flags);
+    write1Byte(ADDR_SHUTDOWN, flags);
 }
 
 bool JointController::writeGoalPosition(double angle)
@@ -68,6 +78,21 @@ bool JointController::readVelocity(double &result)
     }
 }
 
+bool JointController::readLoad(double &result)
+{
+    uint16_t value;
+    if (read2Byte(ADDR_PRESENT_VELOCITY, &value)) {
+        if (value < 1024) {
+            result =  ((double)value / 1024) * 100;
+        } else {
+            result = -((double)(value-1024) / 1024) * 100;
+        }
+        return true;
+    } else {
+        return false;
+    }
+}
+
 bool JointController::writeComplianceSlope(uint8_t slope)
 {
     // Slope value must be even
@@ -75,6 +100,15 @@ bool JointController::writeComplianceSlope(uint8_t slope)
     if (!write1Byte(ADDR_CW_COMPLIANCE_SLOPE, value))
         return false;
     if (!write1Byte(ADDR_CCW_COMPLIANCE_SLOPE, value))
+        return false;
+    return true;
+}
+
+bool JointController::writeTorqueLimit(double percent)
+{
+    if (percent < 0) return false;
+    uint16_t value = 1024*(percent/100);
+    if (!write2Byte(ADDR_TORQUE_LIMIT, value))
         return false;
     return true;
 }
