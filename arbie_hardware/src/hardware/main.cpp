@@ -128,6 +128,7 @@ public:
         // Odrives
         // Assume the odrives node has been started, with the services:
 
+        /*
         handles.push_back(std::make_unique<handle::Service>(
             "flippers_front_joint",
             interfaces,
@@ -159,6 +160,7 @@ public:
             "tracks/right",
             n
         ));
+        */
 
         // Camera (for now, placeholder handle)
 
@@ -255,6 +257,11 @@ public:
         hw(n, port),
         cm(&hw, n)
     {
+        loop_timer = n.createTimer(
+            ros::Duration(1.0/50),
+            &Node::loop,
+            this
+        );
         successful = hw.initialise(n);
         if (!successful) {
             ROS_ERROR("Failed to initialise hardware");
@@ -265,16 +272,15 @@ public:
         );
     }
 
-    void loop(const ros::Duration &duration)
+    void loop(const ros::TimerEvent &timer)
     {
         if (!successful) return;
 
         hw.read();
         cm.update(
             ros::Time::now(),
-            ros::Duration(duration)
+            ros::Duration(timer.current_real - timer.last_real)
         );
-        ROS_INFO("Writing hardware");
         hw.write();
     }
 
@@ -289,6 +295,7 @@ public:
 private:
     Hardware hw;
     controller_manager::ControllerManager cm;
+    ros::Timer loop_timer;
     ros::ServiceServer calibrate_server;
     bool successful;
 };
@@ -301,12 +308,8 @@ int main(int argc, char **argv)
     std::string port = "/dev/ttyUSB0";
     Node node(n, port);
 
-    // ros::MultiThreadedSpinner spinner(4);
-    ros::Rate loop_rate(50);
-    while (ros::ok()) {
-        node.loop(loop_rate.cycleTime());
-        ros::getGlobalCallbackQueue()->callAvailable(ros::WallDuration(0.1));
-        loop_rate.sleep();
-    }
+    ros::AsyncSpinner spinner(6);
+    spinner.start();
+    ros::waitForShutdown();
     return 0;
 }
