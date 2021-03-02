@@ -305,7 +305,7 @@ int main(int argc, char **argv)
     ros::Rate loop_rate(50);
     while (ros::ok()) {
         node.loop(loop_rate.cycleTime());
-        ros::spinOnce();
+        ros::getGlobalCallbackQueue()->callAvailable(ros::WallDuration(0.1));
         loop_rate.sleep();
     }
     return 0;
