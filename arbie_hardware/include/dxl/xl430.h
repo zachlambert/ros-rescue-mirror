@@ -11,6 +11,7 @@ namespace xl430 {
 class BaseController: public dxl::BaseController {
 protected:
     static constexpr uint32_t ADDR_OPERATING_MODE = 11;
+    static constexpr uint32_t ADDR_SHUTDOWN = 63;
     static constexpr uint32_t ADDR_TORQUE_ENABLE = 64;
     static constexpr uint32_t ADDR_PRESENT_POSITION = 132;
     static constexpr uint32_t ADDR_PRESENT_VELOCITY = 128;
@@ -20,8 +21,7 @@ public:
     BaseController(
         CommHandler &commHandler,
         CommHandler::Protocol protocol,
-        uint32_t id):
-            dxl::BaseController(commHandler, protocol, id) {}
+        uint32_t id);
 
     bool enable() {
         return write1Byte(ADDR_TORQUE_ENABLE, 1);

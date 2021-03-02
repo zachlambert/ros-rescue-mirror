@@ -5,13 +5,28 @@ namespace xl430 {
 
 // ===== xl430::BaseController =====
 
+BaseController::BaseController(
+    CommHandler &commHandler,
+    CommHandler::Protocol protocol,
+    uint32_t id):
+        dxl::BaseController(commHandler, protocol, id)
+{
+    // Shutdown in the following situations:
+    // - Bit 5 = Overload error (persistent loda > maximum)
+    // - Bit 4 = Electrical shock error (shock on circuit or insufficient power)
+    // - Bit 3 = Motor encoder error
+    // - Bit 2 = Overheating error
+    // - Bit 0 = Input voltage error
+    // (ie: all the available flags)
+    uint8_t flags = (1<<5) | (1<<4) | (1<<3) | (1<<2) | (1<<0);
+    write1Byte(ADDR_SHUTDOWN, flags);
+}
+
 bool BaseController::readPosition(double &result)
 {
     int32_t value;
     if (read4Byte(ADDR_PRESENT_POSITION, (uint32_t*)&value)) {
         result = ((double)value / 4096) * 2*M_PI;
-        std::cout << "Read XL430 value = " << value << std::endl;
-        std::cout << "Read XL430 pos = " << result << std::endl;
         return true;
     } else {
         result = 0;
@@ -58,9 +73,6 @@ ExtendedPositionController::ExtendedPositionController(
 bool ExtendedPositionController::writeGoalPosition(double pos)
 {
     uint32_t value = 4096 * pos/(2*M_PI);
-    std::cout << "Write XL430 value = " << value << std::endl;
-    std::cout << "Write XL430 pos = " << pos << std::endl;
-    // TESTING - May have erratic behaviour
     return write4Byte(ADDR_GOAL_POSITION, value);
 }
 

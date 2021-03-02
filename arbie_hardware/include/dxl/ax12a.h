@@ -10,13 +10,18 @@ namespace ax12a {
 
 class BaseController: public dxl::BaseController {
 protected:
-    // The operating mode (Joint vs Wheel) is determined
-    // by the values of the angle limits.
-    // If both = 0, (no limits), goes into wheel mode
-    // If neither = 0 (both have valid limits), goes into joint mode.
     static constexpr uint32_t ADDR_CW_ANGLE_LIMIT = 6;
     static constexpr uint32_t ADDR_CCW_ANGLE_LIMIT = 8;
+    static constexpr uint32_t ADDR_ALARM_LED = 17;
+    static constexpr uint32_t ADDR_SHUTDOWN = 18;
     static constexpr uint32_t ADDR_TORQUE_ENABLE = 24;
+    static constexpr uint32_t ADDR_CW_COMPLIANCE_SLOPE = 28;
+    static constexpr uint32_t ADDR_CCW_COMPLIANCE_SLOPE = 29;
+    static constexpr uint32_t ADDR_GOAL_POSITION = 30;
+    static constexpr uint32_t ADDR_TORQUE_LIMIT = 34;
+    static constexpr uint32_t ADDR_PRESENT_POSITION = 36;
+    static constexpr uint32_t ADDR_PRESENT_VELOCITY = 38;
+    static constexpr uint32_t ADDR_PRESENT_LOAD = 40;
 
 public:
     BaseController(
@@ -35,15 +40,6 @@ public:
 
 
 class JointController: public BaseController{
-    static constexpr uint32_t ADDR_CW_COMPLIANCE_SLOPE = 28;
-    static constexpr uint32_t ADDR_CCW_COMPLIANCE_SLOPE = 29;
-    static constexpr uint32_t ADDR_GOAL_POSITION = 30;
-    static constexpr uint32_t ADDR_PRESENT_POSITION = 36;
-    static constexpr uint32_t ADDR_PRESENT_VELOCITY = 38;
-    static constexpr uint32_t ADDR_PRESENT_LOAD = 40;
-    static constexpr uint32_t ADDR_TORQUE_LIMIT = 34;
-    static constexpr uint32_t ADDR_ALARM_LED = 18;
-    static constexpr uint32_t ADDR_SHUTDOWN = 18;
 
 public:
     struct Config {
