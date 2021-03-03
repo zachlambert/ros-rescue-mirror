@@ -1,4 +1,6 @@
 <launch>
+    <arg name="dummy" default="false"/>
+
     <param
         name="robot_description"
         command="xacro $(find arbie_description)/model/arbie.urdf.xacro"
@@ -9,10 +11,22 @@
     />
 
     <node name="odrives" pkg="arbie_hardware" type="odrives" output="screen"/>
+    <group unless="$(arg dummy)">
     <node
         name="hardware"
         pkg="arbie_hardware"
         type="hardware"
         output="screen"
     />
+    </group>
+
+    <group if="$(arg dummy)">
+    <node
+        name="hardware"
+        pkg="arbie_hardware"
+        type="hardware_dummy"
+        output="screen"
+    />
+    </group>
+
 </launch>

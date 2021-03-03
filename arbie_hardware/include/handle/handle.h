@@ -75,21 +75,46 @@ private:
 class PosDummy: public Handle {
 public:
     PosDummy(const std::string &name, Interfaces &interface):
-        Handle(name, interface, Type::POS)
+        Handle(name, interface, Type::POS), fake_pos(0)
     {}
 
     void write(double cmd) { 
-        pos = cmd;
+        fake_pos = cmd;
     }
     void read(double &pos, double &vel, double &eff) {
-        pos = this->pos;
+        pos = fake_pos;
         vel = 0;
         eff = 0;
     }
 
 private:
-    double pos;
+    double fake_pos;
 };
+
+class VelDummy: public Handle {
+public:
+    VelDummy(const std::string &name, Interfaces &interface):
+        Handle(name, interface, Type::VEL), fake_pos(0), fake_vel(0)
+    {
+        write_time = ros::Time::now();
+    }
+
+    void write(double cmd) { 
+        fake_vel = cmd;
+        fake_pos += fake_vel*(ros::Time::now() - write_time).toSec();
+        write_time = ros::Time::now();
+    }
+    void read(double &pos, double &vel, double &eff) {
+        pos = fake_pos;
+        vel = fake_vel;
+        eff = 0;
+    }
+
+private:
+    double fake_vel, fake_pos;
+    ros::Time write_time;
+};
+
 
 
 } // namespace handle

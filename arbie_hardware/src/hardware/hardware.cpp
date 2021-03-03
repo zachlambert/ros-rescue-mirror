@@ -128,7 +128,6 @@ public:
         // Odrives
         // Assume the odrives node has been started, with the services:
 
-        /*
         handles.push_back(std::make_unique<handle::Service>(
             "flippers_front_joint",
             interfaces,
@@ -160,7 +159,6 @@ public:
             "tracks/right",
             n
         ));
-        */
 
         // Camera (for now, placeholder handle)
 

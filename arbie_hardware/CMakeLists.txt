@@ -52,8 +52,11 @@ add_dependencies(handles
 )
 
 # 3. Compile the main hardware nodes
-add_executable(hardware src/hardware/main.cpp)
+add_executable(hardware src/hardware/hardware.cpp)
 target_link_libraries(hardware handles ${catkin_LIBRARIES})
+
+add_executable(hardware_dummy src/hardware/hardware_dummy.cpp)
+target_link_libraries(hardware_dummy handles ${catkin_LIBRARIES})
 
 # 4. Compile some test nodes. These either test the dynamixel drivers individually
 # or test a handle.
