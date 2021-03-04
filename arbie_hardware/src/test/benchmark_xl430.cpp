@@ -7,7 +7,7 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "benchmark_ax12a");
     ros::NodeHandle n;
     std::string port = "/dev/ttyUSB0";
-    int baud_rate = 57600;
+    int baud_rate = 1000000;
     int ax12a_id = 3;
 
     dxl::CommHandler comm_handler(port, baud_rate);
