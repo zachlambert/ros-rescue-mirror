@@ -22,6 +22,7 @@ public:
         CommHandler &commHandler,
         CommHandler::Protocol protocol,
         uint32_t id);
+    virtual ~BaseController(){ disable(); }
 
     bool enable() {
         return write1Byte(ADDR_TORQUE_ENABLE, 1);
