@@ -63,6 +63,8 @@ int main(int argc, char **argv)
         if (!check_result(dxl_comm_result, error, packet_handler)) return 1;
     }
 
+    std::cout << "Creating bulk read object" << std::endl;
+
     // Create a bulk read object and load id/address/size elements
     dynamixel::GroupBulkRead bulk_read(port_handler, packet_handler);
     for (std::size_t i = 0; i < xl430_ids.size(); i++) {
@@ -88,6 +90,8 @@ int main(int argc, char **argv)
         }
     }
 
+    std::cout << "Sending bluk read packet" << std::endl;
+
     dxl_comm_result = bulk_read.txRxPacket();
     if (!check_result(dxl_comm_result, error, packet_handler)) {
         std::cerr << "Bulk read failed" << std::endl;
@@ -112,6 +116,8 @@ int main(int argc, char **argv)
         data = bulk_read.getData(ax12a_ids[i], ax12a::ADDR_PRESENT_LOAD, 2);
         std::cout << "ax12a " << i << " load = " << data << std::endl;
     }
+
+    std::cout << "Timing bulk read" << std::endl;
 
     // Now time a number of bulk reads
     int num_reads = 3 * (xl430_ids.size() + ax12a_ids.size());
