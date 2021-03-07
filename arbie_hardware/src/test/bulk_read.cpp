@@ -14,6 +14,18 @@ namespace ax12a {
     constexpr uint32_t ADDR_PRESENT_LOAD = 40;
 }
 
+bool check_result(int dxl_comm_result, uint8_t error, dynamixel::PacketHandler *packet_handler)
+{
+    if (dxl_comm_result != COMM_SUCCESS) {
+        std::cerr << packet_handler->getTxRxResult(dxl_comm_result) << std::endl;
+        return false;
+    } else if (error != 0) {
+        std::cerr << packet_handler->getRxPacketError(error) << std::endl;
+        return false;
+    }
+    return true;
+}
+
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "benchmark_ax12a");
@@ -21,7 +33,8 @@ int main(int argc, char **argv)
     std::string port = "/dev/ttyUSB0";
     int baud_rate = 1000000;
     std::vector<int> xl430_ids = { 1, 2, 3 };
-    std::vector<int> ax12a_ids = { 4, 5, 6, 7, 8, 9 };
+    // std::vector<int> ax12a_ids = { 4, 5, 6, 7, 8, 9 };
+    std::vector<int> ax12a_ids = { };
 
     dynamixel::PortHandler *port_handler =
         dynamixel::PortHandler::getPortHandler(port.c_str());;
@@ -37,33 +50,47 @@ int main(int argc, char **argv)
         return 1;
     }
 
+    int dxl_comm_result;
     uint8_t error;
     for (std::size_t i = 0; i < xl430_ids.size(); i++) {
-        packet_handler->write1ByteTxRx(
+        dxl_comm_result = packet_handler->write1ByteTxRx(
             port_handler, ax12a_ids[i], xl430::ADDR_TORQUE_ENABLE, 1, &error);
+        if (!check_result(dxl_comm_result, error, packet_handler)) return 1;
     }
     for (std::size_t i = 0; i < ax12a_ids.size(); i++) {
-        packet_handler->write1ByteTxRx(
+        dxl_comm_result = packet_handler->write1ByteTxRx(
             port_handler, ax12a_ids[i], ax12a::ADDR_TORQUE_ENABLE, 1, &error);
+        if (!check_result(dxl_comm_result, error, packet_handler)) return 1;
     }
 
     // Create a bulk read object and load id/address/size elements
     dynamixel::GroupBulkRead bulk_read(port_handler, packet_handler);
     for (std::size_t i = 0; i < xl430_ids.size(); i++) {
-        bulk_read.addParam(xl430_ids[i], xl430::ADDR_PRESENT_POSITION, 4);
-        bulk_read.addParam(xl430_ids[i], xl430::ADDR_PRESENT_VELOCITY, 4);
-        bulk_read.addParam(xl430_ids[i], xl430::ADDR_PRESENT_LOAD, 2);
+        if (!bulk_read.addParam(xl430_ids[i], xl430::ADDR_PRESENT_POSITION, 4)) {
+            std::cerr << "Failed to add param" << std::endl;
+        }
+        if (!bulk_read.addParam(xl430_ids[i], xl430::ADDR_PRESENT_VELOCITY, 4)) {
+            std::cerr << "Failed to add param" << std::endl;
+        }
+        if (!bulk_read.addParam(xl430_ids[i], xl430::ADDR_PRESENT_LOAD, 2)) {
+            std::cerr << "Failed to add param" << std::endl;
+        }
     }
     for (std::size_t i = 0; i < ax12a_ids.size(); i++) {
-        bulk_read.addParam(ax12a_ids[i], ax12a::ADDR_PRESENT_POSITION, 2);
-        bulk_read.addParam(ax12a_ids[i], ax12a::ADDR_PRESENT_VELOCITY, 2);
-        bulk_read.addParam(ax12a_ids[i], ax12a::ADDR_PRESENT_LOAD, 2);
+        if (!bulk_read.addParam(ax12a_ids[i], ax12a::ADDR_PRESENT_POSITION, 2)) {
+            std::cerr << "Failed to add param" << std::endl;
+        }
+        if (!bulk_read.addParam(ax12a_ids[i], ax12a::ADDR_PRESENT_VELOCITY, 2)) {
+            std::cerr << "Failed to add param" << std::endl;
+        }
+        if (!bulk_read.addParam(ax12a_ids[i], ax12a::ADDR_PRESENT_LOAD, 2)) {
+            std::cerr << "Failed to add param" << std::endl;
+        }
     }
 
-    int dxl_comm_result = bulk_read.txRxPacket();
-    if (dxl_comm_result != COMM_SUCCESS) {
-        std::cout << "Bulk read failed" << std::endl;
-        std::cout << packet_handler->getTxRxResult(dxl_comm_result) << std::endl;
+    dxl_comm_result = bulk_read.txRxPacket();
+    if (!check_result(dxl_comm_result, error, packet_handler)) {
+        std::cerr << "Bulk read failed" << std::endl;
         return 1;
     }
 
