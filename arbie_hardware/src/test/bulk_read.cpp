@@ -2,6 +2,7 @@
 #include <dynamixel_sdk/dynamixel_sdk.h>
 
 namespace xl430 {
+    constexpr uint32_t ADDR_STATUS_RETURN_LEVEL = 68;
     constexpr uint32_t ADDR_TORQUE_ENABLE = 64;
     constexpr uint32_t ADDR_PRESENT_POSITION = 132;
     constexpr uint32_t ADDR_PRESENT_VELOCITY = 128;
@@ -10,6 +11,7 @@ namespace xl430 {
     constexpr int BULK_LEN = 2+4+4;
 }
 namespace ax12a {
+    constexpr uint32_t ADDR_STATUS_RETURN_LEVEL = 16;
     constexpr uint32_t ADDR_TORQUE_ENABLE = 24;
     constexpr uint32_t ADDR_PRESENT_POSITION = 36;
     constexpr uint32_t ADDR_PRESENT_VELOCITY = 38;
@@ -61,10 +63,18 @@ int main(int argc, char **argv)
         dxl_comm_result = packet_handler->write1ByteTxRx(
             port_handler, xl430_ids[i], xl430::ADDR_TORQUE_ENABLE, 1, &error);
         if (!check_result(dxl_comm_result, error, packet_handler)) return 1;
+
+        dxl_comm_result = packet_handler->write1ByteTxRx(
+            port_handler, xl430_ids[i], xl430::ADDR_STATUS_RETURN_LEVEL, 2, &error);
+        if (!check_result(dxl_comm_result, error, packet_handler)) return 1;
     }
     for (std::size_t i = 0; i < ax12a_ids.size(); i++) {
         dxl_comm_result = packet_handler->write1ByteTxRx(
             port_handler, ax12a_ids[i], ax12a::ADDR_TORQUE_ENABLE, 1, &error);
+        if (!check_result(dxl_comm_result, error, packet_handler)) return 1;
+
+        dxl_comm_result = packet_handler->write1ByteTxRx(
+            port_handler, ax12a_ids[i], ax12a::ADDR_STATUS_RETURN_LEVEL, 2, &error);
         if (!check_result(dxl_comm_result, error, packet_handler)) return 1;
     }
 
