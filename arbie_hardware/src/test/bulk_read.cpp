@@ -63,6 +63,7 @@ int main(int argc, char **argv)
     int dxl_comm_result = bulk_read.txRxPacket();
     if (dxl_comm_result != COMM_SUCCESS) {
         std::cout << "Bulk read failed" << std::endl;
+        std::cout << packet_handler->getTxRxResult(dxl_comm_result) << std::endl;
         return 1;
     }
 
