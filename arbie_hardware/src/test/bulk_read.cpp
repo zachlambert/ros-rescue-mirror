@@ -61,20 +61,18 @@ int main(int argc, char **argv)
     uint8_t error;
     for (std::size_t i = 0; i < xl430_ids.size(); i++) {
         dxl_comm_result = packet_handler->write1ByteTxRx(
-            port_handler, xl430_ids[i], xl430::ADDR_TORQUE_ENABLE, 1, &error);
-        if (!check_result(dxl_comm_result, error, packet_handler)) return 1;
-
-        dxl_comm_result = packet_handler->write1ByteTxRx(
             port_handler, xl430_ids[i], xl430::ADDR_STATUS_RETURN_LEVEL, 2, &error);
+        if (!check_result(dxl_comm_result, error, packet_handler)) return 1;
+        dxl_comm_result = packet_handler->write1ByteTxRx(
+            port_handler, xl430_ids[i], xl430::ADDR_TORQUE_ENABLE, 1, &error);
         if (!check_result(dxl_comm_result, error, packet_handler)) return 1;
     }
     for (std::size_t i = 0; i < ax12a_ids.size(); i++) {
         dxl_comm_result = packet_handler->write1ByteTxRx(
-            port_handler, ax12a_ids[i], ax12a::ADDR_TORQUE_ENABLE, 1, &error);
-        if (!check_result(dxl_comm_result, error, packet_handler)) return 1;
-
-        dxl_comm_result = packet_handler->write1ByteTxRx(
             port_handler, ax12a_ids[i], ax12a::ADDR_STATUS_RETURN_LEVEL, 2, &error);
+        if (!check_result(dxl_comm_result, error, packet_handler)) return 1;
+        dxl_comm_result = packet_handler->write1ByteTxRx(
+            port_handler, ax12a_ids[i], ax12a::ADDR_TORQUE_ENABLE, 1, &error);
         if (!check_result(dxl_comm_result, error, packet_handler)) return 1;
     }
 
@@ -104,6 +102,9 @@ int main(int argc, char **argv)
     // Test a single bulk read and make sure the results seem sensible
     uint32_t data;
     for (std::size_t i = 0; i < xl430_ids.size(); i++) {
+        if (!bulk_read.isAvailable(xl430_ids[i], xl430::ADDR_PRESENT_POSITION, 4)) {
+            std::cout << "xl430 " << i << " present position not available" << std::endl;
+        }
         data = bulk_read.getData(xl430_ids[i], xl430::ADDR_PRESENT_POSITION, 4);
         std::cout << "xl430 " << i << " position = " << data << std::endl;
         data = bulk_read.getData(xl430_ids[i], xl430::ADDR_PRESENT_VELOCITY, 4);
@@ -112,6 +113,9 @@ int main(int argc, char **argv)
         std::cout << "xl430 " << i << " load = " << data << std::endl;
     }
     for (std::size_t i = 0; i < ax12a_ids.size(); i++) {
+        if (!bulk_read.isAvailable(ax12a_ids[i], ax12a::ADDR_PRESENT_POSITION, 2)) {
+            std::cout << "ax12a " << i << " present position not available" << std::endl;
+        }
         data = bulk_read.getData(ax12a_ids[i], ax12a::ADDR_PRESENT_POSITION, 2);
         std::cout << "ax12a " << i << " position = " << data << std::endl;
         data = bulk_read.getData(ax12a_ids[i], ax12a::ADDR_PRESENT_VELOCITY, 2);
