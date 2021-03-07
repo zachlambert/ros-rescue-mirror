@@ -32,12 +32,8 @@ int main(int argc, char **argv)
     ros::NodeHandle n;
     std::string port = "/dev/ttyUSB0";
     int baud_rate = 1000000;
-    std::vector<int> xl430_ids;
-    xl430_ids.push_back(1);
-    xl430_ids.push_back(2);
-    xl430_ids.push_back(3);
-    // std::vector<int> ax12a_ids = { 4, 5, 6, 7, 8, 9 };
-    std::vector<int> ax12a_ids;
+    std::vector<int> xl430_ids = { 1, 2, 3 };
+    std::vector<int> ax12a_ids = { 4, 5, 6, 7, 8, 9 };
 
     dynamixel::PortHandler *port_handler =
         dynamixel::PortHandler::getPortHandler(port.c_str());;
@@ -59,7 +55,7 @@ int main(int argc, char **argv)
     uint8_t error;
     for (std::size_t i = 0; i < xl430_ids.size(); i++) {
         dxl_comm_result = packet_handler->write1ByteTxRx(
-            port_handler, ax12a_ids[i], xl430::ADDR_TORQUE_ENABLE, 1, &error);
+            port_handler, xl430_ids[i], xl430::ADDR_TORQUE_ENABLE, 1, &error);
         if (!check_result(dxl_comm_result, error, packet_handler)) return 1;
     }
     for (std::size_t i = 0; i < ax12a_ids.size(); i++) {
