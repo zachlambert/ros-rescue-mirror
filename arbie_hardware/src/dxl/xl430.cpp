@@ -76,7 +76,7 @@ ExtendedPositionController::ExtendedPositionController(
 bool ExtendedPositionController::writeGoalPosition(double pos)
 {
     uint32_t value = 4096 * pos/(2*M_PI);
-    return write4Byte(ADDR_GOAL_POSITION, value, false);
+    return write4Byte(ADDR_GOAL_POSITION, value);
 }
 
 
