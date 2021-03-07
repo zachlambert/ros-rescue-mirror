@@ -50,6 +50,8 @@ int main(int argc, char **argv)
         return 1;
     }
 
+    std::cout << "Writing torque enable" << std::endl;
+
     int dxl_comm_result;
     uint8_t error;
     for (std::size_t i = 0; i < xl430_ids.size(); i++) {
