@@ -38,8 +38,9 @@ int main(int argc, char **argv)
     ros::NodeHandle n;
     std::string port = "/dev/ttyUSB0";
     int baud_rate = 1000000;
-    std::vector<int> xl430_ids = { 2, 3 };
+    std::vector<int> xl430_ids = { 1, 2, 3 };
     std::vector<int> ax12a_ids;// = { 4, 5, 6, 7, 8, 9 };
+    ax12a_ids.push_back(4);
 
     dynamixel::PortHandler *port_handler =
         dynamixel::PortHandler::getPortHandler(port.c_str());;
