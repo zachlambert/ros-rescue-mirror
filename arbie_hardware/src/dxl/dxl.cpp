@@ -38,9 +38,8 @@ bool BaseController::write1Byte(uint32_t addr, uint8_t value, bool rx)
             packetHandler->write1ByteTxRx(portHandler, id, addr, value, &dxl_error),
             dxl_error);
     } else {
-        return checkResult(
-            packetHandler->write1ByteTxOnly(portHandler, id, addr, value),
-            dxl_error);
+        packetHandler->write1ByteTxOnly(portHandler, id, addr, value);
+        return true;
     }
 }
 
@@ -52,9 +51,9 @@ bool BaseController::write2Byte(uint32_t addr, uint16_t value, bool rx)
             packetHandler->write2ByteTxRx(portHandler, id, addr, value, &dxl_error),
             dxl_error);
     } else {
-        return checkResult(
-            packetHandler->write2ByteTxOnly(portHandler, id, addr, value),
-            dxl_error);
+        packetHandler->write2ByteTxOnly(portHandler, id, addr, value);
+        return true;
+ 
     }
 }
 
@@ -66,9 +65,8 @@ bool BaseController::write4Byte(uint32_t addr, uint32_t value, bool rx)
             packetHandler->write4ByteTxRx(portHandler, id, addr, value, &dxl_error),
             dxl_error);
     } else {
-        return checkResult(
-            packetHandler->write4ByteTxOnly(portHandler, id, addr, value),
-            dxl_error);
+        packetHandler->write4ByteTxOnly(portHandler, id, addr, value);
+        return true;
     }
 }
 
