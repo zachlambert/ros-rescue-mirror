@@ -2,16 +2,20 @@
 #include <dynamixel_sdk/dynamixel_sdk.h>
 
 namespace xl430 {
-    static constexpr uint32_t ADDR_TORQUE_ENABLE = 64;
-    static constexpr uint32_t ADDR_PRESENT_POSITION = 132;
-    static constexpr uint32_t ADDR_PRESENT_VELOCITY = 128;
-    static constexpr uint32_t ADDR_PRESENT_LOAD = 126;
+    constexpr uint32_t ADDR_TORQUE_ENABLE = 64;
+    constexpr uint32_t ADDR_PRESENT_POSITION = 132;
+    constexpr uint32_t ADDR_PRESENT_VELOCITY = 128;
+    constexpr uint32_t ADDR_PRESENT_LOAD = 126;
+    constexpr uint32_t BULK_ADDR = 126;
+    constexpr int BULK_LEN = 2+4+4;
 }
 namespace ax12a {
     constexpr uint32_t ADDR_TORQUE_ENABLE = 24;
     constexpr uint32_t ADDR_PRESENT_POSITION = 36;
     constexpr uint32_t ADDR_PRESENT_VELOCITY = 38;
     constexpr uint32_t ADDR_PRESENT_LOAD = 40;
+    constexpr uint32_t BULK_ADDR = 36;
+    constexpr uint32_t BULK_LEN = 2+2+2;
 }
 
 bool check_result(int dxl_comm_result, uint8_t error, dynamixel::PacketHandler *packet_handler)
@@ -69,29 +73,17 @@ int main(int argc, char **argv)
     // Create a bulk read object and load id/address/size elements
     dynamixel::GroupBulkRead bulk_read(port_handler, packet_handler);
     for (std::size_t i = 0; i < xl430_ids.size(); i++) {
-        if (!bulk_read.addParam(xl430_ids[i], xl430::ADDR_PRESENT_POSITION, 4)) {
-            std::cerr << "Failed to add param" << std::endl;
-        }
-        if (!bulk_read.addParam(xl430_ids[i], xl430::ADDR_PRESENT_VELOCITY, 4)) {
-            std::cerr << "Failed to add param" << std::endl;
-        }
-        if (!bulk_read.addParam(xl430_ids[i], xl430::ADDR_PRESENT_LOAD, 2)) {
+        if (!bulk_read.addParam(xl430_ids[i], xl430::BULK_ADDR, xl430::BULK_LEN)) {
             std::cerr << "Failed to add param" << std::endl;
         }
     }
     for (std::size_t i = 0; i < ax12a_ids.size(); i++) {
-        if (!bulk_read.addParam(ax12a_ids[i], ax12a::ADDR_PRESENT_POSITION, 2)) {
-            std::cerr << "Failed to add param" << std::endl;
-        }
-        if (!bulk_read.addParam(ax12a_ids[i], ax12a::ADDR_PRESENT_VELOCITY, 2)) {
-            std::cerr << "Failed to add param" << std::endl;
-        }
-        if (!bulk_read.addParam(ax12a_ids[i], ax12a::ADDR_PRESENT_LOAD, 2)) {
+        if (!bulk_read.addParam(ax12a_ids[i], ax12a::BULK_ADDR, ax12a::BULK_LEN)) {
             std::cerr << "Failed to add param" << std::endl;
         }
     }
 
-    std::cout << "Sending bluk read packet" << std::endl;
+    std::cout << "Sending bulk read packet" << std::endl;
 
     dxl_comm_result = bulk_read.txRxPacket();
     if (!check_result(dxl_comm_result, error, packet_handler)) {
