@@ -13,7 +13,7 @@ public:
         PROTOCOL_2
     };
 
-    CommHandler(const std::string &port, int baud_rate = 57600);
+    CommHandler(const std::string &port, int baud_rate = 1000000);
     bool connect();
     dynamixel::PortHandler *getPortHandler(){ return portHandler; }
     dynamixel::PacketHandler *getPacketHandler(Protocol protocol) {
