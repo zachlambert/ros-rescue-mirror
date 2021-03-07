@@ -59,7 +59,7 @@ bool JointController::writeGoalPosition(double angle)
     if (angle > 150) angle = 150;
     if (angle < -150) angle = -150;
     uint16_t value = floor((angle + 150)/300 * 1024);
-    return write2Byte(ADDR_GOAL_POSITION, value);
+    return write2Byte(ADDR_GOAL_POSITION, value, false);
 }
 
 bool JointController::readPosition(double &result)
