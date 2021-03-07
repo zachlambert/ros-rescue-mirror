@@ -22,7 +22,7 @@ BaseController::BaseController(
     write1Byte(ADDR_SHUTDOWN, flags);
 
     // Also disable the status return packet
-    write1Byte(ADDR_STATUS_RETURN_LEVEL, 0);
+    // write1Byte(ADDR_STATUS_RETURN_LEVEL, 0);
 }
 
 bool BaseController::readPosition(double &result)

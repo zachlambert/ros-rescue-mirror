@@ -57,4 +57,6 @@ int main(int argc, char **argv)
     }
     time_us = (ros::Time::now() - start_time).toSec() * 1e6;
     ROS_INFO("Time per load read = %f", time_us/N);
+
+    controller.disable();
 }
