@@ -97,9 +97,11 @@ bool BaseController::read4Byte(uint32_t addr, uint32_t *output)
 bool BaseController::checkResult(int dxl_comm_result, uint8_t dxl_error)
 {
     if (dxl_comm_result != COMM_SUCCESS) {
+        std::cerr << "id: " << id << std::endl;
         std::cerr << packetHandler->getTxRxResult(dxl_comm_result) << std::endl;
         return false;
     } else if (dxl_error != 0) {
+        std::cerr << "id: " << id << std::endl;
         std::cerr << packetHandler->getRxPacketError(dxl_error) << std::endl;
         return false;
     }
