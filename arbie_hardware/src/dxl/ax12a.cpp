@@ -3,6 +3,25 @@
 namespace dxl {
 namespace ax12a {
 
+BaseController::BaseController(
+    CommHandler &commHandler,
+    CommHandler::Protocol protocol,
+    uint32_t id):
+        dxl::BaseController(commHandler, protocol, id)
+{
+    // Write alarm LED and shutdown to active for:
+    // - Bit 5 = overload error (load > maximum)
+    // - Bit 2 = overheating error
+    // - Bit 0 = input voltage error
+    uint8_t flags = (1<<5) | (1<<2) | (1<<0);
+    write1Byte(ADDR_ALARM_LED, flags);
+    write1Byte(ADDR_SHUTDOWN, flags);
+
+    // Also disable the status return packet
+    write1Byte(ADDR_STATUS_RETURN_LEVEL, 0);
+}
+
+
 JointController::JointController(
     CommHandler &commHandler,
     CommHandler::Protocol protocol,
@@ -32,14 +51,6 @@ JointController::JointController(
     writeComplianceSlope(config.compliance_slope);
 
     writeTorqueLimit(config.torque_limit);
-
-    // Write alarm LED and shutdown to active for:
-    // - Bit 5 = overload error (load > maximum)
-    // - Bit 2 = overheating error
-    // - Bit 0 = input voltage error
-    uint8_t flags = (1<<5) | (1<<2) | (1<<0);
-    write1Byte(ADDR_ALARM_LED, flags);
-    write1Byte(ADDR_SHUTDOWN, flags);
 }
 
 bool JointController::writeGoalPosition(double angle)

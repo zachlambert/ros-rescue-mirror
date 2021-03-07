@@ -12,6 +12,7 @@ class BaseController: public dxl::BaseController {
 protected:
     static constexpr uint32_t ADDR_CW_ANGLE_LIMIT = 6;
     static constexpr uint32_t ADDR_CCW_ANGLE_LIMIT = 8;
+    static constexpr uint32_t ADDR_STATUS_RETURN_LEVEL = 16;
     static constexpr uint32_t ADDR_ALARM_LED = 17;
     static constexpr uint32_t ADDR_SHUTDOWN = 18;
     static constexpr uint32_t ADDR_TORQUE_ENABLE = 24;
@@ -27,8 +28,7 @@ public:
     BaseController(
         CommHandler &commHandler,
         CommHandler::Protocol protocol,
-        uint32_t id):
-            dxl::BaseController(commHandler, protocol, id) {}
+        uint32_t id);
     virtual ~BaseController(){ disable(); }
 
     bool enable() {

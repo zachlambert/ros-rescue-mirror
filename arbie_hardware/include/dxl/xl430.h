@@ -13,6 +13,7 @@ protected:
     static constexpr uint32_t ADDR_OPERATING_MODE = 11;
     static constexpr uint32_t ADDR_SHUTDOWN = 63;
     static constexpr uint32_t ADDR_TORQUE_ENABLE = 64;
+    static constexpr uint32_t ADDR_STATUS_RETURN_LEVEL = 68;
     static constexpr uint32_t ADDR_PRESENT_POSITION = 132;
     static constexpr uint32_t ADDR_PRESENT_VELOCITY = 128;
     static constexpr uint32_t ADDR_PRESENT_LOAD = 126;
@@ -31,7 +32,7 @@ public:
         return write1Byte(ADDR_TORQUE_ENABLE, 0);
     }
     bool readPosition(double &result);
-    double readVelocity(double &result);
+    bool readVelocity(double &result);
     bool readLoad(double &result);
 };
 

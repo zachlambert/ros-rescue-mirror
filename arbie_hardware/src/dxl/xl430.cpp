@@ -20,6 +20,9 @@ BaseController::BaseController(
     // (ie: all the available flags)
     uint8_t flags = (1<<5) | (1<<4) | (1<<3) | (1<<2) | (1<<0);
     write1Byte(ADDR_SHUTDOWN, flags);
+
+    // Also disable the status return packet
+    write1Byte(ADDR_STATUS_RETURN_LEVEL, 0);
 }
 
 bool BaseController::readPosition(double &result)
@@ -34,7 +37,7 @@ bool BaseController::readPosition(double &result)
     }
 }
 
-double BaseController::readVelocity(double &result)
+bool BaseController::readVelocity(double &result)
 {
     int32_t value;
     if (read4Byte(ADDR_PRESENT_VELOCITY, (uint32_t*)&value)) {
