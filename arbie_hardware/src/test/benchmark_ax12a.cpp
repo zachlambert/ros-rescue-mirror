@@ -25,7 +25,7 @@ int main(int argc, char **argv)
 
     std::size_t N = 100;
     ros::Time start_time;
-    double time_us;
+    double time_ms;
 
     double cmd;
     controller.readPosition(cmd);
@@ -33,28 +33,28 @@ int main(int argc, char **argv)
     for (std::size_t i = 0; i < N; i++) {
         controller.writeGoalPosition(cmd);
     }
-    time_us = (ros::Time::now() - start_time).toSec() * 1e6;
-    ROS_INFO("Time per write = %f", time_us/N);
+    time_ms = (ros::Time::now() - start_time).toSec() * 1e3;
+    ROS_INFO("Time per write = %f ms", time_ms/N);
 
     double value;
     start_time = ros::Time::now();
     for (std::size_t i = 0; i < N; i++) {
         controller.readPosition(value);
     }
-    time_us = (ros::Time::now() - start_time).toSec() * 1e6;
-    ROS_INFO("Time per pos read = %f", time_us/N);
+    time_ms = (ros::Time::now() - start_time).toSec() * 1e3;
+    ROS_INFO("Time per pos read = %f ms", time_ms/N);
 
     start_time = ros::Time::now();
     for (std::size_t i = 0; i < N; i++) {
         controller.readVelocity(value);
     }
-    time_us = (ros::Time::now() - start_time).toSec() * 1e6;
-    ROS_INFO("Time per vel read = %f", time_us/N);
+    time_ms = (ros::Time::now() - start_time).toSec() * 1e3;
+    ROS_INFO("Time per vel read = %f ms", time_ms/N);
 
     start_time = ros::Time::now();
     for (std::size_t i = 0; i < N; i++) {
         controller.readLoad(value);
     }
-    time_us = (ros::Time::now() - start_time).toSec() * 1e6;
-    ROS_INFO("Time per load read = %f", time_us/N);
+    time_ms = (ros::Time::now() - start_time).toSec() * 1e3;
+    ROS_INFO("Time per load read = %f ms", time_ms/N);
 }

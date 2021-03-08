@@ -1,59 +1,72 @@
-
 #include <ros/ros.h>
-#include <std_msgs/Float64.h>
 #include "dxl/ax12a.h"
-
-class Node {
-public:
-    Node(ros::NodeHandle &n, dxl::CommHandler &comm_handler, int id):
-        controller(comm_handler, dxl::CommHandler::PROTOCOL_1, id)
-    {
-        command_sub = n.subscribe(
-            "ax12a_command", 1, &Node::command_callback, this);
-        controller.enable();
-    }
-
-    void command_callback(const std_msgs::Float64 &msg)
-    {
-        controller.writeGoalPosition(msg.data);
-        double pos, vel;
-        controller.readPosition(pos);
-        controller.readVelocity(vel);
-        std::cout << "Pos = " << pos << std::endl;
-        std::cout << "Vel = " << vel << std::endl;
-    }
-private:
-    dxl::ax12a::JointController controller;
-    ros::Subscriber command_sub;
-};
 
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "test_ax12a");
     ros::NodeHandle n;
-    std::string port = "/dev/ttyUSB0";
-    int baud_rate = 57600;
+    std::string port;
+    int baud_rate;
+    double cmd_vel;
+    int id;
 
-    if (argc != 2) {
-        std::cerr << "Must provide 1 argument for ax12a id" << std::endl;
-        return 1;
+    ros::NodeHandle n_local("~");
+    n_local.param("port", port, std::string("/dev/ttyUSB0"));
+    n_local.param("baud_rate", baud_rate, 1000000);
+    n_local.param("id", id, 7); // Default to roll joint
+    n_local.param("vel", cmd_vel, 0.5);
+
+    std::cout << "Port = " << port << std::endl;
+    std::cout << "Baud rate = " << baud_rate << std::endl;
+    std::cout << "Id = " << id << std::endl;
+    std::cout << "Vel = " << cmd_vel << std::endl;
+    std::cout << "Type y to continue: ";
+    std::string input;
+    std::cin >> input;
+    if (input != "y") {
+        return 0;
     }
 
-    int id = atoi(argv[1]);
-    // 0 if an invalid integer
-    // Also avoid negative integers
-    if (id <= 0) {
-        std::cerr << "Argument is not a valid integer" << std::endl;
+    if (std::fabs(cmd_vel) > 0.5) {
+        std::cerr << "Use a smaller joint velocity" << std::endl;
         return 1;
     }
 
     dxl::CommHandler comm_handler(port, baud_rate);
     if (!comm_handler.connect()) {
-        std::cerr << "Failed to open serial port" << std::endl;
+        ROS_ERROR("Failed to open serial port");
         return 1;
     }
 
-    std::cout << "Connecting to id " << id << std::endl;
-    Node node(n, comm_handler, id);
-    ros::spin();
+    dxl::ax12a::JointController controller(
+       comm_handler, dxl::CommHandler::PROTOCOL_1, id);
+    controller.enable();
+
+    double cmd;
+    controller.readPosition(cmd);
+
+    double t = 0;
+    double dt;
+    ros::Time prev_time = ros::Time::now();
+    ros::Time current_time;
+    double pos, vel, eff;
+    while (t < 1) {
+        // Read current state, expect a delay for reading
+        controller.readPosition(pos);
+        controller.readVelocity(vel);
+        controller.readLoad(eff);
+        std::cout << "t = " << t << std::endl;
+        std::cout << "Pos = " << pos << std::endl;
+        std::cout << "Vel = " << vel << std::endl;
+        std::cout << "Load = " << eff << std::endl;
+        // Measure elapsed time since last write
+        current_time = ros::Time::now();
+        dt = (current_time - prev_time).toSec();
+        prev_time = current_time;
+        // Write next cmd position
+        cmd += cmd_vel*dt;
+        t += dt;
+        // controller.writeGoalPosition(cmd);
+        std::cout << "<writing "<<cmd<<" cmd>" << std::endl;
+    }
 }

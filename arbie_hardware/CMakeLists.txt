@@ -73,9 +73,6 @@ target_link_libraries(benchmark_ax12a dxl ${catkin_LIBRARIES})
 add_executable(benchmark_xl430 src/test/benchmark_xl430.cpp)
 target_link_libraries(benchmark_xl430 dxl ${catkin_LIBRARIES})
 
-add_executable(bulk_read src/test/bulk_read.cpp)
-target_link_libraries(bulk_read ${catkin_LIBRARIES})
-
 install(PROGRAMS
   nodes/odrives
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
