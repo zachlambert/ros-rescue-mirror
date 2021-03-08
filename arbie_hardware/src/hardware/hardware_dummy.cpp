@@ -19,27 +19,33 @@ public:
     {
         ROS_INFO("Initialising hardware");
 
+        // With setserial <port> low_latency,
+        // get about 1ms to receive rx packet
+        // Read will need 1ms, write needs 1ms if waiting for status packet
+        // Try (1ms write + 1ms x 3 reads) x 2 for "safety factor"
+        double dxl_write_delay = 2; // ms
+        double dxl_read_delay = 6;
         handles.push_back(std::make_unique<handle::PosDummy>(
-            "arm_1_joint", interfaces
+            "arm_1_joint", interfaces, dxl_write_delay, dxl_read_delay
         ));
         handles.push_back(std::make_unique<handle::PosDummy>(
-            "arm_2_joint", interfaces
+            "arm_2_joint", interfaces, dxl_write_delay, dxl_read_delay
         ));
         handles.push_back(std::make_unique<handle::PosDummy>(
-            "arm_3_joint", interfaces
+            "arm_3_joint", interfaces, dxl_write_delay, dxl_read_delay
         ));
         handles.push_back(std::make_unique<handle::PosDummy>(
-            "wrist_pitch_joint", interfaces
+            "wrist_pitch_joint", interfaces, 2*dxl_write_delay, 2*dxl_read_delay
         ));
         handles.push_back(std::make_unique<handle::PosDummy>(
-            "wrist_yaw_joint", interfaces
+            "wrist_yaw_joint", interfaces, dxl_write_delay, dxl_read_delay
         ));
         handles.push_back(std::make_unique<handle::PosDummy>(
-            "wrist_roll_joint", interfaces
+            "wrist_roll_joint", interfaces, dxl_write_delay, dxl_read_delay
         ));
 
         handles.push_back(std::make_unique<handle::PosDummy>(
-            "gripper_joint", interfaces
+            "gripper_joint", interfaces, 2*dxl_write_delay, 2*dxl_read_delay
         ));
 
         handles.push_back(std::make_unique<handle::VelDummy>(
@@ -112,7 +118,7 @@ public:
         cm(&hw, n)
     {
         loop_timer = n.createTimer(
-            ros::Duration(1.0/50),
+            ros::Duration(1.0/20),
             &Node::loop,
             this
         );

@@ -74,27 +74,40 @@ private:
 
 class PosDummy: public Handle {
 public:
-    PosDummy(const std::string &name, Interfaces &interface):
-        Handle(name, interface, Type::POS), fake_pos(0)
+    PosDummy(
+        const std::string &name,
+        Interfaces &interface,
+        double write_delay_ms=0, double read_delay_ms=0):
+            Handle(name, interface, Type::POS),
+            write_delay_ms(write_delay_ms), read_delay_ms(read_delay_ms),
+            fake_pos(0)
     {}
 
     void write(double cmd) { 
         fake_pos = cmd;
+        ros::Duration(write_delay_ms/1000).sleep();
     }
     void read(double &pos, double &vel, double &eff) {
         pos = fake_pos;
         vel = 0;
         eff = 0;
+        ros::Duration(read_delay_ms/1000).sleep();
     }
 
 private:
+    double write_delay_ms, read_delay_ms;
     double fake_pos;
 };
 
 class VelDummy: public Handle {
 public:
-    VelDummy(const std::string &name, Interfaces &interface):
-        Handle(name, interface, Type::VEL), fake_pos(0), fake_vel(0)
+    VelDummy(
+        const std::string &name,
+        Interfaces &interface,
+        double write_delay_ms=0, double read_delay_ms=0):
+            Handle(name, interface, Type::VEL),
+            write_delay_ms(write_delay_ms), read_delay_ms(read_delay_ms),
+            fake_pos(0), fake_vel(0)
     {
         write_time = ros::Time::now();
     }
@@ -103,14 +116,17 @@ public:
         fake_vel = cmd;
         fake_pos += fake_vel*(ros::Time::now() - write_time).toSec();
         write_time = ros::Time::now();
+        ros::Duration(write_delay_ms/1000).sleep();
     }
     void read(double &pos, double &vel, double &eff) {
         pos = fake_pos;
         vel = fake_vel;
         eff = 0;
+        ros::Duration(read_delay_ms/1000).sleep();
     }
 
 private:
+    double write_delay_ms, read_delay_ms;
     double fake_vel, fake_pos;
     ros::Time write_time;
 };
