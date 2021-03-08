@@ -22,7 +22,8 @@ public:
     BaseController(
         CommHandler &commHandler,
         CommHandler::Protocol protocol,
-        uint32_t id);
+        uint32_t id,
+        bool write_tx_only=false);
     virtual ~BaseController(){ disable(); }
 
     bool enable() {
@@ -34,6 +35,9 @@ public:
     bool readPosition(double &result);
     bool readVelocity(double &result);
     bool readLoad(double &result);
+
+protected:
+    bool write_tx_only;
 };
 
 
@@ -43,7 +47,8 @@ public:
     ExtendedPositionController(
         CommHandler &commHandler,
         CommHandler::Protocol protocol,
-        uint32_t id);
+        uint32_t id,
+        bool write_tx_only=false);
     bool writeGoalPosition(double pos);
 };
 
@@ -54,7 +59,8 @@ public:
     VelocityController(
         CommHandler &commHandler,
         CommHandler::Protocol protocol,
-        uint32_t id);
+        uint32_t id,
+        bool write_tx_only=false);
     bool writeGoalVelocity(double velocity);
 };
 
@@ -65,7 +71,8 @@ public:
     PwmController(
         CommHandler &commHandler,
         CommHandler::Protocol protocol,
-        uint32_t id);
+        uint32_t id,
+        bool write_tx_only=false);
     bool writeGoalPwm(double pwm);
 };
 

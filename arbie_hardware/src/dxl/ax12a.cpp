@@ -6,8 +6,10 @@ namespace ax12a {
 BaseController::BaseController(
     CommHandler &commHandler,
     CommHandler::Protocol protocol,
-    uint32_t id):
-        dxl::BaseController(commHandler, protocol, id)
+    uint32_t id,
+    bool write_tx_only):
+        dxl::BaseController(commHandler, protocol, id),
+        write_tx_only(write_tx_only)
 {
     // Write alarm LED and shutdown to active for:
     // - Bit 5 = overload error (load > maximum)
@@ -17,8 +19,13 @@ BaseController::BaseController(
     write1Byte(ADDR_ALARM_LED, flags);
     write1Byte(ADDR_SHUTDOWN, flags);
 
-    // Also disable the status return packet
-    // write1Byte(ADDR_STATUS_RETURN_LEVEL, 0);
+    if (write_tx_only) {
+        // Only return status packet on read and ping commands
+        write1Byte(ADDR_STATUS_RETURN_LEVEL, 1);
+    } else {
+        // Always return status packet
+        write1Byte(ADDR_STATUS_RETURN_LEVEL, 2);
+    }
 }
 
 
@@ -26,8 +33,9 @@ JointController::JointController(
     CommHandler &commHandler,
     CommHandler::Protocol protocol,
     uint32_t id,
+    bool write_tx_only,
     Config config):
-        BaseController(commHandler, protocol, id)
+        BaseController(commHandler, protocol, id, write_tx_only)
 {
     // Ensure lower and upper angle limits are valid
     if (config.lower_angle_limit_degrees < -150)
@@ -59,7 +67,7 @@ bool JointController::writeGoalPosition(double angle)
     if (angle > 150) angle = 150;
     if (angle < -150) angle = -150;
     uint16_t value = floor((angle + 150)/300 * 1024);
-    return write2Byte(ADDR_GOAL_POSITION, value);
+    return write2Byte(ADDR_GOAL_POSITION, value, write_tx_only);
 }
 
 bool JointController::readPosition(double &result)

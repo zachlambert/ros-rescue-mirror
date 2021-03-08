@@ -28,7 +28,8 @@ public:
     BaseController(
         CommHandler &commHandler,
         CommHandler::Protocol protocol,
-        uint32_t id);
+        uint32_t id,
+        bool write_tx_only=false);
     virtual ~BaseController(){ disable(); }
 
     bool enable() {
@@ -37,6 +38,9 @@ public:
     bool disable(){
         return write1Byte(ADDR_TORQUE_ENABLE, 0);
     }
+
+protected:
+    bool write_tx_only;
 };
 
 
@@ -60,6 +64,7 @@ public:
         CommHandler &commHandler,
         CommHandler::Protocol protocol,
         uint32_t id,
+        bool write_tx_only=false,
         Config config = Config());
 
     bool writeGoalPosition(double angle);

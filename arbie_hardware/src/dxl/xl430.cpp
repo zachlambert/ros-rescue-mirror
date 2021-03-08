@@ -8,8 +8,10 @@ namespace xl430 {
 BaseController::BaseController(
     CommHandler &commHandler,
     CommHandler::Protocol protocol,
-    uint32_t id):
-        dxl::BaseController(commHandler, protocol, id)
+    uint32_t id,
+    bool write_tx_only):
+        dxl::BaseController(commHandler, protocol, id),
+        write_tx_only(write_tx_only)
 {
     // Shutdown in the following situations:
     // - Bit 5 = Overload error (persistent loda > maximum)
@@ -21,8 +23,13 @@ BaseController::BaseController(
     uint8_t flags = (1<<5) | (1<<4) | (1<<3) | (1<<2) | (1<<0);
     write1Byte(ADDR_SHUTDOWN, flags);
 
-    // Also disable the status return packet
-    // write1Byte(ADDR_STATUS_RETURN_LEVEL, 0);
+    if (write_tx_only) {
+        // Only return status packet on read and ping commands
+        write1Byte(ADDR_STATUS_RETURN_LEVEL, 1);
+    } else {
+        // Always return status packet
+        write1Byte(ADDR_STATUS_RETURN_LEVEL, 2);
+    }
 }
 
 bool BaseController::readPosition(double &result)
@@ -67,8 +74,9 @@ bool BaseController::readLoad(double &result)
 ExtendedPositionController::ExtendedPositionController(
     CommHandler &commHandler,
     CommHandler::Protocol protocol,
-    uint32_t id):
-        BaseController(commHandler, protocol, id)
+    uint32_t id,
+    bool write_tx_only):
+        BaseController(commHandler, protocol, id, write_tx_only)
 {
     write1Byte(ADDR_OPERATING_MODE, 4);
 }
@@ -76,7 +84,7 @@ ExtendedPositionController::ExtendedPositionController(
 bool ExtendedPositionController::writeGoalPosition(double pos)
 {
     uint32_t value = 4096 * pos/(2*M_PI);
-    return write4Byte(ADDR_GOAL_POSITION, value);
+    return write4Byte(ADDR_GOAL_POSITION, value, write_tx_only);
 }
 
 
@@ -85,8 +93,9 @@ bool ExtendedPositionController::writeGoalPosition(double pos)
 VelocityController::VelocityController(
     CommHandler &commHandler,
     CommHandler::Protocol protocol,
-    uint32_t id):
-        BaseController(commHandler, protocol, id)
+    uint32_t id,
+    bool write_tx_only):
+        BaseController(commHandler, protocol, id, write_tx_only)
 {
     write1Byte(ADDR_OPERATING_MODE, 1);
 }
@@ -94,7 +103,7 @@ VelocityController::VelocityController(
 bool VelocityController::writeGoalVelocity(double velocity)
 {
     uint32_t value = velocity / 0.02398;
-    return write4Byte(ADDR_GOAL_VELOCITY, value);
+    return write4Byte(ADDR_GOAL_VELOCITY, value, write_tx_only);
 }
 
 
@@ -103,8 +112,9 @@ bool VelocityController::writeGoalVelocity(double velocity)
 PwmController::PwmController(
     CommHandler &commHandler,
     CommHandler::Protocol protocol,
-    uint32_t id):
-        BaseController(commHandler, protocol, id)
+    uint32_t id,
+    bool write_tx_only):
+        BaseController(commHandler, protocol, id, write_tx_only)
 {
     write1Byte(ADDR_OPERATING_MODE, 16);
 }
@@ -114,7 +124,7 @@ bool PwmController::writeGoalPwm(double pwm)
     // pwm: -1 -> 1
     // value: -885 -> 885 signed
     int16_t value = 885*pwm;
-    return write2Byte(100, pwm);
+    return write2Byte(100, pwm, write_tx_only);
 }
 
 } // namespace xl430

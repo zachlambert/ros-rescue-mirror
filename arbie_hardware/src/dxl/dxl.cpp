@@ -30,43 +30,45 @@ bool CommHandler::connect()
 
 // ===== BaseController =====
 
-bool BaseController::write1Byte(uint32_t addr, uint8_t value, bool rx)
+bool BaseController::write1Byte(uint32_t addr, uint8_t value, bool tx_only)
 {
-    uint8_t dxl_error = 0;
-    if (rx) {
+    if (tx_only) {
+        return checkResult(
+            packetHandler->write1ByteTxOnly(portHandler, id, addr, value),
+            0);
+    } else {
+        uint8_t dxl_error = 0;
         return checkResult(
             packetHandler->write1ByteTxRx(portHandler, id, addr, value, &dxl_error),
             dxl_error);
-    } else {
-        packetHandler->write1ByteTxOnly(portHandler, id, addr, value);
-        return true;
     }
 }
 
-bool BaseController::write2Byte(uint32_t addr, uint16_t value, bool rx)
+bool BaseController::write2Byte(uint32_t addr, uint16_t value, bool tx_only)
 {
-    uint8_t dxl_error = 0;
-    if (rx) {
+    if (tx_only) {
+        return checkResult(
+            packetHandler->write2ByteTxOnly(portHandler, id, addr, value),
+            0);
+    } else {
+        uint8_t dxl_error = 0;
         return checkResult(
             packetHandler->write2ByteTxRx(portHandler, id, addr, value, &dxl_error),
             dxl_error);
-    } else {
-        packetHandler->write2ByteTxOnly(portHandler, id, addr, value);
-        return true;
- 
     }
 }
 
-bool BaseController::write4Byte(uint32_t addr, uint32_t value, bool rx)
+bool BaseController::write4Byte(uint32_t addr, uint32_t value, bool tx_only)
 {
-    uint8_t dxl_error = 0;
-    if (rx) {
+    if (tx_only) {
+        return checkResult(
+            packetHandler->write4ByteTxOnly(portHandler, id, addr, value),
+            0);
+    } else {
+        uint8_t dxl_error = 0;
         return checkResult(
             packetHandler->write4ByteTxRx(portHandler, id, addr, value, &dxl_error),
             dxl_error);
-    } else {
-        packetHandler->write4ByteTxOnly(portHandler, id, addr, value);
-        return true;
     }
 }
 
