@@ -9,17 +9,20 @@ int main(int argc, char **argv)
     int baud_rate;
     double cmd_vel;
     int id;
+    bool write_tx_only;
 
     ros::NodeHandle n_local("~");
     n_local.param("port", port, std::string("/dev/ttyUSB0"));
     n_local.param("baud_rate", baud_rate, 1000000);
     n_local.param("id", id, 2); // Default to 3rd arm joint
     n_local.param("vel", cmd_vel, 0.5);
+    n_local.param("write_tx_only", write_tx_only, false);
 
     std::cout << "Port = " << port << std::endl;
     std::cout << "Baud rate = " << baud_rate << std::endl;
     std::cout << "Id = " << id << std::endl;
     std::cout << "Vel = " << cmd_vel << std::endl;
+    std::cout << "Write tx only = " << write_tx_only << std::endl;
     std::cout << "Type y to continue: ";
     std::string input;
     std::cin >> input;
@@ -39,7 +42,7 @@ int main(int argc, char **argv)
     }
 
     dxl::xl430::ExtendedPositionController controller(
-       comm_handler, dxl::CommHandler::PROTOCOL_1, id);
+       comm_handler, dxl::CommHandler::PROTOCOL_1, id, write_tx_only);
     controller.enable();
 
     double cmd;

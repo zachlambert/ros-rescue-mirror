@@ -10,15 +10,18 @@ int main(int argc, char **argv)
     double cmd_vel;
     int id1 = 4;
     int id2 = 5;
+    bool write_tx_only;
 
     ros::NodeHandle n_local("~");
     n_local.param("port", port, std::string("/dev/ttyUSB0"));
     n_local.param("baud_rate", baud_rate, 1000000);
     n_local.param("vel", cmd_vel, 0.5);
+    n_local.param("write_tx_only", write_tx_only, false);
 
     std::cout << "Port = " << port << std::endl;
     std::cout << "Baud rate = " << baud_rate << std::endl;
     std::cout << "Vel = " << cmd_vel << std::endl;
+    std::cout << "Write tx only = " << write_tx_only << std::endl;
     std::cout << "Type y to continue: ";
     std::string input;
     std::cin >> input;
@@ -38,9 +41,9 @@ int main(int argc, char **argv)
     }
 
     dxl::ax12a::JointController controller1(
-        comm_handler, dxl::CommHandler::PROTOCOL_1, id1);
+        comm_handler, dxl::CommHandler::PROTOCOL_1, id1, write_tx_only);
     dxl::ax12a::JointController controller2(
-        comm_handler, dxl::CommHandler::PROTOCOL_1, id2);
+        comm_handler, dxl::CommHandler::PROTOCOL_1, id2, write_tx_only);
 
     handle::ax12a::PositionPair::Config config;
     config.scale1 = -1;
