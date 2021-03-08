@@ -73,7 +73,7 @@ target_link_libraries(test_xl430 dxl ${catkin_LIBRARIES})
 add_executable(test_ax12a src/test/ax12a.cpp)
 target_link_libraries(test_ax12a dxl ${catkin_LIBRARIES})
 
-add_executable(test_ax12a_pair src/test/ax12a_pair.cpp)
+add_executable(test_pitch src/test/pitch.cpp)
 target_link_libraries(test_ax12a_pair handles ${catkin_LIBRARIES})
 
 # 5. Install python nodes
