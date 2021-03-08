@@ -1,79 +1,77 @@
-
 #include <ros/ros.h>
-#include <std_msgs/Float64.h>
 #include "handle/dxl.h"
-
-/* This node creates a handle to a pair of ax12a joint controllers for
- * testing.
- * When used with ros_control, the Interfaces object is used for connecting
- * the handle to, such that ros can call the read and write functions.
- * Here, it's just a placeholder, but isn't used.
- * Instead, we just call the read and write functions manually to check
- * they work.
- */
-
-class Node {
-public:
-    Node(ros::NodeHandle &n, dxl::CommHandler &comm_handler, int id1, int id2):
-        controller1(comm_handler, dxl::CommHandler::PROTOCOL_1, id1),
-        controller2(comm_handler, dxl::CommHandler::PROTOCOL_1, id2),
-        interfaces()
-    {
-        handle::ax12a::PositionPair::Config config;
-        config.scale1 = 1;
-        config.scale2 = -1;
-        pair_handle = std::make_unique<handle::ax12a::PositionPair>(
-            "joiwt_name", interfaces, controller1, controller2, config
-        );
-
-        command_sub = n.subscribe(
-            "ax12a_pair_command", 1, &Node::command_callback, this);
-    }
-
-    void command_callback(const std_msgs::Float64 &msg)
-    {
-        double pos, vel, eff;
-        pair_handle->read(pos, vel, eff);
-        pair_handle->write(msg.data);
-    }
-
-private:
-    dxl::ax12a::JointController controller1;
-    dxl::ax12a::JointController controller2;
-    handle::Interfaces interfaces;
-    std::unique_ptr<handle::ax12a::PositionPair> pair_handle;
-    ros::Subscriber command_sub;
-};
 
 int main(int argc, char **argv)
 {
-    ros::init(argc, argv, "test_ax12a");
+    ros::init(argc, argv, "test_ax12a_pair");
     ros::NodeHandle n;
-    std::string port = "/dev/ttyUSB0";
-    int baud_rate = 57600;
+    std::string port;
+    int baud_rate;
+    double cmd_vel;
+    int id1 = 4;
+    int id2 = 5;
 
-    if (argc != 3) {
-        std::cerr << "Must provide 2 argument for 2 ax12a ids" << std::endl;
-        std::cerr << "For pitch joint: 4 and 5" << std::endl;
-        return 1;
+    ros::NodeHandle n_local("~");
+    n_local.param("port", port, std::string("/dev/ttyUSB0"));
+    n_local.param("baud_rate", baud_rate, 1000000);
+    n_local.param("vel", cmd_vel, 0.5);
+
+    std::cout << "Port = " << port << std::endl;
+    std::cout << "Baud rate = " << baud_rate << std::endl;
+    std::cout << "Vel = " << cmd_vel << std::endl;
+    std::cout << "Type y to continue: ";
+    std::string input;
+    std::cin >> input;
+    if (input != "y") {
+        return 0;
     }
 
-    int id1 = atoi(argv[1]);
-    int id2 = atoi(argv[2]);
-    // 0 if an invalid integer
-    // Also avoid negative integers
-    if (id1 <= 0 || id2 <= 0) {
-        std::cerr << "Arguments are not valid integers" << std::endl;
+    if (std::fabs(cmd_vel) > 0.5) {
+        std::cerr << "Use a smaller joint velocity" << std::endl;
         return 1;
     }
 
     dxl::CommHandler comm_handler(port, baud_rate);
     if (!comm_handler.connect()) {
-        std::cerr << "Failed to open serial port" << std::endl;
+        ROS_ERROR("Failed to open serial port");
         return 1;
     }
 
-    std::cout << "Connecting to ids " << id1 << " and " << id2 << std::endl;
-    Node node(n, comm_handler, id1, id2);
-    ros::spin();
+    dxl::ax12a::JointController controller1(
+        comm_handler, dxl::CommHandler::PROTOCOL_1, id1);
+    dxl::ax12a::JointController controller2(
+        comm_handler, dxl::CommHandler::PROTOCOL_1, id2);
+
+    handle::ax12a::PositionPair::Config config;
+    config.scale1 = -1;
+    config.scale2 = 1;
+
+    handle::Interfaces interfaces;
+    handle::ax12a::PositionPair handle(
+        "wrist_pitch_joint", interfaces, controller1, controller2, config);
+
+    double cmd, pos, vel, eff;
+    handle.read(cmd, vel, eff);
+
+    double t = 0;
+    double dt;
+    ros::Time prev_time = ros::Time::now();
+    ros::Time current_time;
+    while (t < 1) {
+        // Read current state, expect a delay for reading
+        handle.read(pos, vel, eff);
+        std::cout << "t = " << t << std::endl;
+        std::cout << "Pos = " << pos << std::endl;
+        std::cout << "Vel = " << vel << std::endl;
+        std::cout << "Load = " << eff << std::endl;
+        // Measure elapsed time since last write
+        current_time = ros::Time::now();
+        dt = (current_time - prev_time).toSec();
+        prev_time = current_time;
+        // Write next cmd position
+        cmd += cmd_vel*dt;
+        t += dt;
+        handle.write(cmd);
+    }
+    return 0;
 }

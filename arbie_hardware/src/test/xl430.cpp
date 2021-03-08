@@ -1,9 +1,9 @@
 #include <ros/ros.h>
-#include "dxl/ax12a.h"
+#include "dxl/xl430.h"
 
 int main(int argc, char **argv)
 {
-    ros::init(argc, argv, "test_ax12a");
+    ros::init(argc, argv, "test_xl430");
     ros::NodeHandle n;
     std::string port;
     int baud_rate;
@@ -13,7 +13,7 @@ int main(int argc, char **argv)
     ros::NodeHandle n_local("~");
     n_local.param("port", port, std::string("/dev/ttyUSB0"));
     n_local.param("baud_rate", baud_rate, 1000000);
-    n_local.param("id", id, 7); // Default to roll joint
+    n_local.param("id", id, 2); // Default to 3rd arm joint
     n_local.param("vel", cmd_vel, 0.5);
 
     std::cout << "Port = " << port << std::endl;
@@ -38,7 +38,7 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    dxl::ax12a::JointController controller(
+    dxl::xl430::ExtendedPositionController controller(
        comm_handler, dxl::CommHandler::PROTOCOL_1, id);
     controller.enable();
 

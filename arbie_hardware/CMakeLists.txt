@@ -61,17 +61,22 @@ target_link_libraries(hardware_dummy handles ${catkin_LIBRARIES})
 # 4. Compile some test nodes. These either test the dynamixel drivers individually
 # or test a handle.
 
+add_executable(benchmark_ax12a src/test/benchmark_ax12a.cpp)
+target_link_libraries(benchmark_ax12a dxl ${catkin_LIBRARIES})
+
+add_executable(benchmark_xl430 src/test/benchmark_xl430.cpp)
+target_link_libraries(benchmark_xl430 dxl ${catkin_LIBRARIES})
+
+add_executable(test_xl430 src/test/xl430.cpp)
+target_link_libraries(test_xl430 dxl ${catkin_LIBRARIES})
+
 add_executable(test_ax12a src/test/ax12a.cpp)
 target_link_libraries(test_ax12a dxl ${catkin_LIBRARIES})
 
 add_executable(test_ax12a_pair src/test/ax12a_pair.cpp)
 target_link_libraries(test_ax12a_pair handles ${catkin_LIBRARIES})
 
-add_executable(benchmark_ax12a src/test/benchmark_ax12a.cpp)
-target_link_libraries(benchmark_ax12a dxl ${catkin_LIBRARIES})
-
-add_executable(benchmark_xl430 src/test/benchmark_xl430.cpp)
-target_link_libraries(benchmark_xl430 dxl ${catkin_LIBRARIES})
+# 5. Install python nodes
 
 install(PROGRAMS
   nodes/odrives
