@@ -12,7 +12,8 @@ public:
     CommandPublisher(ros::NodeHandle &n);
     void set_gripper_velocity(
         double x, double theta, double z,
-        double yaw, double pitch, double roll);
+        double yaw, double pitch, double roll,
+        double gripper);
     void set_tracks_command(double track_left, double track_right);
     void set_flippers_command(double flippers_rear, double flippers_front);
     void set_base_pose(double x, double y, double theta);

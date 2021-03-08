@@ -28,62 +28,12 @@ void rotation_matrix_to_euler(
     *roll = atan2(R(2, 1), R(2, 2));
 }
 
-/*
-Eigen::Isometry3d KinematicsHandler::gripper_coords_to_pose(
-    const std::vector<double> &gripper_coords)
-{
-    Eigen::Translation3d translation(
-        cos(gripper_coords[1]) * gripper_coords[0],
-        sin(gripper_coords[1]) * gripper_coords[0],
-        gripper_coords[2]
-    );
-    Eigen::AngleAxisd roll(gripper_coords[3], Eigen::Vector3d::UnitX());
-    Eigen::AngleAxisd pitch(gripper_coords[4], Eigen::Vector3d::UnitY());
-    Eigen::AngleAxisd yaw(gripper_coords[1] + gripper_coords[5], Eigen::Vector3d::UnitZ());
-    Eigen::Isometry3d gripper_pose_relative = translation * yaw * pitch * roll;
-    Eigen::Translation3d arm_base_translation(
-        robot_state->getFrameTransform("arm_base_link").translation());
-
-    Eigen::Isometry3d gripper_pose_absolute =
-        arm_base_translation * gripper_pose_relative;
-
-    return gripper_pose_absolute;
-}
-
-void KinematicsHandler::gripper_pose_to_coords(
-    const Eigen::Isometry3d &gripper_pose_absolute,
-    std::vector<double> &gripper_coords)
-{
-    Eigen::Translation3d arm_base_translation(
-        robot_state->getFrameTransform("arm_base_link").translation());
-    Eigen::Isometry3d gripper_pose_relative =
-        arm_base_translation.inverse() * gripper_pose_absolute;
-
-    // Extract the translation and rotation components
-    Eigen::Translation3d gripper_translation(gripper_pose_relative.translation());
-    Eigen::Quaterniond gripper_quaternion(gripper_pose_relative.rotation());
-
-    double r = hypot(gripper_translation.x(), gripper_translation.y());
-    double theta = atan2(gripper_translation.y(), gripper_translation.x());
-    gripper_coords[0] = r;
-    gripper_coords[1] = theta;
-    gripper_coords[2] = gripper_translation.z();
-
-    // Convert the quaternion to euler angles, and store in the last
-    // 3 components of the gripper coordinates
-    quaternion_to_euler(
-        gripper_quaternion,
-        &gripper_coords[3], &gripper_coords[4], &gripper_coords[5]
-    );
-}
-*/
-
-
 KinematicsHandler::KinematicsHandler(ros::NodeHandle& n):
         robot_model_loader("robot_description"),
         robot_model(robot_model_loader.getModel()),
         robot_state(new robot_state::RobotState(robot_model)),
-        joint_model_group(robot_model->getJointModelGroup("arm")),
+        arm_model_group(robot_model->getJointModelGroup("arm")),
+        gripper_model_group(robot_model->getJointModelGroup("gripper")),
         c_req(),
         c_res()
 {
@@ -101,6 +51,9 @@ KinematicsHandler::KinematicsHandler(ros::NodeHandle& n):
 
     joint_positions.resize(6);
     std::fill(joint_positions.begin(), joint_positions.end(), 0);
+
+    gripper_joint_position = 0;
+    gripper_joint_velocity = 0;
 }
 
 void KinematicsHandler::set_joint_states(const sensor_msgs::JointState &joint_states_msg)
@@ -111,7 +64,7 @@ void KinematicsHandler::set_joint_states(const sensor_msgs::JointState &joint_st
         // Only update robot state with non-arm angles, so the robot state
         // is aware of the rest of the model.
         // The arm angles are set in the loop to the target angles
-        if (!joint_model_group->hasJointModel(joint_states.name[i])) {
+        if (!arm_model_group->hasJointModel(joint_states.name[i])) {
             robot_state->setJointPositions(joint_states.name[i], &joint_states.position[i]);
         }
     }
@@ -157,12 +110,12 @@ void KinematicsHandler::set_gripper_velocity(const std_msgs::Float64MultiArray &
         gripper_velocity_in.data[4],
         gripper_velocity_in.data[5]
     );
-    
+
     // this->gripper_velocity vector has the form:
     // [ vx, vy, vz, wx, wy, wz]
     // - Linear velocity and angular velocity in cartesian coordinates
     Eigen::Vector3d linear_velocity, angular_velocity;
-    
+
     Eigen::Isometry3d origin_body_trans = robot_state->getFrameTransform("body_link");
     Eigen::Isometry3d origin_base_trans = robot_state->getFrameTransform("arm_base_link");
     Eigen::Isometry3d origin_ee_trans = robot_state->getFrameTransform("gripper_base_link");
@@ -216,6 +169,9 @@ void KinematicsHandler::set_gripper_velocity(const std_msgs::Float64MultiArray &
 
     gripper_velocity.block<3, 1>(0, 0) = U.transpose() * linear_velocity;
     gripper_velocity.block<3, 1>(3, 0) = U.transpose() * angular_velocity;
+
+    // Also get the gripper joint velocity
+    gripper_joint_velocity = gripper_velocity_in.data[6];
 }
 
 void KinematicsHandler::set_master_angles(const std_msgs::Float64MultiArray &master_angles_msg)
@@ -235,14 +191,14 @@ void KinematicsHandler::loop_velocity(double dt)
     // TODO: Compare joint_pos with actual joint states. If these lag behind
     // the target joint states too much, adjust targets
 
-    robot_state->setJointGroupPositions(joint_model_group, joint_positions);
+    robot_state->setJointGroupPositions(arm_model_group, joint_positions);
 
     Eigen::VectorXd joint_velocities;
 
     Eigen::MatrixXd jacobian;
     // Reference position in end effector frame
     robot_state->getJacobian(
-        joint_model_group,
+        arm_model_group,
         robot_state->getLinkModel("gripper_base_link"),
         ee_reference_point,
         jacobian
@@ -250,8 +206,8 @@ void KinematicsHandler::loop_velocity(double dt)
     joint_velocities = jacobian.inverse() * gripper_velocity;
 
     // Check that velocity limits aren't exceeded
-    robot_state->setJointGroupVelocities(joint_model_group, joint_velocities.data());
-    for (auto &joint_model: joint_model_group->getJointModels()) {
+    robot_state->setJointGroupVelocities(arm_model_group, joint_velocities.data());
+    for (auto &joint_model: arm_model_group->getJointModels()) {
         if (!robot_state->satisfiesVelocityBounds(joint_model)) {
             // ROS_INFO("Doesn't satisfy velocity bounds.");
             // return;
@@ -266,19 +222,22 @@ void KinematicsHandler::loop_velocity(double dt)
         trial_joint_positions[i] = joint_positions[i] + joint_velocities[i] * dt;
     }
 
+    double trial_gripper_joint_position = gripper_joint_position + gripper_joint_velocity * dt;
+
     // To check if the current velocity causes a collision, move with this
     // velocity for a given period of time T, then check if the final state
     // is valid.
 
     std::vector<double> query_joint_positions = trial_joint_positions;
+    double query_gripper_joint_position = trial_gripper_joint_position;
 
     double t = dt;
     const double T = 0.25;
     while (t < T) {
-        robot_state->setJointGroupPositions(joint_model_group, query_joint_positions);
+        robot_state->setJointGroupPositions(arm_model_group, query_joint_positions);
         robot_state->getJacobian(
-            joint_model_group,
-            robot_state->getLinkModel(joint_model_group->getLinkModelNames().back()),
+            arm_model_group,
+            robot_state->getLinkModel(arm_model_group->getLinkModelNames().back()),
             ee_reference_point,
             jacobian
         );
@@ -286,15 +245,22 @@ void KinematicsHandler::loop_velocity(double dt)
         for (std::size_t i = 0; i < query_joint_positions.size(); i++) {
             query_joint_positions[i] += joint_velocities[i] * dt;
         }
+        query_gripper_joint_position += gripper_joint_velocity * dt;
         t += dt;
     }
-    robot_state->setJointGroupPositions(joint_model_group, query_joint_positions);
+    robot_state->setJointGroupPositions(arm_model_group, query_joint_positions);
+
+    // Set gripper joint positions. Should update mimic joints too.
+    std::vector<double> query_gripper_joint_positions = { query_gripper_joint_position };
+    robot_state->setJointGroupPositions(gripper_model_group, query_gripper_joint_positions);
+
     if (!validate_state()) {
         ROS_INFO("Velocity failed");
         return;
     }
 
     joint_positions = trial_joint_positions;
+    gripper_joint_position = trial_gripper_joint_position;
 }
 
 void KinematicsHandler::loop_master(double dt)
@@ -317,21 +283,22 @@ void KinematicsHandler::reset_joint_positions()
     // Set joint_positions from joint_states
     for (std::size_t i = 0; i < joint_states.name.size(); i++) {
         std::size_t joint_i =
-            joint_model_group->getJointModel(joint_states.name[i])->getJointIndex();
+            arm_model_group->getJointModel(joint_states.name[i])->getJointIndex();
         joint_positions[joint_i] = joint_states.position[i];
     }
 }
 
-void KinematicsHandler::copy_arm_joints_to(std_msgs::Float64MultiArray &arm_command_msg)
+void KinematicsHandler::copy_joints_to(std_msgs::Float64MultiArray &arm_command_msg, std_msgs::Float64 &gripper_command_msg)
 {
     std::copy(joint_positions.begin(), joint_positions.end(), arm_command_msg.data.begin());
+    gripper_command_msg.data = gripper_joint_position;
 }
 
-void KinematicsHandler::copy_arm_joints_to(sensor_msgs::JointState &joint_states)
+void KinematicsHandler::copy_joints_to(sensor_msgs::JointState &joint_states)
 {
     for (std::size_t i = 0; i < joint_states.name.size(); i++) {
         std::size_t joint_i =
-            joint_model_group->getJointModel(joint_states.name[i])->getJointIndex();
+            arm_model_group->getJointModel(joint_states.name[i])->getJointIndex();
         joint_states.position[i] = joint_positions[joint_i];
     }
 }
@@ -341,7 +308,7 @@ bool KinematicsHandler::validate_state()
     // validates the current state of robot_state, so assumes
     // robot_state has already been set with positions and velocities
 
-    for (const auto &j: joint_model_group->getJointModels()) {
+    for (const auto &j: arm_model_group->getJointModels()) {
         if (!robot_state->satisfiesPositionBounds(j)) {
             ROS_INFO("%s outside position bounds", j->getName().c_str());
             // return false;

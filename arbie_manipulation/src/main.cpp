@@ -3,6 +3,8 @@
 #include "controller_manager_msgs/SwitchController.h"
 #include "arbie_msgs/GripperCommand.h"
 #include <moveit/move_group_interface/move_group_interface.h>
+#include <std_msgs/Float64.h>
+#include <std_msgs/Float64MultiArray.h>
 
 enum class ControlMode {
     VELOCITY, // Gripper velocity
@@ -55,6 +57,11 @@ public:
         arm_command_msg.layout.dim[0].stride = 1;
         arm_command_msg.layout.dim[0].label = "joint";
         arm_command_msg.data.resize(6);
+
+        gripper_command_pub = n.advertise<std_msgs::Float64>(
+            "gripper_position_controller/command",
+            10
+        );
 
         planned_joint_states_pub = n.advertise<sensor_msgs::JointState>(
             "planned/joint_states",
@@ -128,11 +135,13 @@ public:
         }
 
         if (command_mode == CommandMode::MOVE) {
-            kinematics_handler.copy_arm_joints_to(arm_command_msg);
+            std_msgs::Float64 gripper_command_msg;
+            kinematics_handler.copy_joints_to(arm_command_msg, gripper_command_msg);
             arm_command_pub.publish(arm_command_msg);
+            gripper_command_pub.publish(gripper_command_msg);
 
         } else { // CommandMode::PLAN
-            kinematics_handler.copy_arm_joints_to(planned_joint_states_msg);
+            kinematics_handler.copy_joints_to(planned_joint_states_msg);
             planned_joint_states_pub.publish(planned_joint_states_msg);
         }
     }
@@ -210,8 +219,11 @@ private:
     ros::Subscriber joint_states_sub;
     ros::Subscriber gripper_velocity_sub;
     ros::Subscriber master_angles_sub;
+
     ros::Publisher arm_command_pub; // Command joint positions for arm angles
     std_msgs::Float64MultiArray arm_command_msg;
+    ros::Publisher gripper_command_pub;
+
     ros::Publisher planned_joint_states_pub;
     sensor_msgs::JointState planned_joint_states_msg;
 

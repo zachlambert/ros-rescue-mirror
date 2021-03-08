@@ -47,9 +47,9 @@ int main(int argc, char **argv)
                 - joystick_listener.query_axis(JoyAxis::LT));
             command_publisher.set_gripper_velocity(
                 r_vel, theta_vel, z_vel,
-                yaw_vel, pitch_vel, roll_vel
+                yaw_vel, pitch_vel, roll_vel,
+                gripper_vel
             );
-            // TODO: Add gripper_vel in
 
             if (joystick_listener.query_button_state(JoyButton::A) == JoyButtonState::PRESSED) {
                 command_publisher.send_gripper_command("named_target", "home");
