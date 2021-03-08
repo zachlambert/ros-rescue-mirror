@@ -256,7 +256,7 @@ public:
         cm(&hw, n)
     {
         loop_timer = n.createTimer(
-            ros::Duration(1.0/20),
+            ros::Duration(1.0/50),
             &Node::loop,
             this
         );

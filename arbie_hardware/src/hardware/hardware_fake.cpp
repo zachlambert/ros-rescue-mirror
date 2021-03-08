@@ -19,12 +19,20 @@ public:
     {
         ROS_INFO("Initialising hardware");
 
-        // With setserial <port> low_latency,
-        // get about 1ms to receive rx packet
-        // Read will need 1ms, write needs 1ms if waiting for status packet
-        // Try (1ms write + 1ms x 3 reads) x 2 for "safety factor"
-        double dxl_write_delay = 2; // ms
-        double dxl_read_delay = 6;
+        // Assume setserial <port> low_latency
+        // About 1ms to receive rx packet back
+
+        // Worst case
+        // - Make write wait for rx packet, so takes 1ms
+        // - Add 2x "safety factor"
+        // double dxl_write_delay = 2;
+        // double dxl_read_delay = 6;
+
+        // Best case:
+        // - Write is practically instant since don't wait for rx packet
+        double dxl_write_delay = 0;
+        double dxl_read_delay = 3;
+
         handles.push_back(std::make_unique<handle::PosDummy>(
             "arm_1_joint", interfaces, dxl_write_delay, dxl_read_delay
         ));
@@ -118,7 +126,7 @@ public:
         cm(&hw, n)
     {
         loop_timer = n.createTimer(
-            ros::Duration(1.0/20),
+            ros::Duration(1.0/50),
             &Node::loop,
             this
         );

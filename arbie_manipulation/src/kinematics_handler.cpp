@@ -204,7 +204,7 @@ void KinematicsHandler::set_gripper_velocity(const std_msgs::Float64MultiArray &
     Eigen::Matrix3d A;
     A << -sin(pitch),            0,          1,
           cos(pitch)*sin(roll),  cos(roll),  0,
-          cos(pitch)*cos(roll), -sin(pitch), 0;
+          cos(pitch)*cos(roll), -sin(roll), 0;
     angular_velocity = A * euler_velocity;
     // At this point, angular velocity is defined in the end effector
     // reference frame.

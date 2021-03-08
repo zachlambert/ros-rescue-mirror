@@ -1,5 +1,5 @@
 <launch>
-    <arg name="dummy" default="false"/>
+    <arg name="fake" default="false"/>
 
     <param
         name="robot_description"
@@ -11,7 +11,7 @@
     />
 
     <node name="odrives" pkg="arbie_hardware" type="odrives" output="screen"/>
-    <group unless="$(arg dummy)">
+    <group unless="$(arg fake)">
     <node
         name="hardware"
         pkg="arbie_hardware"
@@ -20,11 +20,11 @@
     />
     </group>
 
-    <group if="$(arg dummy)">
+    <group if="$(arg fake)">
     <node
         name="hardware"
         pkg="arbie_hardware"
-        type="hardware_dummy"
+        type="hardware_fake"
         output="screen"
     />
     </group>
