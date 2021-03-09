@@ -20,16 +20,16 @@ BaseController::BaseController(
     // - Bit 2 = Overheating error
     // - Bit 0 = Input voltage error
     // (ie: all the available flags)
-    uint8_t flags = (1<<5) | (1<<4) | (1<<3) | (1<<2) | (1<<0);
-    write1Byte(ADDR_SHUTDOWN, flags);
+    // uint8_t flags = (1<<5) | (1<<4) | (1<<3) | (1<<2) | (1<<0);
+    // write1Byte(ADDR_SHUTDOWN, flags);
 
-    if (write_tx_only) {
-        // Only return status packet on read and ping commands
-        write1Byte(ADDR_STATUS_RETURN_LEVEL, 1);
-    } else {
-        // Always return status packet
-        write1Byte(ADDR_STATUS_RETURN_LEVEL, 2);
-    }
+    // if (write_tx_only) {
+    //     // Only return status packet on read and ping commands
+    //     write1Byte(ADDR_STATUS_RETURN_LEVEL, 1);
+    // } else {
+    //     // Always return status packet
+    //     write1Byte(ADDR_STATUS_RETURN_LEVEL, 2);
+    // }
 }
 
 bool BaseController::readPosition(double &result)
