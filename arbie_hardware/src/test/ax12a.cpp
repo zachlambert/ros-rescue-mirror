@@ -73,5 +73,6 @@ int main(int argc, char **argv)
         cmd += cmd_vel*dt;
         t += dt;
         controller.writeGoalPosition(cmd);
+        std::cout << "Cmd = " << cmd << std::endl;
     }
 }
