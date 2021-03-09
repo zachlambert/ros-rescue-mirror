@@ -40,7 +40,11 @@ Position::Position(
 {
     connected = controller.disable(); // If already enabled
     if (connected) {
-        controller.enable();
+        ROS_INFO("Successfully disabled, now re-enabling");
+        connected = controller.enable();
+    }
+    if (connected) {
+        ROS_INFO("%s: Controller connected", get_name().c_str());
         controller.readPosition(origin);
     } else {
         ROS_ERROR("%s: Controller not connected", get_name().c_str());
@@ -134,6 +138,7 @@ void Position::write(double cmd)
     //         get_name().c_str(), get_current_pos(), cmd, config.max_pos_change);
     //     return;
     // }
+    std::cout << "WRITING " << origin+config.scale*(cmd-config.zero_pos) << std::endl;
     controller.writeGoalPosition(origin + config.scale*(cmd-config.zero_pos));
 }
 
@@ -143,10 +148,12 @@ void Position::read(double &pos, double &vel, double &eff)
 
     double pos_reading;
     controller.readPosition(pos_reading);
+    std::cout << "POS_READING = " << pos_reading << std::endl;
     pos = config.zero_pos + (pos_reading - origin)/config.scale;
 
     double vel_reading;
     controller.readVelocity(vel_reading);
+    std::cout << "VEL_READING = " << pos_reading << std::endl;
     vel = vel_reading/config.scale;
 
     controller.readLoad(eff); // Don't convert, just use as is
