@@ -139,7 +139,9 @@ void Position::write(double cmd)
     //     return;
     // }
     std::cout << "WRITING " << origin+config.scale*(cmd-config.zero_pos) << std::endl;
-    controller.writeGoalPosition(origin + config.scale*(cmd-config.zero_pos));
+    if (!controller.writeGoalPosition(origin + config.scale*(cmd-config.zero_pos))) {
+        ROS_ERROR("Failed to write goal position");
+    }
 }
 
 void Position::read(double &pos, double &vel, double &eff)
