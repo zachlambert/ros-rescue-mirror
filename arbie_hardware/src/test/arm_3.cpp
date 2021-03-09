@@ -60,7 +60,6 @@ int main(int argc, char **argv)
     double dt;
     ros::Time prev_time = ros::Time::now();
     ros::Time current_time;
-    controller.enable();
     while (t < 1) {
         // Read current state, expect a delay for reading
         handle.read(pos, vel, eff);

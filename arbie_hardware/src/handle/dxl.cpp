@@ -38,11 +38,7 @@ Position::Position(
         config(config),
         origin(0)
 {
-    connected = controller.disable(); // If already enabled
-    if (connected) {
-        ROS_INFO("Successfully disabled, now re-enabling");
-        connected = controller.enable();
-    }
+    connected = controller.enable();
     if (connected) {
         ROS_INFO("%s: Controller connected", get_name().c_str());
         controller.readPosition(origin);
