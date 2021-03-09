@@ -52,7 +52,7 @@ public:
 
         handle::xl430::Position::Config arm_2_config;
         arm_2_config.scale = 25;
-        arm_2_config.eff2_threshold = 8;
+        arm_2_config.eff2_threshold = 20;
         handles.push_back(std::make_unique<handle::xl430::Position>(
             "arm_2_joint",
             interfaces,

@@ -44,10 +44,10 @@ protected:
     bool read2Byte(uint32_t addr, uint16_t *output);
     bool read4Byte(uint32_t addr, uint32_t *output);
 
+    uint32_t id;
 private:
     bool checkResult(int dxl_comm_result, uint8_t dxl_error);
 
-    uint32_t id;
     dynamixel::PortHandler *portHandler;
     dynamixel::PacketHandler *packetHandler;
 };

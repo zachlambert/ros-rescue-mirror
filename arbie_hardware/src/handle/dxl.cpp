@@ -298,12 +298,6 @@ PositionPair::PositionPair(
     }
 }
 
-PositionPair::~PositionPair()
-{
-    controller1->disable();
-    controller2->disable();
-}
-
 void PositionPair::write(double cmd)
 {
     if (!connected || disabled) return;

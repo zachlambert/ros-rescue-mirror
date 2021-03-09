@@ -146,7 +146,6 @@ public:
         dxl::ax12a::JointController *controller1,
         dxl::ax12a::JointController *controller2,
         Config config = Config());
-    ~PositionPair();
     void write(double cmd);
     void read(double &pos, double &vel, double &eff);
     void move(double change, double speed, double dt=0.01);

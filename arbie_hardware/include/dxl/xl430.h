@@ -24,7 +24,10 @@ public:
         CommHandler::Protocol protocol,
         uint32_t id,
         bool write_tx_only=false);
-    virtual ~BaseController(){ disable(); }
+    virtual ~BaseController(){
+        disable();
+        std::cout << "DISABLING " << id << std::endl;
+    }
 
     bool enable() {
         return write1Byte(ADDR_TORQUE_ENABLE, 1);
