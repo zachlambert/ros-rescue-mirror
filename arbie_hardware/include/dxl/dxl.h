@@ -37,9 +37,9 @@ public:
     virtual ~BaseController() {}
 
 protected:
-    bool write1Byte(uint32_t addr, uint8_t value, bool tx_only=true);
-    bool write2Byte(uint32_t addr, uint16_t value, bool tx_only=true);
-    bool write4Byte(uint32_t addr, uint32_t value, bool tx_only=true);
+    bool write1Byte(uint32_t addr, uint8_t value, bool tx_only=false);
+    bool write2Byte(uint32_t addr, uint16_t value, bool tx_only=false);
+    bool write4Byte(uint32_t addr, uint32_t value, bool tx_only=false);
     bool read1Byte(uint32_t addr, uint8_t *output);
     bool read2Byte(uint32_t addr, uint16_t *output);
     bool read4Byte(uint32_t addr, uint32_t *output);

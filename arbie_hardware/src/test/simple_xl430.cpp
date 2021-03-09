@@ -34,11 +34,26 @@ int main(int argc, char **argv)
     }
 
     constexpr uint32_t ADDR_TORQUE_ENABLE = 64;
+    constexpr uint32_t ADDR_SHUTDOWN = 63;
+    constexpr uint32_t ADDR_STATUS_RETURN_LEVEL = 68;
+    static constexpr uint32_t ADDR_OPERATING_MODE = 11;
 
     uint8_t dxl_error = 0;
     int result = packet_handler->write1ByteTxRx(
         port_handler, id, ADDR_TORQUE_ENABLE, 1, &dxl_error);
     check_result(result, dxl_error, packet_handler);
+
+    uint8_t flags = (1<<5) | (1<<4) | (1<<3) | (1<<2) | (1<<0);
+    result = packet_handler->write1ByteTxRx(
+        port_handler, id, ADDR_SHUTDOWN, flags, &dxl_error);
+    check_result(result, dxl_error, packet_handler);
+
+    result = packet_handler->write1ByteTxRx(
+        port_handler, id, ADDR_STATUS_RETURN_LEVEL, 2, &dxl_error);
+    check_result(result, dxl_error, packet_handler);
+
+    result = packet_handler->write1ByteTxRx(
+        port_handler, id, ADDR_OPERATING_MODE, 4, &dxl_error);
 
     dxl_error = 0;
     result = packet_handler->write1ByteTxRx(
