@@ -47,8 +47,7 @@ int main(int argc, char **argv)
        comm_handler, dxl::CommHandler::PROTOCOL_1, id, write_tx_only);
     controller.enable();
 
-    double cmd;
-    controller.readPosition(cmd);
+    double cmd = 0;
 
     double t = 0;
     double dt;
