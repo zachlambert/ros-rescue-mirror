@@ -21,7 +21,7 @@ BaseController::BaseController(
     // - Bit 0 = Input voltage error
     // (ie: all the available flags)
     uint8_t flags = (1<<5) | (1<<4) | (1<<3) | (1<<2) | (1<<0);
-    write1Byte(ADDR_SHUTDOWN, 52); // TEMP: Writing default value 52
+    write1Byte(ADDR_SHUTDOWN, flags);
 
     if (write_tx_only) {
         // Only return status packet on read and ping commands
@@ -29,7 +29,6 @@ BaseController::BaseController(
     } else {
         // Always return status packet
         write1Byte(ADDR_STATUS_RETURN_LEVEL, 2);
-        std::cout << "Writing status packet level 2" << std::endl;
     }
 }
 
