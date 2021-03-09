@@ -33,18 +33,19 @@ int main(int argc, char **argv)
         } else {
             double yaw_vel = 0, pitch_vel = 0, roll_vel = 0, gripper_vel = 0;
             if (joystick_listener.query_button_value(JoyButton::LB)) {
-                roll_vel = -3*joystick_listener.query_axis(JoyAxis::RIGHT_HORIZONTAL);
-                gripper_vel = 1.5*joystick_listener.query_axis(JoyAxis::RIGHT_VERTICAL);
+                roll_vel = -1.5*joystick_listener.query_axis(JoyAxis::RIGHT_HORIZONTAL);
+                gripper_vel = 1.0*joystick_listener.query_axis(JoyAxis::RIGHT_VERTICAL);
             } else {
-                yaw_vel = -0.5*joystick_listener.query_axis(JoyAxis::RIGHT_HORIZONTAL);
-                pitch_vel = -0.5*joystick_listener.query_axis(JoyAxis::RIGHT_VERTICAL);
+                yaw_vel = -0.25*joystick_listener.query_axis(JoyAxis::RIGHT_HORIZONTAL);
+                pitch_vel = -0.25*joystick_listener.query_axis(JoyAxis::RIGHT_VERTICAL);
             }
 
-            double r_vel = -0.2*joystick_listener.query_axis(JoyAxis::LEFT_VERTICAL);
-            double theta_vel = -0.4*joystick_listener.query_axis(JoyAxis::LEFT_HORIZONTAL);
-            double z_vel = 0.2 * (
+            double r_vel = -0.1*joystick_listener.query_axis(JoyAxis::LEFT_VERTICAL);
+            double theta_vel = -0.2*joystick_listener.query_axis(JoyAxis::LEFT_HORIZONTAL);
+            double z_vel = 0.1 * (
                 joystick_listener.query_axis(JoyAxis::RT)
                 - joystick_listener.query_axis(JoyAxis::LT));
+
             command_publisher.set_gripper_velocity(
                 r_vel, theta_vel, z_vel,
                 yaw_vel, pitch_vel, roll_vel,
