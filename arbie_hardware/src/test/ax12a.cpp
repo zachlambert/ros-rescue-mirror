@@ -32,7 +32,7 @@ int main(int argc, char **argv)
         return 0;
     }
 
-    if (std::fabs(cmd_vel) > 0.5) {
+    if (std::fabs(cmd_vel) > 1.5) {
         std::cerr << "Use a smaller joint velocity" << std::endl;
         return 1;
     }
