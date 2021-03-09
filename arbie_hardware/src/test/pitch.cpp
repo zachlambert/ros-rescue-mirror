@@ -11,12 +11,14 @@ int main(int argc, char **argv)
     int id1 = 4;
     int id2 = 5;
     bool write_tx_only;
+    double extra_delay_ms;
 
     ros::NodeHandle n_local("~");
     n_local.param("port", port, std::string("/dev/ttyUSB0"));
     n_local.param("baud_rate", baud_rate, 1000000);
     n_local.param("vel", cmd_vel, 0.5);
     n_local.param("write_tx_only", write_tx_only, false);
+    n_local.param("delay", extra_delay_ms, 0.0);
 
     std::cout << "Port = " << port << std::endl;
     std::cout << "Baud rate = " << baud_rate << std::endl;
@@ -63,6 +65,7 @@ int main(int argc, char **argv)
     while (t < 1) {
         // Read current state, expect a delay for reading
         handle.read(pos, vel, eff);
+        ros::Duration(extra_delay_ms/1000).sleep();
         std::cout << "t = " << t << std::endl;
         std::cout << "Pos = " << pos << std::endl;
         std::cout << "Vel = " << vel << std::endl;
