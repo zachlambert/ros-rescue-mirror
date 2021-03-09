@@ -3,13 +3,12 @@
 
 int main(int argc, char **argv)
 {
-    ros::init(argc, argv, "test_ax12a_pair");
+    ros::init(argc, argv, "test_xl430_handle");
     ros::NodeHandle n;
     std::string port;
     int baud_rate;
     double cmd_vel;
-    int id1 = 4;
-    int id2 = 5;
+    int id = 3;
     bool write_tx_only;
     double extra_delay_ms;
 
@@ -31,7 +30,7 @@ int main(int argc, char **argv)
         return 0;
     }
 
-    if (std::fabs(cmd_vel) > 0.5) {
+    if (std::fabs(cmd_vel) > 1.5) {
         std::cerr << "Use a smaller joint velocity" << std::endl;
         return 1;
     }
@@ -42,23 +41,20 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    dxl::ax12a::JointController controller1(
-        comm_handler, dxl::CommHandler::PROTOCOL_1, id1, write_tx_only);
-    dxl::ax12a::JointController controller2(
-        comm_handler, dxl::CommHandler::PROTOCOL_1, id2, write_tx_only);
+    dxl::xl430::ExtendedPositionController controller(
+        comm_handler, dxl::CommHandler::PROTOCOL_1, id, write_tx_only);
 
-    handle::ax12a::PositionPair::Config config;
-    config.scale1 = -1;
-    config.scale2 = 1;
+    handle::xl430::Position::Config config;
+    config.scale = 25;
+    config.eff2_threshold = 40;
 
     handle::Interfaces interfaces;
-    handle::ax12a::PositionPair handle(
-        "wrist_pitch_joint", interfaces, controller1, controller2, config);
+    handle::xl430::Position handle(
+        "arm_3_joint", interfaces, controller, config);
 
-    // Reading the current position doesn't work until you've already
-    // written a command. Therefore, start with 0.
-    double cmd = 0;
-    double pos, vel, eff;
+    // Read initial position into command
+    double cmd, pos, vel, eff;
+    handle.read(cmd, vel, eff);
 
     double t = 0;
     double dt;

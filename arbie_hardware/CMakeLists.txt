@@ -76,6 +76,9 @@ target_link_libraries(test_xl430 dxl ${catkin_LIBRARIES})
 add_executable(test_ax12a src/test/ax12a.cpp)
 target_link_libraries(test_ax12a dxl ${catkin_LIBRARIES})
 
+add_executable(test_arm_3 src/test/arm_3.cpp)
+target_link_libraries(test_arm_3 handles ${catkin_LIBRARIES})
+
 add_executable(test_pitch src/test/pitch.cpp)
 target_link_libraries(test_pitch handles ${catkin_LIBRARIES})
 
