@@ -41,7 +41,7 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    dxl::xl430::ExtendedPositionController controller(
+    auto *controller = new dxl::xl430::ExtendedPositionController(
         comm_handler, dxl::CommHandler::PROTOCOL_1, id, write_tx_only);
 
     handle::xl430::Position::Config config;

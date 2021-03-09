@@ -31,25 +31,20 @@ namespace xl430 {
 Position::Position(
     const std::string &name,
     Interfaces &interface,
-    dxl::xl430::ExtendedPositionController controller,
+    dxl::xl430::ExtendedPositionController *controller,
     Config config):
         Handle(name, interface, Type::POS),
         controller(controller),
         config(config),
         origin(0)
 {
-    connected = controller.enable();
+    connected = controller->disable(); // If already enabled
     if (connected) {
-        ROS_INFO("%s: Controller connected", get_name().c_str());
-        controller.readPosition(origin);
+        controller->enable();
+        controller->readPosition(origin);
     } else {
         ROS_ERROR("%s: Controller not connected", get_name().c_str());
     }
-}
-
-Position::~Position()
-{
-    controller.disable();
 }
 
 void Position::calibrate(double cmd_vel) {
@@ -78,7 +73,7 @@ void Position::calibrate(double cmd_vel) {
     // Don't measure the mean eff2 before moving, since the load experienced
     // while moving is different.
     for (std::size_t i = 0; i < N; i++) {
-        controller.readLoad(eff2[i]);
+        controller->readLoad(eff2[i]);
         eff2[i] = pow(result, 2);
         cmd += cmd_vel * dt;
         write(cmd);
@@ -88,7 +83,7 @@ void Position::calibrate(double cmd_vel) {
     double mean_eff2;
     std::size_t i = 0;
     do {
-        controller.readLoad(result);
+        controller->readLoad(result);
         eff2[i] = pow(result, 2);
         i = (i+1)%N;
         mean_eff2 = std::accumulate(eff2.begin(), eff2.end(), 0.0f)/N;
@@ -101,12 +96,12 @@ void Position::calibrate(double cmd_vel) {
     // Now read the current motor angle into the origin variable.
     // Now, a cmd_pos = zero_pos, will give a motor_pos = origin
     // eg: If zero_pos = 0, writing cmd_pos = 0 won't cause any change
-    controller.readPosition(origin);
+    controller->readPosition(origin);
 }
 
 void Position::set_as_origin()
 {
-    controller.readPosition(origin);
+    controller->readPosition(origin);
 }
 
 void Position::move(double change, double speed, double dt)
@@ -134,10 +129,7 @@ void Position::write(double cmd)
     //         get_name().c_str(), get_current_pos(), cmd, config.max_pos_change);
     //     return;
     // }
-    std::cout << "WRITING " << origin+config.scale*(cmd-config.zero_pos) << std::endl;
-    if (!controller.writeGoalPosition(origin + config.scale*(cmd-config.zero_pos))) {
-        ROS_ERROR("Failed to write goal position");
-    }
+    controller->writeGoalPosition(origin + config.scale*(cmd-config.zero_pos));
 }
 
 void Position::read(double &pos, double &vel, double &eff)
@@ -145,16 +137,14 @@ void Position::read(double &pos, double &vel, double &eff)
     if (!connected) return;
 
     double pos_reading;
-    controller.readPosition(pos_reading);
-    std::cout << "POS_READING = " << pos_reading << std::endl;
+    controller->readPosition(pos_reading);
     pos = config.zero_pos + (pos_reading - origin)/config.scale;
 
     double vel_reading;
-    controller.readVelocity(vel_reading);
-    std::cout << "VEL_READING = " << pos_reading << std::endl;
+    controller->readVelocity(vel_reading);
     vel = vel_reading/config.scale;
 
-    controller.readLoad(eff); // Don't convert, just use as is
+    controller->readLoad(eff); // Don't convert, just use as is
 }
 
 
@@ -163,25 +153,20 @@ void Position::read(double &pos, double &vel, double &eff)
 Velocity::Velocity(
     const std::string &name,
     Interfaces &interface,
-    dxl::xl430::VelocityController controller,
+    dxl::xl430::VelocityController *controller_provided,
     Config config):
         Handle(name, interface, Type::VEL),
-        controller(controller),
+        controller(controller_provided),
         config(config),
         origin(0)
 {
-    connected = controller.disable(); // If already enabled
+    connected = controller->disable(); // If already enabled
     if (connected) {
-        controller.enable();
-        controller.readPosition(origin);
+        controller->enable();
+        controller->readPosition(origin);
     } else {
         ROS_ERROR("%s: Controller not connected", get_name().c_str());
     }
-}
-
-Velocity::~Velocity()
-{
-    controller.disable();
 }
 
 void Velocity::calibrate(double cmd_vel) {
@@ -195,14 +180,14 @@ void Velocity::calibrate(double cmd_vel) {
     double result;
 
     for (std::size_t i = 0; i < N; i++) {
-        controller.readLoad(eff2[i]);
+        controller->readLoad(eff2[i]);
         eff2[i] = pow(result, 2);
         ros::Duration(0.1).sleep();
     }
     double mean_eff2;
     std::size_t i = 0;
     do {
-        controller.readLoad(result);
+        controller->readLoad(result);
         eff2[i] = pow(result, 2);
         i = (i+1)%N;
         mean_eff2 = std::accumulate(eff2.begin(), eff2.end(), 0.0f)/N;
@@ -210,13 +195,13 @@ void Velocity::calibrate(double cmd_vel) {
         ros::Duration(0.1).sleep();
     } while(mean_eff2 < config.eff2_threshold);
     write(0);
-    controller.readPosition(origin);
+    controller->readPosition(origin);
 }
 
 void Velocity::write(double cmd)
 {
     if (!connected) return;
-    controller.writeGoalVelocity(cmd*config.scale);
+    controller->writeGoalVelocity(cmd*config.scale);
 }
 
 void Velocity::read(double &pos, double &vel, double &eff)
@@ -224,14 +209,14 @@ void Velocity::read(double &pos, double &vel, double &eff)
     if (!connected) return;
 
     double pos_reading;
-    controller.readPosition(pos_reading);
+    controller->readPosition(pos_reading);
     pos = config.zero_pos + (pos_reading - origin)/config.scale;
 
     double vel_reading;
-    controller.readVelocity(vel_reading);
+    controller->readVelocity(vel_reading);
     vel = vel_reading/config.scale;
 
-    controller.readLoad(eff); // Don't convert, just use as is
+    controller->readLoad(eff); // Don't convert, just use as is
 }
 
 } // namespace xl430
@@ -242,21 +227,18 @@ namespace ax12a {
 Position::Position(
     const std::string &name,
     Interfaces &interface,
-    dxl::ax12a::JointController controller,
+    dxl::ax12a::JointController *controller,
     Config config):
         Handle(name, interface, Type::POS),
         controller(controller),
         config(config)
 {
-    connected = controller.disable(); // If already enabled
+    connected = controller->disable(); // If already enabled
     if (connected) {
-        controller.enable();
+        controller->enable();
     } else {
         ROS_ERROR("%s: Controller not connected", get_name().c_str());
     }
-}
-Position::~Position() {
-    controller.disable();
 }
 
 void Position::write(double cmd) {
@@ -266,14 +248,14 @@ void Position::write(double cmd) {
     //         get_name().c_str(), get_current_pos(), cmd, config.max_pos_change);
     //     return;
     // }
-    controller.writeGoalPosition(cmd);
+    controller->writeGoalPosition(cmd);
 }
 
 void Position::read(double &pos, double &vel, double &eff) {
     if (!connected) return;
-    controller.readPosition(pos);
-    controller.readVelocity(vel);
-    controller.readLoad(eff);
+    controller->readPosition(pos);
+    controller->readVelocity(vel);
+    controller->readLoad(eff);
 }
 
 void Position::move(double change, double speed, double dt)
@@ -297,8 +279,8 @@ void Position::move(double change, double speed, double dt)
 PositionPair::PositionPair(
     const std::string &name,
     Interfaces &interface,
-    dxl::ax12a::JointController controller1,
-    dxl::ax12a::JointController controller2,
+    dxl::ax12a::JointController *controller1,
+    dxl::ax12a::JointController *controller2,
     Config config):
         Handle(name, interface, Type::POS),
         controller1(controller1),
@@ -306,11 +288,11 @@ PositionPair::PositionPair(
         config(config),
         disabled(false)
 {
-    connected = controller1.disable();
-    connected &= controller2.disable();
+    connected = controller1->disable();
+    connected &= controller2->disable();
     if (connected) {
-        controller1.enable();
-        controller2.enable();
+        controller1->enable();
+        controller2->enable();
     } else {
         ROS_ERROR("%s: Controller not connected", get_name().c_str());
     }
@@ -318,8 +300,8 @@ PositionPair::PositionPair(
 
 PositionPair::~PositionPair()
 {
-    controller1.disable();
-    controller2.disable();
+    controller1->disable();
+    controller2->disable();
 }
 
 void PositionPair::write(double cmd)
@@ -330,8 +312,8 @@ void PositionPair::write(double cmd)
     //         get_name().c_str(), get_current_pos(), cmd, config.max_pos_change);
     //     return;
     // }
-    controller1.writeGoalPosition(config.origin1 + cmd*config.scale1);
-    controller2.writeGoalPosition(config.origin2 + cmd*config.scale2);
+    controller1->writeGoalPosition(config.origin1 + cmd*config.scale1);
+    controller2->writeGoalPosition(config.origin2 + cmd*config.scale2);
 }
 
 void PositionPair::read(double &pos, double &vel, double &eff)
@@ -345,23 +327,23 @@ void PositionPair::read(double &pos, double &vel, double &eff)
     // Assume positions and velocities are consistent
     // so only read one joint
     double pos_reading;
-    controller1.readPosition(pos_reading);
+    controller1->readPosition(pos_reading);
     pos = (pos_reading - config.origin1)/config.scale1;
 
     double vel_reading;
-    controller1.readVelocity(vel_reading);
+    controller1->readVelocity(vel_reading);
     vel = vel_reading/config.scale1;
 
     if (!config.enforce_matching) return;
 
     // If positions not consistent, disable controller
     double pos2_reading, pos2;
-    controller2.readPosition(pos2_reading);
+    controller2->readPosition(pos2_reading);
     pos2 = (pos2_reading - config.origin2)/config.scale2;
 
     if (fabs(pos2 - pos) > config.pos_diff_allowance) {
-        controller1.disable();
-        controller2.disable();
+        controller1->disable();
+        controller2->disable();
         disabled = true;
         ROS_ERROR("%s: Positions don't match: %f, %f", get_name().c_str(), pos, pos2);
     }

@@ -42,9 +42,9 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    dxl::ax12a::JointController controller1(
+    auto *controller1 = new dxl::ax12a::JointController(
         comm_handler, dxl::CommHandler::PROTOCOL_1, id1, write_tx_only);
-    dxl::ax12a::JointController controller2(
+    auto *controller2 = new dxl::ax12a::JointController(
         comm_handler, dxl::CommHandler::PROTOCOL_1, id2, write_tx_only);
 
     handle::ax12a::PositionPair::Config config;

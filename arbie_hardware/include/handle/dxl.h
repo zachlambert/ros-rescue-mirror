@@ -50,9 +50,8 @@ public:
     Position(
         const std::string &name,
         Interfaces &interface,
-        dxl::xl430::ExtendedPositionController controller,
+        dxl::xl430::ExtendedPositionController *controller_provided,
         Config config = Config());
-    ~Position();
 
     void write(double cmd);
     void read(double &pos, double &vel, double &eff);
@@ -63,7 +62,7 @@ public:
 
 private:
     bool connected;
-    dxl::xl430::ExtendedPositionController controller;
+    std::unique_ptr<dxl::xl430::ExtendedPositionController> controller;
     Config config;
     double origin;
 };
@@ -81,9 +80,8 @@ public:
     Velocity(
         const std::string &name,
         Interfaces &interface,
-        dxl::xl430::VelocityController controller,
+        dxl::xl430::VelocityController *controller_provided,
         Config config = Config());
-    ~Velocity();
 
     void write(double cmd);
     void read(double &pos, double &vel, double &eff);
@@ -92,7 +90,7 @@ public:
 
 private:
     bool connected;
-    dxl::xl430::VelocityController controller;
+    std::unique_ptr<dxl::xl430::VelocityController> controller;
     Config config;
     double origin;
 };
@@ -111,9 +109,8 @@ public:
     Position(
         const std::string &name,
         Interfaces &interface,
-        dxl::ax12a::JointController controller,
+        dxl::ax12a::JointController *controller_provided,
         Config config = Config());
-    ~Position();
     void write(double cmd);
     void read(double &pos, double &vel, double &eff);
     void move(double change, double speed, double dt=0.01);
@@ -121,7 +118,7 @@ public:
 
 private:
     bool connected;
-    dxl::ax12a::JointController controller;
+    std::unique_ptr<dxl::ax12a::JointController> controller;
     Config config;
 };
 
@@ -146,8 +143,8 @@ public:
     PositionPair(
         const std::string &name,
         Interfaces &interface,
-        dxl::ax12a::JointController controller1,
-        dxl::ax12a::JointController controller2,
+        dxl::ax12a::JointController *controller1,
+        dxl::ax12a::JointController *controller2,
         Config config = Config());
     ~PositionPair();
     void write(double cmd);
@@ -157,7 +154,7 @@ public:
 
 private:
     bool connected;
-    dxl::ax12a::JointController controller1, controller2;
+    std::unique_ptr<dxl::ax12a::JointController> controller1, controller2;
     Config config;
     bool disabled;
 };

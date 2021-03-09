@@ -42,7 +42,7 @@ public:
         handles.push_back(std::make_unique<handle::xl430::Position>(
             "arm_1_joint",
             interfaces,
-            dxl::xl430::ExtendedPositionController(
+            new dxl::xl430::ExtendedPositionController(
                 commHandler, commHandler.PROTOCOL_1, arm_1_id),
             arm_1_config
         ));
@@ -56,7 +56,7 @@ public:
         handles.push_back(std::make_unique<handle::xl430::Position>(
             "arm_2_joint",
             interfaces,
-            dxl::xl430::ExtendedPositionController(
+            new dxl::xl430::ExtendedPositionController(
                 commHandler, commHandler.PROTOCOL_1, arm_2_id),
             arm_2_config
         ));
@@ -69,7 +69,7 @@ public:
         handles.push_back(std::make_unique<handle::xl430::Position>(
             "arm_3_joint",
             interfaces,
-            dxl::xl430::ExtendedPositionController(
+            new dxl::xl430::ExtendedPositionController(
                 commHandler, commHandler.PROTOCOL_1, arm_3_id),
             arm_3_config
         ));
@@ -84,9 +84,9 @@ public:
         handles.push_back(std::make_unique<handle::ax12a::PositionPair>(
             "wrist_pitch_joint",
             interfaces,
-            dxl::ax12a::JointController(
+            new dxl::ax12a::JointController(
                 commHandler, commHandler.PROTOCOL_1, wrist_pitch_1_id),
-            dxl::ax12a::JointController(
+            new dxl::ax12a::JointController(
                 commHandler, commHandler.PROTOCOL_1, wrist_pitch_2_id),
             wrist_pitch_config
         ));
@@ -97,7 +97,7 @@ public:
         handles.push_back(std::make_unique<handle::ax12a::Position>(
             "wrist_yaw_joint",
             interfaces,
-            dxl::ax12a::JointController(
+            new dxl::ax12a::JointController(
                 commHandler, commHandler.PROTOCOL_1, wrist_yaw_id)
         ));
         handles.back()->write();
@@ -105,7 +105,7 @@ public:
         handles.push_back(std::make_unique<handle::ax12a::Position>(
             "wrist_roll_joint",
             interfaces,
-            dxl::ax12a::JointController(
+            new dxl::ax12a::JointController(
                 commHandler, commHandler.PROTOCOL_1, wrist_roll_id)
         ));
         handles.back()->write();
@@ -120,8 +120,8 @@ public:
         handles.push_back(std::make_unique<handle::ax12a::PositionPair>(
             "gripper_joint",
             interfaces,
-            dxl::ax12a::JointController(commHandler, commHandler.PROTOCOL_1, gripper_1_id),
-            dxl::ax12a::JointController(commHandler, commHandler.PROTOCOL_1, gripper_2_id),
+            new dxl::ax12a::JointController(commHandler, commHandler.PROTOCOL_1, gripper_1_id),
+            new dxl::ax12a::JointController(commHandler, commHandler.PROTOCOL_1, gripper_2_id),
             gripper_config
         ));
 
