@@ -86,5 +86,6 @@ target_link_libraries(test_pitch handles ${catkin_LIBRARIES})
 
 install(PROGRAMS
   nodes/odrives
+  nodes/spawner
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )

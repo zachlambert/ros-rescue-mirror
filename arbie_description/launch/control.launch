@@ -12,10 +12,10 @@
         output="screen">
     </node>
 
-    <rosparam
+    <!--<rosparam
         file="$(find arbie_description)/config/controllers.yaml"
         command="load"
-    />
+    />-->
 
     <!-- ALL
     Load all joint controllers, including stopped trajectory controllers for MoveIt

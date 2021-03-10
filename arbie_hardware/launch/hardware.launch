@@ -6,6 +6,10 @@
         command="xacro $(find arbie_description)/model/arbie.urdf.xacro"
     />
     <rosparam
+        file="$(find arbie_description)/config/controllers.yaml"
+        command="load"
+    />
+    <rosparam
         file="$(find arbie_hardware)/config/usb.yaml"
         command="load"
     />
@@ -28,5 +32,21 @@
         output="screen"
     />
     </group>
+
+    <node
+        name="robot_state_publisher"
+        pkg="robot_state_publisher"
+        type="robot_state_publisher"
+        respawn="false"
+        output="screen"
+    />
+
+    <node
+        name="arbie_controller_spawner"
+        pkg="arbie_hardware"
+        type="spawner"
+        respawn="false"
+        output="screen"
+    />
 
 </launch>
