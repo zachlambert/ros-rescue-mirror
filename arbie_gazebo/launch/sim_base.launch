@@ -1,9 +1,4 @@
 <launch>
-    <!-- Start gazebo server -->
-    <node name="gzserver" pkg="gazebo_ros" type="gzserver"
-        respawn="true"
-        args="$(find arbie_gazebo)/worlds/navigation.world"
-    />
     <rosparam
         file="$(find arbie_gazebo)/config/gazebo_control_gains.yaml"
         command="load"
