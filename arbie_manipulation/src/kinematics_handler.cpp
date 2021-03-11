@@ -51,23 +51,51 @@ KinematicsHandler::KinematicsHandler(ros::NodeHandle& n):
 
     joint_positions.resize(6);
     std::fill(joint_positions.begin(), joint_positions.end(), 0);
+    actual_joint_positions.resize(6);
+    std::fill(actual_joint_positions.begin(), actual_joint_positions.end(), 0);
+    joint_positions_valid = false;
 
     gripper_joint_position = 0;
     gripper_joint_velocity = 0;
+
+    std::size_t i = 0;
+    for (const std::string &s: arm_model_group->getActiveJointModelNames()) {
+        arm_joint_index[s] = i;
+        i++;
+    }
 }
 
-void KinematicsHandler::set_joint_states(const sensor_msgs::JointState &joint_states_msg)
+void KinematicsHandler::set_joint_states(const sensor_msgs::JointState &joint_states)
 {
-    joint_states = joint_states_msg;
-
     for (std::size_t i = 0; i < joint_states.name.size(); i++) {
-        // Only update robot state with non-arm angles, so the robot state
-        // is aware of the rest of the model.
-        // The arm angles are set in the loop to the target angles
-        if (!arm_model_group->hasJointModel(joint_states.name[i])) {
-            robot_state->setJointPositions(joint_states.name[i], &joint_states.position[i]);
+        if (arm_model_group->hasJointModel(joint_states.name[i])) {
+            // If the joint is in the arm model, copy the value to the actual_joint_positions
+            // vector, which is compared with the commanded joint positions
+            std::size_t joint_i = arm_joint_index[joint_states.name[i]];
+            actual_joint_positions[joint_i] = joint_states.position[i];
+        } if (gripper_model_group->hasJointModel(joint_states.name[i])) {
+            actual_gripper_joint_position = joint_states.position[i];
+        } else {
+            // Otherwise, update hte robot state with this joint, to use for
+            // self-collision detection.
+            robot_state->setJointPositions(
+                joint_states.name[i], &joint_states.position[i]);
         }
     }
+
+    // Already have valid joint positions, don't need to set from actual_joint_positions
+    if (joint_positions_valid) return;
+
+    auto elapsed = ros::Time::now()-joint_states.header.stamp;
+    // joint_states_msg is too old, don't use
+    if (elapsed.toSec() > 0.05) return;
+
+    std::cout << "ELAPSED = " << elapsed << std::endl;
+    std::cout << joint_states << std::endl;
+    joint_positions = actual_joint_positions;
+    gripper_joint_position = actual_gripper_joint_position;
+
+    joint_positions_valid = true;
 }
 
 void KinematicsHandler::set_gripper_velocity(const std_msgs::Float64MultiArray &gripper_velocity_in)
@@ -184,12 +212,16 @@ void KinematicsHandler::set_master_angles(const std_msgs::Float64MultiArray &mas
 
 void KinematicsHandler::loop_velocity(double dt)
 {
-    // Assume dt is small enough that a single step is accurate
-    // ie: theta_next = theta + dt * theta_vel
-    // (instead of interpolating)
+    if (!joint_positions_valid) return;
 
-    // TODO: Compare joint_pos with actual joint states. If these lag behind
-    // the target joint states too much, adjust targets
+    for (std::size_t i = 0; i < joint_positions.size(); i++) {
+        if (std::fabs(joint_positions[i] - actual_joint_positions[i]) > 0.2) {
+            joint_positions[i] = actual_joint_positions[i];
+        }
+    }
+    if (std::fabs(gripper_joint_position - actual_gripper_joint_position) < 0.2) {
+        gripper_joint_position = actual_gripper_joint_position;
+    }
 
     robot_state->setJointGroupPositions(arm_model_group, joint_positions);
 
@@ -267,24 +299,17 @@ void KinematicsHandler::loop_master(double dt)
 {
     static constexpr double time_constant = 1.0;
     static constexpr double snap_angle = 0.1;
+    static constexpr double max_speed = 1.5;
     double difference;
     for (std::size_t i = 0; i < joint_positions.size(); i++) {
         difference = master_angles[i] - joint_positions[i];
         if (fabs(difference) < snap_angle) {
             joint_positions[i] = master_angles[i];
         } else {
-            joint_positions[i] += (dt/time_constant) * difference;
+            double vel = difference/time_constant;
+            if (fabs(vel) > max_speed) vel = (vel>0 ? max_speed : -max_speed);
+            joint_positions[i] += dt * vel;
         }
-    }
-}
-
-void KinematicsHandler::reset_joint_positions()
-{
-    // Set joint_positions from joint_states
-    for (std::size_t i = 0; i < joint_states.name.size(); i++) {
-        std::size_t joint_i =
-            arm_model_group->getJointModel(joint_states.name[i])->getJointIndex();
-        joint_positions[joint_i] = joint_states.position[i];
     }
 }
 
@@ -292,15 +317,6 @@ void KinematicsHandler::copy_joints_to(std_msgs::Float64MultiArray &arm_command_
 {
     std::copy(joint_positions.begin(), joint_positions.end(), arm_command_msg.data.begin());
     gripper_command_msg.data = gripper_joint_position;
-}
-
-void KinematicsHandler::copy_joints_to(sensor_msgs::JointState &joint_states)
-{
-    for (std::size_t i = 0; i < joint_states.name.size(); i++) {
-        std::size_t joint_i =
-            arm_model_group->getJointModel(joint_states.name[i])->getJointIndex();
-        joint_states.position[i] = joint_positions[joint_i];
-    }
 }
 
 bool KinematicsHandler::validate_state()

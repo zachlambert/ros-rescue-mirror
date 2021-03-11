@@ -1,7 +1,7 @@
 #include "ros/ros.h"
 #include "kinematics_handler.h"
 #include "controller_manager_msgs/SwitchController.h"
-#include "arbie_msgs/GripperCommand.h"
+#include "arbie_msgs/ManipulationCommand.h"
 #include <moveit/move_group_interface/move_group_interface.h>
 #include <std_msgs/Float64.h>
 #include <std_msgs/Float64MultiArray.h>
@@ -9,11 +9,6 @@
 enum class ControlMode {
     VELOCITY, // Gripper velocity
     MASTER    // Master arm joint angles
-};
-
-enum class CommandMode {
-    MOVE,     // Move the arm as you command it
-    PLAN      // Update a planned robot state
 };
 
 class Node {
@@ -63,11 +58,6 @@ public:
             10
         );
 
-        planned_joint_states_pub = n.advertise<sensor_msgs::JointState>(
-            "planned/joint_states",
-            10
-        );
-
         // Initialise service clients for swapping arm controllers
 
         switch_controllers_client =
@@ -78,13 +68,13 @@ public:
         load_position_msg.request.start_controllers.push_back("gripper_position_controller");
         load_position_msg.request.stop_controllers.push_back("arm_trajectory_controller");
         load_position_msg.request.stop_controllers.push_back("gripper_trajectory_controller");
-        load_position_msg.request.strictness = 1;
+        load_position_msg.request.strictness = 2;
 
         load_trajectory_msg.request.start_controllers.push_back("arm_trajectory_controller");
         load_trajectory_msg.request.start_controllers.push_back("gripper_trajectory_controller");
         load_trajectory_msg.request.stop_controllers.push_back("arm_position_controller");
         load_trajectory_msg.request.stop_controllers.push_back("gripper_position_controller");
-        load_trajectory_msg.request.strictness = 1;
+        load_trajectory_msg.request.strictness = 2;
 
         switch_controllers_client.call(load_position_msg);
 
@@ -102,7 +92,6 @@ public:
         );
 
         control_mode = ControlMode::VELOCITY;
-        command_mode = CommandMode::MOVE;
     }
 
     void joint_states_callback(const sensor_msgs::JointState &joint_states)
@@ -134,51 +123,30 @@ public:
             kinematics_handler.loop_master(dt);
         }
 
-        if (command_mode == CommandMode::MOVE) {
-            std_msgs::Float64 gripper_command_msg;
-            kinematics_handler.copy_joints_to(arm_command_msg, gripper_command_msg);
-            arm_command_pub.publish(arm_command_msg);
-            gripper_command_pub.publish(gripper_command_msg);
+        if (!kinematics_handler.are_joint_positions_valid()) return;
 
-        } else { // CommandMode::PLAN
-            kinematics_handler.copy_joints_to(planned_joint_states_msg);
-            planned_joint_states_pub.publish(planned_joint_states_msg);
-        }
+        std_msgs::Float64 gripper_command_msg;
+        kinematics_handler.copy_joints_to(arm_command_msg, gripper_command_msg);
+        arm_command_pub.publish(arm_command_msg);
+        gripper_command_pub.publish(gripper_command_msg);
     }
 
     bool gripper_command_callback(
-        arbie_msgs::GripperCommand::Request &req,
-        arbie_msgs::GripperCommand::Response &res)
+        arbie_msgs::ManipulationCommand::Request &req,
+        arbie_msgs::ManipulationCommand::Response &res)
     {
-        std::string command = "named_target";
-        std::string argument = "";
-        bool success = false;
-
-        if (req.command == "named_target" && command_mode == CommandMode::PLAN) {
+        if (req.command == "named_target") {
             move_group.setNamedTarget(req.argument);
             res.success = plan_and_execute_trajectory();
-
-        } else if (req.command == "planned_target" && command_mode == CommandMode::PLAN) {
-            move_group.setJointValueTarget(kinematics_handler.get_joint_positions());
-            res.success = plan_and_execute_trajectory();
-
+            kinematics_handler.invalidate_joint_positions();
         } else if (req.command == "control_mode") {
             if (req.argument == "velocity") {
                 control_mode = ControlMode::VELOCITY;
             } else if (req.argument == "master") {
                 control_mode = ControlMode::MASTER;
             }
-
-        } else if (req.command == "command_mode") {
-            if (req.argument == "move") {
-                command_mode = CommandMode::MOVE;
-                kinematics_handler.reset_joint_positions();
-            } else if (req.argument == "plan") {
-                command_mode = CommandMode::PLAN;
-            }
+            res.success = true;
         }
-
-        res.success = success;
         return true;
     }
 
@@ -208,7 +176,6 @@ private:
     }
 
     ControlMode control_mode;
-    CommandMode command_mode;
 
     // Updates joint targets in response to a target gripper velocity
     KinematicsHandler kinematics_handler;
@@ -224,9 +191,6 @@ private:
     std_msgs::Float64MultiArray arm_command_msg;
     ros::Publisher gripper_command_pub;
 
-    ros::Publisher planned_joint_states_pub;
-    sensor_msgs::JointState planned_joint_states_msg;
-
     // Timer for kinematics_handler loop
     ros::Timer loop_timer;
 
@@ -240,7 +204,7 @@ private:
 
 int main(int argc, char **argv)
 {
-    ros::init(argc, argv, "inverse_kinematics");
+    ros::init(argc, argv, "manipulation");
     ros::NodeHandle n;
     Node node(n);
 
