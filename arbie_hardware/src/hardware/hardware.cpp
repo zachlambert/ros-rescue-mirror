@@ -223,11 +223,11 @@ public:
 
         ROS_INFO("Finished calibrating arm");
 
-        std_srvs::Trigger req;
-        flippers_front_calibrate_client.call(req);
-        flippers_rear_calibrate_client.call(req);
-        tracks_left_calibrate_client.call(req);
-        tracks_right_calibrate_client.call(req);
+        std_srvs::Trigger calibrate_msg;
+        flippers_front_calibrate_client.call(calibrate_msg);
+        flippers_rear_calibrate_client.call(calibrate_msg);
+        tracks_left_calibrate_client.call(calibrate_msg);
+        tracks_right_calibrate_client.call(calibrate_msg);
 
         ROS_INFO("Finished calibrating odrives");
 

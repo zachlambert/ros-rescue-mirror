@@ -80,8 +80,8 @@ public:
 
         // Initialise service server for receiving commands
 
-        gripper_command_service = n.advertiseService(
-            "gripper_command", &Node::gripper_command_callback, this);
+        manipulation_command_service = n.advertiseService(
+            "manipulation_command", &Node::manipulation_command_callback, this);
 
         // Initialise kinematics handler and loop
 
@@ -131,7 +131,7 @@ public:
         gripper_command_pub.publish(gripper_command_msg);
     }
 
-    bool gripper_command_callback(
+    bool manipulation_command_callback(
         arbie_msgs::ManipulationCommand::Request &req,
         arbie_msgs::ManipulationCommand::Response &res)
     {
@@ -199,7 +199,7 @@ private:
     ros::ServiceClient switch_controllers_client;
     controller_manager_msgs::SwitchController load_position_msg;
     controller_manager_msgs::SwitchController load_trajectory_msg;
-    ros::ServiceServer gripper_command_service;
+    ros::ServiceServer manipulation_command_service;
 };
 
 int main(int argc, char **argv)
