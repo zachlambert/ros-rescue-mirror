@@ -43,16 +43,6 @@
     />
     </group>
 
-    <!-- Performs forward kinematics for the robot using published joint_states,
-    allowing the model state to be visualised -->
-    <node
-        name="robot_state_publisher"
-        pkg="robot_state_publisher"
-        type="robot_state_publisher"
-        respawn="false"
-        output="screen"
-    />
-
     <!-- Spawn controllers. This calls services provided by the hardware node,
     to load certain interfaces to the hardware. After this node, topics are
     available to control the joints and get feedback -->
@@ -60,6 +50,16 @@
         name="arbie_controller_spawner"
         pkg="arbie_hardware"
         type="spawner"
+        respawn="false"
+        output="screen"
+    />
+
+    <!-- Performs forward kinematics for the robot using published joint_states,
+    allowing the model state to be visualised -->
+    <node
+        name="robot_state_publisher"
+        pkg="robot_state_publisher"
+        type="robot_state_publisher"
         respawn="false"
         output="screen"
     />

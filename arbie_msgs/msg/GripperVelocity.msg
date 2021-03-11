@@ -1,0 +1,3 @@
+std_msgs/Float64MultiArray velocity
+float64 grasp_velocity
+string arm_control_mode

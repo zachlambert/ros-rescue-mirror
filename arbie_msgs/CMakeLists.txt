@@ -7,9 +7,18 @@ find_package(catkin REQUIRED COMPONENTS
     message_generation
 )
 
+add_message_files(
+    FILES
+        GripperVelocity.msg
+        HardwareStatus.msg
+        ManipulationStatus.msg
+        NavigationStatus.msg
+        TeleopStatus.msg
+)
 add_service_files(
     FILES
-        GripperCommand.srv
+        ManipulationCommand.srv
+        NavigationCommand.srv
         ReadHardware.srv
         WriteHardware.srv
 )

@@ -69,9 +69,9 @@ public:
             "tracks_right_joint", interfaces
         ));
 
-        // handles.push_back(std::make_unique<handle::PosDummy>(
-        //     "camera_tilt_joint", interfaces
-        // ));
+        handles.push_back(std::make_unique<handle::PosDummy>(
+            "camera_tilt_joint", interfaces
+        ));
 
         registerInterface(&interfaces.state);
         registerInterface(&interfaces.pos);
