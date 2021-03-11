@@ -14,7 +14,17 @@
 class Hardware: public hardware_interface::RobotHW {
 public:
     Hardware(ros::NodeHandle &n, const std::string &dxl_port):
-        commHandler(dxl_port), calibrated(false) {}
+        commHandler(dxl_port), calibrated(false)
+    {
+        flippers_front_calibrate_client =
+            n.serviceClient<std_srvs::Trigger>("flippers/front/calibrate");
+        flippers_rear_calibrate_client =
+            n.serviceClient<std_srvs::Trigger>("flippers/rear/calibrate");
+        tracks_left_calibrate_client =
+            n.serviceClient<std_srvs::Trigger>("tracks/left/calibrate");
+        tracks_right_calibrate_client =
+            n.serviceClient<std_srvs::Trigger>("tracks/right/calibrate");
+    }
 
     bool initialise(ros::NodeHandle &n)
     {
@@ -212,6 +222,15 @@ public:
         ros::Duration(1).sleep();
 
         ROS_INFO("Finished calibrating arm");
+
+        std_srvs::Trigger req;
+        flippers_front_calibrate_client.call(req);
+        flippers_rear_calibrate_client.call(req);
+        tracks_left_calibrate_client.call(req);
+        tracks_right_calibrate_client.call(req);
+
+        ROS_INFO("Finished calibrating odrives");
+
         calibrated = true;
         hardware_mutex.unlock();
         return true;
@@ -246,6 +265,11 @@ private:
     // For calibration - have no ownership
     handle::xl430::Position *arm_1_handle, *arm_2_handle, *arm_3_handle;
     handle::ax12a::PositionPair *wrist_pitch_handle;
+
+    ros::ServiceClient flippers_rear_calibrate_client;
+    ros::ServiceClient flippers_front_calibrate_client;
+    ros::ServiceClient tracks_left_calibrate_client;
+    ros::ServiceClient tracks_right_calibrate_client;
 };
 
 
