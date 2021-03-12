@@ -1,13 +1,29 @@
 <launch>
+    <arg name="fake" default="false"/>
+
+    <!-- Load config for model and hardware controllers -->
+
     <param
         name="robot_description"
         command="xacro $(find arbie_description)/model/arbie.urdf.xacro"
     />
     <rosparam
+        file="$(find arbie_description)/config/controllers.yaml"
+        command="load"
+    />
+
+    <!-- Load parameters for hardware access -->
+
+    <rosparam
         file="$(find arbie_hardware)/config/usb.yaml"
         command="load"
     />
 
+    <!-- Real hardware -->
+    <!-- Start a node to control the odrives, commanded through services -->
+    <!-- Start the hardware node which facilities hardware control, either
+    directly, or through services for the odrives -->
+    <group unless="$(arg fake)">
     <node name="odrives" pkg="arbie_hardware" type="odrives" output="screen"/>
     <node
         name="hardware"
@@ -15,4 +31,37 @@
         type="hardware"
         output="screen"
     />
+    </group>
+
+    <!-- Same interface as above, but fakes the hardware interface -->
+    <group if="$(arg fake)">
+    <node
+        name="hardware"
+        pkg="arbie_hardware"
+        type="hardware_fake"
+        output="screen"
+    />
+    </group>
+
+    <!-- Spawn controllers. This calls services provided by the hardware node,
+    to load certain interfaces to the hardware. After this node, topics are
+    available to control the joints and get feedback -->
+    <node
+        name="arbie_controller_spawner"
+        pkg="arbie_hardware"
+        type="spawner"
+        respawn="false"
+        output="screen"
+    />
+
+    <!-- Performs forward kinematics for the robot using published joint_states,
+    allowing the model state to be visualised -->
+    <node
+        name="robot_state_publisher"
+        pkg="robot_state_publisher"
+        type="robot_state_publisher"
+        respawn="false"
+        output="screen"
+    />
+
 </launch>

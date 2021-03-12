@@ -1,0 +1,42 @@
+#!/usr/bin/env python
+
+# Simple node, just put the code here
+
+import rospy
+from controller_manager_msgs.srv import LoadController, SwitchController
+
+rospy.wait_for_service("controller_manager/load_controller")
+load_controller = rospy.ServiceProxy("controller_manager/load_controller", LoadController)
+
+start_controllers = [
+    "joint_state_controller",
+    "base_controller",
+    "flippers_front_controller",
+    "flippers_rear_controller",
+    "camera_tilt_controller",
+    "arm_position_controller",
+    "gripper_position_controller"
+]
+other_controllers = [
+    "arm_trajectory_controller",
+    "gripper_trajectory_controller",
+]
+
+for controller in start_controllers + other_controllers:
+    try:
+        result = load_controller(controller)
+        if not result.ok:
+            print("Failed to load controller " + controller)
+    except rospy.ServiceException as e:
+        print("Service did not process request: " + str(e))
+
+rospy.wait_for_service("controller_manager/switch_controller")
+switch_controller = rospy.ServiceProxy("controller_manager/switch_controller", SwitchController)
+
+try:
+    strictness = 1 # BEST_EFFORT, will ignore failed controllers
+    result = switch_controller(start_controllers, [], strictness, True, 0)
+    if not result.ok:
+        print("Failed to switch controllers")
+except rospy.ServiceException as e:
+    print("Service did not process request: " + str(e))

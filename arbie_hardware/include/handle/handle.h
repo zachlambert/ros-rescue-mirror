@@ -25,34 +25,13 @@ enum class Type {
     EFF
 };
 
+
 class Handle {
 public:
 
-    Handle(const std::string &name, Interfaces &interface, Type type):
-        pos(0), vel(0), eff(0), cmd(0)
-    {
-        interface.state.registerHandle(hardware_interface::JointStateHandle(
-                name, &pos, &vel, &eff
-        ));
-        switch (type) {
-            case Type::POS:
-                interface.pos.registerHandle(hardware_interface::JointHandle(
-                        interface.state.getHandle(name), &cmd
-                ));
-                break;
-            case Type::VEL:
-                interface.vel.registerHandle(hardware_interface::JointHandle(
-                        interface.state.getHandle(name), &cmd
-                ));
-                break;
-            case Type::EFF:
-                interface.eff.registerHandle(hardware_interface::JointHandle(
-                        interface.state.getHandle(name), &cmd
-                ));
-                break;
-        }
-    }
+    Handle(const std::string &name, Interfaces &interface, Type type);
     virtual ~Handle() {}
+
     void write() {
         write(cmd);
     }
@@ -63,42 +42,27 @@ public:
     }
     virtual void read(double &pos, double &vel, double &eff) = 0;
 protected:
+    // Used in write(double cmd) if the handle wants to verify that
+    // there isn't a large jump between the current position and next command
+    double get_current_pos()const { return pos; }
+    // Used for logging
+    const std::string &get_name()const { return name; }
+private:
+    std::string name;
     double pos, vel, eff, cmd;
 };
+
 
 class Service: public Handle {
 public:
     Service(
-            const std::string &name,
-            Interfaces &interface,
-            Type handle_type,
-            const std::string &service_name,
-            ros::NodeHandle &n):
-        Handle(name, interface, handle_type)
-    {
-        std::stringstream write_name;
-        write_name << service_name << "/write";
-        write_client = n.serviceClient<arbie_msgs::WriteHardware>(write_name.str());
-
-        std::stringstream read_name;
-        read_name << service_name << "/read";
-        read_client = n.serviceClient<arbie_msgs::ReadHardware>(read_name.str());
-    }
-
-    void write(double cmd)
-    {
-        write_msg.request.cmd.data = cmd;
-        write_client.call(write_msg);
-    }
-
-    void read(double &pos, double &vel, double &eff)
-    {
-        if(read_client.call(read_msg) && read_msg.response.success) {
-            pos = read_msg.response.pos.data;
-            vel = read_msg.response.vel.data;
-            eff = read_msg.response.eff.data;
-        }
-    }
+        const std::string &name,
+        Interfaces &interface,
+        Type handle_type,
+        const std::string &service_name,
+        ros::NodeHandle &n);
+    void write(double cmd);
+    void read(double &pos, double &vel, double &eff);
 
 private:
     ros::ServiceClient write_client;
@@ -107,27 +71,67 @@ private:
     arbie_msgs::ReadHardware read_msg;
 };
 
+
 class PosDummy: public Handle {
 public:
-    PosDummy(const std::string &name, Interfaces &interface):
-        Handle(name, interface, Type::POS)
+    PosDummy(
+        const std::string &name,
+        Interfaces &interface,
+        double write_delay_ms=0, double read_delay_ms=0):
+            Handle(name, interface, Type::POS),
+            write_delay_ms(write_delay_ms), read_delay_ms(read_delay_ms),
+            fake_pos(0)
     {}
 
-    void write(double cmd)
-    {
-        pos = cmd;
+    void write(double cmd) { 
+        fake_pos = cmd;
+        ros::Duration(write_delay_ms/1000).sleep();
     }
-
-    void read(double &pos, double &vel, double &eff)
-    {
-        pos = this->pos;
+    void read(double &pos, double &vel, double &eff) {
+        pos = fake_pos;
         vel = 0;
         eff = 0;
+        ros::Duration(read_delay_ms/1000).sleep();
     }
 
 private:
-    double pos;
+    double write_delay_ms, read_delay_ms;
+    double fake_pos;
 };
+
+class VelDummy: public Handle {
+public:
+    VelDummy(
+        const std::string &name,
+        Interfaces &interface,
+        double write_delay_ms=0, double read_delay_ms=0):
+            Handle(name, interface, Type::VEL),
+            write_delay_ms(write_delay_ms), read_delay_ms(read_delay_ms),
+            fake_pos(0), fake_vel(0)
+    {
+        write_time = ros::Time::now();
+    }
+
+    void write(double cmd) { 
+        fake_vel = cmd;
+        fake_pos += fake_vel*(ros::Time::now() - write_time).toSec();
+        write_time = ros::Time::now();
+        ros::Duration(write_delay_ms/1000).sleep();
+    }
+    void read(double &pos, double &vel, double &eff) {
+        pos = fake_pos;
+        vel = fake_vel;
+        eff = 0;
+        ros::Duration(read_delay_ms/1000).sleep();
+    }
+
+private:
+    double write_delay_ms, read_delay_ms;
+    double fake_vel, fake_pos;
+    ros::Time write_time;
+};
+
+
 
 } // namespace handle
 

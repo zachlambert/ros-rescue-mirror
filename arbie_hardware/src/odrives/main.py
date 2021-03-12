@@ -1,6 +1,7 @@
 import rospy
 from std_msgs.msg import MultiArrayDimension, Float32
 from diagnostic_msgs.msg import DiagnosticStatus, KeyValue
+from std_srvs.srv import Trigger, TriggerResponse
 from arbie_msgs.srv import (
     ReadHardware, ReadHardwareResponse,
     WriteHardware, WriteHardwareResponse
@@ -52,6 +53,11 @@ def flippers_front_write(req):
     else:
         return WriteHardwareResponse(False)
 
+def flippers_front_calibrate(req):
+    if flippers.is_connected():
+        return flippers.calibrate_axis0()
+    else:
+        return TriggerResponse(False)
 
 # Service callbacks for flippers_rear_...
 
@@ -68,6 +74,11 @@ def flippers_rear_write(req):
     else:
         return WriteHardwareResponse(False)
 
+def flippers_rear_calibrate(req):
+    if flippers.is_connected():
+        return flippers.calibrate_axis1()
+    else:
+        return TriggerResponse(False)
 
 # Service callbacks for tracks_left_...
 
@@ -85,6 +96,11 @@ def tracks_left_write(req):
         return WriteHardwareResponse(False)
     return WriteHardwareResponse(True)
 
+def tracks_left_calibrate(req):
+    if tracks.is_connected():
+        return flippers.calibrate_axis0()
+    else:
+        return TriggerResponse(False)
 
 # Service callbacks for tracks_left_...
 
@@ -102,6 +118,11 @@ def tracks_right_write(req):
         return WriteHardwareResponse(False)
     return WriteHardwareResponse(True)
 
+def tracks_right_calibrate(req):
+    if tracks.is_connected():
+        return flippers.calibrate_axis1()
+    else:
+        return TriggerResponse(False)
 
 # Topic callback from the topics which monitor the flipper angles
 
@@ -136,6 +157,11 @@ def main():
         "flippers/diagnostic", DiagnosticStatus, queue_size=10)
     tracks_diagnostic_pub = rospy.Publisher(
         "tracks/diagnostic", DiagnosticStatus, queue_size=10)
+
+    rospy.Service("flippers/front/calibrate", Trigger, flippers_front_calibrate)
+    rospy.Service("flippers/rear/calibrate", Trigger, flippers_rear_calibrate)
+    rospy.Service("tracks/left/calibrate", Trigger, tracks_left_calibrate)
+    rospy.Service("tracks/right/calibrate", Trigger, tracks_right_calibrate)
 
     rate = rospy.Rate(1);
     while not rospy.is_shutdown():

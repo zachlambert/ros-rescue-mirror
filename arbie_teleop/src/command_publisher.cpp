@@ -19,7 +19,7 @@ CommandPublisher::CommandPublisher(ros::NodeHandle &n)
     gripper_velocity_pub = n.advertise<std_msgs::Float64MultiArray>(
         "gripper_velocity", 1000
     );
-    gripper_velocity_msg = create_command_msg(6);
+    gripper_velocity_msg = create_command_msg(7); // Also includes gripper grasp velocity
 
     // Tracks command
     tracks_command_pub = n.advertise<geometry_msgs::Twist>(
@@ -40,7 +40,7 @@ CommandPublisher::CommandPublisher(ros::NodeHandle &n)
     );
 }
 
-void CommandPublisher::set_gripper_velocity(double x, double theta, double z, double yaw, double pitch, double roll)
+void CommandPublisher::set_gripper_velocity(double x, double theta, double z, double yaw, double pitch, double roll, double gripper)
 {
     gripper_velocity_msg.data[0] = x;
     gripper_velocity_msg.data[1] = theta;
@@ -48,6 +48,7 @@ void CommandPublisher::set_gripper_velocity(double x, double theta, double z, do
     gripper_velocity_msg.data[3] = yaw;
     gripper_velocity_msg.data[4] = pitch;
     gripper_velocity_msg.data[5] = roll;
+    gripper_velocity_msg.data[6] = gripper;
 }
 
 void CommandPublisher::set_tracks_command(double linear_velocity, double angular_velocity)

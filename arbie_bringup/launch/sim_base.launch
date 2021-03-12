@@ -1,6 +1,8 @@
 <launch>
-    <include file="$(find arbie_gazebo)/launch/navigation.launch"/>
-    <include file="$(find arbie_description)/launch/control.launch"/>
+    <!--<include file="$(find arbie_description)/launch/control.launch">
+        <arg name="all" value="false"/>
+        <arg name="base" value="true"/>
+    </include>-->
 
     <!-- Command base velocity -->
     <node
@@ -8,7 +10,7 @@
         pkg="teleop_twist_keyboard"
         type="teleop_twist_keyboard.py"
         args="cmd_vel:='/base_controller/cmd_vel' _speed:='0.3' _turn:='3'">
-    </node>
+</node>
     <!-- View the robot model and depth camera input -->
     <node
         name="rviz"
@@ -16,4 +18,6 @@
         type="rviz"
         args="-d $(find arbie_test)/config/base.rviz"
     />
+
+        <!--<include file="$(find arbie_slam)/launch/slam.launch"/>-->
 </launch>

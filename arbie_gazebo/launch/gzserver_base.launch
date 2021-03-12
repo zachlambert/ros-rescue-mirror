@@ -1,0 +1,7 @@
+<launch>
+    <!-- Start gazebo server with a world for navigation-->
+    <node name="gzserver" pkg="gazebo_ros" type="gzserver"
+        respawn="true"
+        args="$(find arbie_gazebo)/worlds/navigation.world"
+    />
+</launch>

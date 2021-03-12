@@ -226,11 +226,11 @@ so am just omitting it for now. It's not that important to simulate this.
 -->
 
 <link name="gripper_left_driver_link">
-  <inertial>
+  <!--<inertial>
     <origin rpy="0 0 0" xyz="4.552690735497994e-07 -0.030940033304886344 0.004350583148282683"/>
     <mass value="0.013747989643093032"/>
     <inertia ixx="5e-06" ixy="0.0" ixz="0.0" iyy="2e-06" iyz="-1e-06" izz="4e-06"/>
-  </inertial>
+  </inertial>-->
   <visual>
     <origin rpy="0 0 0" xyz="0.013094 -0.263651 -0.172219"/>
     <geometry>
@@ -303,6 +303,7 @@ so am just omitting it for now. It's not that important to simulate this.
   <parent link="body_link"/>
   <child link="arm_base_link"/>
   <axis xyz="0 1 0"/>
+  <limit effort="1000.0" velocity="1.5"/>
 </joint>
 
 <transmission name="arm_1_tran">
@@ -321,7 +322,7 @@ so am just omitting it for now. It's not that important to simulate this.
   <parent link="arm_base_link"/>
   <child link="arm_lower_link"/>
   <axis xyz="1 0 0"/>
-  <limit effort="1000.0" lower="0.0" upper="${pi}" velocity="1"/>
+  <limit effort="1000.0" lower="0.0" upper="${pi}" velocity="10"/>
 </joint>
 
 <transmission name="arm_2_transmission">
@@ -336,11 +337,11 @@ so am just omitting it for now. It's not that important to simulate this.
 </transmission>
 
 <joint name="arm_3_joint" type="revolute">
-  <origin rpy="0 0 0" xyz="-0.033 0.035 -0.45"/>
+  <origin rpy="-0.04 0 0" xyz="-0.033 0.035 -0.45"/>
   <parent link="arm_lower_link"/>
   <child link="arm_upper_link"/>
   <axis xyz="-1 0 0"/>
-  <limit effort="1000.0" lower="0.0" upper="${pi}" velocity="1"/>
+  <limit effort="1000.0" lower="0.0" upper="${pi}" velocity="10"/>
 </joint>
 
 <transmission name="arm_3_transmission">
@@ -362,7 +363,7 @@ so am just omitting it for now. It's not that important to simulate this.
   <parent link="wrist_base_link"/>
   <child link="wrist_pitch_link"/>
   <axis xyz="1 0 0"/>
-  <limit effort="1000.0" lower="${-pi/2}" upper="${pi/2}" velocity="1"/>
+  <limit effort="1000.0" lower="${-pi/2}" upper="${pi/2}" velocity="10"/>
 </joint>
 
 <transmission name="wrist_pitch_transmission">
@@ -381,7 +382,7 @@ so am just omitting it for now. It's not that important to simulate this.
   <parent link="wrist_pitch_link"/>
   <child link="wrist_yaw_link"/>
   <axis xyz="0 -1 0"/>
-  <limit effort="1000.0" lower="${-pi/2}" upper="${pi/2}" velocity="1"/>
+  <limit effort="1000.0" lower="${-pi/2}" upper="${pi/2}" velocity="10"/>
 </joint>
 
 <transmission name="wrist_yaw_transmsission">
@@ -400,6 +401,7 @@ so am just omitting it for now. It's not that important to simulate this.
   <parent link="wrist_yaw_link"/>
   <child link="gripper_base_link"/>
   <axis xyz="0 0 1"/>
+  <limit effort="1000.0" velocity="${pi}"/>
 </joint>
 
 <transmission name="wrist_roll_transmission">
@@ -444,6 +446,7 @@ so am just omitting it for now. It's not that important to simulate this.
   <mimic joint="gripper_joint" multiplier="-1"/>
 </joint>
 
+<!--
 <transmission name="gripper_left_driver_transmission">
   <type>transmission_interface/SimpleTransmission</type>
   <joint name="gripper_left_joint">
@@ -454,15 +457,17 @@ so am just omitting it for now. It's not that important to simulate this.
     <mechanicalReduction>1</mechanicalReduction>
   </actuator>
 </transmission>
+-->
 
 <!-- Use gazebo mimic joint plugin to drive the left joint too -->
+<!--
 <gazebo>
 <plugin name="gripper_mimic_joint_plugin" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
   <joint>gripper_joint</joint>
   <mimicJoint>gripper_left_joint</mimicJoint>
   <multiplier>-1</multiplier>
 </plugin>
-</gazebo>
+</gazebo>-->
 
 
 <!-- GRIPPER DEPENDENT JOINTS
