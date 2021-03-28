@@ -5,7 +5,6 @@
     <include file="$(find arbie_webgui)/launch/webgui.launch"/>
     <include file="$(find arbie_teleop)/launch/teleop.launch"/>
 
-    <!-- Start realsense cameras and slam -->
-    <include file="$(find arbie_slam)/launch/cameras.launch"/>
+    <!-- Start slam -->
     <include file="$(find arbie_slam)/launch/slam.launch"/>
 </launch>

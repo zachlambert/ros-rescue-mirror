@@ -24,12 +24,12 @@ int main(int argc, char **argv)
             arm_mode = !arm_mode;
         }
         if (!arm_mode) {
-            command_publisher.set_tracks_command(
-                -joystick_listener.query_axis(JoyAxis::LEFT_VERTICAL),
-                -joystick_listener.query_axis(JoyAxis::LEFT_HORIZONTAL));
-            command_publisher.set_flippers_command(
-                joystick_listener.query_axis(JoyAxis::RIGHT_VERTICAL),
-                joystick_listener.query_axis(JoyAxis::RIGHT_HORIZONTAL));
+            double linear_vel = -0.5*joystick_listener.query_axis(JoyAxis::LEFT_VERTICAL);
+            double angular_vel = -3*joystick_listener.query_axis(JoyAxis::LEFT_HORIZONTAL);
+            command_publisher.set_tracks_command(linear_vel, angular_vel);
+            double rear_flippers = joystick_listener.query_axis(JoyAxis::RIGHT_VERTICAL);
+            double front_flippers = joystick_listener.query_axis(JoyAxis::RIGHT_HORIZONTAL);
+            command_publisher.set_flippers_command(rear_flippers, front_flippers);
         } else {
             double yaw_vel = 0, pitch_vel = 0, roll_vel = 0, gripper_vel = 0;
             if (joystick_listener.query_button_value(JoyButton::LB)) {
