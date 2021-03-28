@@ -1,23 +1,11 @@
 <launch>
-    <!--<include file="$(find arbie_description)/launch/control.launch">
-        <arg name="all" value="false"/>
-        <arg name="base" value="true"/>
-    </include>-->
+    <include file="$(find arbie_gazebo)/launch/sim_hardware_base.launch"/>
 
-    <!-- Command base velocity -->
-    <node
-        name="teleop_twist_keyboard"
-        pkg="teleop_twist_keyboard"
-        type="teleop_twist_keyboard.py"
-        args="cmd_vel:='/base_controller/cmd_vel' _speed:='0.3' _turn:='3'">
-</node>
-    <!-- View the robot model and depth camera input -->
-    <node
-        name="rviz"
-        pkg="rviz"
-        type="rviz"
-        args="-d $(find arbie_test)/config/base.rviz"
-    />
+    <!-- Webui and teleop for interpreting joystick input -->
+    <include file="$(find arbie_webgui)/launch/webgui.launch"/>
+    <include file="$(find arbie_teleop)/launch/teleop.launch"/>
 
-        <!--<include file="$(find arbie_slam)/launch/slam.launch"/>-->
+    <!-- Start realsense cameras and slam -->
+    <include file="$(find arbie_slam)/launch/cameras.launch"/>
+    <include file="$(find arbie_slam)/launch/slam.launch"/>
 </launch>

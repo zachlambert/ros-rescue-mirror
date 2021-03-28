@@ -1,13 +1,13 @@
 <launch>
+    <arg name="fake" default="false"/>
+
     <!-- Load urdf, start hardware interface -->
-    <include file="$(find arbie_hardware)/launch/hardware.launch"/>
+    <include file="$(find arbie_hardware)/launch/hardware.launch">
+        <param name="fake" value="$(arg fake)"/>
+    </include>
 
     <!-- Start main pcb -->
-    <include file="$(find arbie_hardware)/launch/pcb.launch"/>
-
-    <!-- Start control: Start state publisher and spawn controllers
-    to allow reading/writing joints and viewing resultant robot model -->
-    <include file="$(find arbie_description)/launch/control.launch"/>
+    <!--<include file="$(find arbie_hardware)/launch/pcb.launch"/>-->
 
     <!-- Webui and teleop for interpreting joystick input -->
     <include file="$(find arbie_webgui)/launch/webgui.launch"/>
