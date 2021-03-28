@@ -35,7 +35,7 @@ CommandPublisher::CommandPublisher(ros::NodeHandle &n)
     );
 
     // Gripper command service
-    gripper_command_service = n.serviceClient<arbie_msgs::GripperCommand>(
+    gripper_command_service = n.serviceClient<arbie_msgs::ManipulationCommand>(
         "gripper_command"
     );
 }

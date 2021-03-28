@@ -5,7 +5,7 @@
 #include "std_msgs/Float64.h"
 #include "std_msgs/Float64MultiArray.h"
 #include "geometry_msgs/Twist.h"
-#include "arbie_msgs/GripperCommand.h"
+#include "arbie_msgs/ManipulationCommand.h"
 
 class CommandPublisher {
 public:
@@ -35,7 +35,7 @@ private:
 
     // Gripper commands (move to named pose)
     ros::ServiceClient gripper_command_service;
-    arbie_msgs::GripperCommand gripper_command_msg;
+    arbie_msgs::ManipulationCommand gripper_command_msg;
 };
 
 #endif
