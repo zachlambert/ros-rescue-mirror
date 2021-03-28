@@ -1,0 +1,108 @@
+#control_buttons {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+}
+
+#control_buttons> div {
+  width: 33.33%;
+  height: 33.33%;
+  border: none;
+  overflow: hidden;
+  opacity: 0.6;
+}
+
+.button {
+    background-color: #4CAF50; /* Green */
+    color: white;
+    
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    
+    margin: 4px 2px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+  }
+  
+  .button1 {
+
+    background-color: white; 
+    color: black; 
+    border: 2px solid #4CAF50;
+    padding: 15px 15px;
+    font-size: 12px;
+  }
+  
+  .button1:hover {
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  .button2 {
+
+    background-color: white; 
+    color: black; 
+    border: 2px solid #008CBA;
+    padding: 15px 15px;
+    font-size: 12px;
+  }
+  
+  .button2:hover {
+    background-color: #008CBA;
+    color: white;
+  }
+
+.speech_in {
+  background-color: transparent; 
+  color: black; 
+  border: none;
+  padding: 15px 15px;
+  font-size: 10px;
+}
+  
+.speech_out {
+  background-color: transparent; 
+  color: black; 
+  border: none;
+  padding: 15px 15px;
+  font-size: 10px;
+}
+
+svg{
+  display: block;
+  width: 70%;
+  height: 20%;
+  padding: 0;
+  margin: 0;
+  position:relative;
+  
+  }
+  
+h1{
+  width: 33.33%;
+  font-family: sans-serif;
+  position:relative;
+  text-align:center;
+  color:white;
+  font-size: 18px;
+  top: 16.66%;
+  opacity: 1;
+  transition: opacity 1s ease-in-out;
+  -moz-transition: opacity 1s ease-in-out;
+  -webkit-transition: opacity 1s ease-in-out;
+  }
+
+h1 a{
+    color: #48b1f4;
+    text-decoration:none;
+  }
+
+path{
+  stroke-linecap: square;
+  stroke: white;
+  stroke-width: 0.5px;
+  }

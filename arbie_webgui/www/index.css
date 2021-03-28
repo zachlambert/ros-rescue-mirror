@@ -10,17 +10,89 @@ body, html, #modules {
   padding: 0;
   margin: 0; }
 
-#modules {
-  display: flex;
-  flex-wrap: wrap;
-  align-content: flex-start; }
+.fullScreenButton {
+    position: fixed;
+    bottom: 0px;
+    left:0px;
+  
+    background-color: transparent; 
+    color: black; 
+    border: none;
+    padding: 15px 15px;
+    font-size: 10px;
+    opacity: 0.6;
+  }
+  
+.fullScreenButton:hover {
+    background-color: black;
+    color: white;
+  }
 
-#modules > div {
-  position: relative;
+.mod_audio {
+    position: fixed;
+    top:  400px;
+    left: 5px;
+    width: 33.33%;
+    height: 70%;
+    border: none;
+    overflow: hidden;
+    opacity: 0.6;
+}
+
+.mod_co2 {
+  position: fixed;
+  top: 800px;
+  left: 600px;
   width: 33.33%;
   height: 33.33%;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  overflow: hidden; }
+  border: none;
+  overflow: hidden;
+  opacity : 1;
+}
+
+.mod_gamepad {
+  position: fixed;
+  top: 400px;
+  left: 600px;
+  width: 25%;
+  height: 25%;
+  border: none;
+  overflow: hidden;
+  opacity: 0;
+}
+
+.mod_model_viewer {
+  position: fixed;
+  top: 0px;
+  left: 5px;
+  width: 25%;
+  height: 25%;
+  border: none;
+  overflow: hidden;
+  opacity: 0.6;
+}
+
+.mod_power {
+  position: fixed;
+  top: 0px;
+  left: 1000px;
+  width: 25%;
+  height: 33.33%;
+  border: none;
+  overflow: hidden;
+  opacity: 0.6;
+}
+
+.mod_odrive {
+  position: fixed;
+  top: 500px;
+  left: 1050px;
+  width: 25%;
+  height: 33.33%;
+  border: none;
+  overflow: hidden;
+  opacity: 0.6;
+}
 
 #settings {
   position: absolute;
@@ -64,3 +136,26 @@ input[type=number]::-webkit-outer-spin-button {
   margin: 0; }
 
 /*# sourceMappingURL=index.css.map */
+
+
+
+#video_selector {
+  position: fixed;
+  bottom: 0px;
+  right: 0px;
+  padding: 8px;
+  border: 0;
+  border-radius: 4px;
+  opacity: 0.01;
+}
+#video_selector:focus:active {
+  border-radius: 4px 4px 0 0; }
+#camera_stream {
+  position: fixed;
+  right: 0px;
+  bottom: 0px;
+}
+
+
+
+/*# sourceMappingURL=style.css.map */
