@@ -38,6 +38,11 @@ CommandPublisher::CommandPublisher(ros::NodeHandle &n)
     gripper_command_service = n.serviceClient<arbie_msgs::ManipulationCommand>(
         "gripper_command"
     );
+
+    // Calibration service
+    calibrate_service = n.serviceClient<std_srvs::Trigger>(
+        "calibrate"
+    );
 }
 
 void CommandPublisher::set_gripper_velocity(double x, double theta, double z, double yaw, double pitch, double roll, double gripper)
@@ -81,5 +86,15 @@ bool CommandPublisher::send_gripper_command(
         return gripper_command_msg.response.success;
     }
     ROS_INFO("Gripper command failed");
+    return false;
+}
+
+bool CommandPublisher::calibrate()
+{
+    if (calibrate_service.call(calibrate_msg)) {
+        ROS_INFO("Calibrate status: %d", calibrate_msg.response.success);
+        return calibrate_msg.response.success;
+    }
+    ROS_INFO("Calibrate command failed");
     return false;
 }
