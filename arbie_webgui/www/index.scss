@@ -17,15 +17,16 @@ body, html, #modules {
   bottom: 0px;
   left:0px;
 
-  background-color: white; 
+  background-color: transparent; 
   color: black; 
-  border: 2px solid #4CAF50;
+  border: none;
   padding: 15px 15px;
-  font-size: 12px;
+  font-size: 10px;
+  opacity: 0.6;
 }
 
 .fullScreenButton:hover {
-  background-color: #4CAF50;
+  background-color: black;
   color: white;
 }
 
@@ -40,10 +41,10 @@ body, html, #modules {
   opacity: 0.6;
 }
 
-.mod_model_viewer {
+.mod_map{
   position: fixed;
-  top: 0px;
-  left: 0px;
+  top: 500px;
+  left: 500px;
   width: 25%;
   height: 25%;
   border: none;
@@ -51,26 +52,59 @@ body, html, #modules {
   opacity: 0.6;
 }
 
+.mod_co2 {
+position: fixed;
+top: 0px;
+left: 300px;
+width: 33.33%;
+height: 33.33%;
+border: 1px solid rgba(0, 0, 0, 0.1);
+overflow: hidden;
+opacity : 1;
+}
+
+.mod_gamepad {
+position: fixed;
+top: 400px;
+left: 600px;
+width: 25%;
+height: 25%;
+border: 1px solid rgba(0, 0, 0, 0.1);
+overflow: hidden;
+opacity: 1;
+}
+
+.mod_model_viewer {
+position: fixed;
+top: 0px;
+left: 5px;
+width: 25%;
+height: 25%;
+border: none;
+overflow: hidden;
+opacity: 0.6;
+}
+
 .mod_power {
-  position: fixed;
-  top: 0px;
-  left: 0px;
-  width: 25%;
-  height: 33.33%;
-  border: none;
-  overflow: hidden;
-  opacity: 0.6;
+position: fixed;
+top: 0px;
+left: 1000px;
+width: 25%;
+height: 33.33%;
+border: none;
+overflow: hidden;
+opacity: 0.6;
 }
 
 .mod_odrive {
-  position: fixed;
-  top: 0px;
-  left: 0px;
-  width: 25%;
-  height: 33.33%;
-  border: none;
-  overflow: hidden;
-  opacity: 0.6;
+position: fixed;
+top: 500px;
+left: 1050px;
+width: 25%;
+height: 33.33%;
+border: none;
+overflow: hidden;
+opacity: 0.6;
 }
 
 #settings {
