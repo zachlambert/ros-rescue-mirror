@@ -15,6 +15,7 @@ function init() {
         antialias: true
     });
 
+    console.log("model viewer initialised")
     // var local_viewer = new ROS3D.Viewer({
     //     divID: 'local_viewer',
     //     width: 600,
@@ -49,9 +50,16 @@ function init() {
         tfClient : global_tf_client,
         path : 'http://' + window.location.hostname + ':8000/',
         rootObject : global_viewer.scene,
-        loader : ROS3D.COLLADA_LOADER_2
+        loader : ROS3D.COLLADA_LOADER
     });
-
+/*
+    var gridClient = new ROS3D.OccupancyGridClient({
+        ros : ros,
+        fixedFrame : 'base_link',
+        topic : '/rtabmap/grid_map',
+        rootObject : global_viewer.scene
+      });
+*/
     // // Setup URDF client for global view
     // var urdfClient = new ROS3D.UrdfClient({
     //     ros : ros,

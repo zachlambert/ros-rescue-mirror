@@ -151,24 +151,4 @@ ros.on('close', function () {
     console.log('Connection to websocket server closed.');
 });
 
-/*
-var elem = document.documentElement;
-var fullscreenState = 0;
-
-
-
-function toggleFullscreen() {
-    if(fullscreenState == 0){
-        if (elem.requestFullscreen) {
-            elem.requestFullscreen();
-            fullscreenState = 1;
-      }
-    }
-    else if(fullscreenState == 1){
-      if (document.exitFullscreen) {
-          document.exitFullscreen();
-        fullscreenState = 0;
-      }
-    }
-}
-*/
+//camera_init();
