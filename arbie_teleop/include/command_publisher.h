@@ -20,7 +20,7 @@ public:
     void set_base_pose(double x, double y, double theta);
     void publish_all();
 
-    bool send_gripper_command(const std::string &command, const std::string &argument);
+    bool send_manipulation_command(const std::string &command, const std::string &argument);
 
     bool calibrate();
 
@@ -37,9 +37,9 @@ private:
     ros::Publisher gripper_velocity_pub;
     std_msgs::Float64MultiArray gripper_velocity_msg;
 
-    // Gripper commands (move to named pose)
-    ros::ServiceClient gripper_command_service;
-    arbie_msgs::ManipulationCommand gripper_command_msg;
+    // Manipulation commands (move to named pose)
+    ros::ServiceClient manipulation_command_service;
+    arbie_msgs::ManipulationCommand manipulation_command_msg;
 
     // Calibrate arm
     ros::ServiceClient calibrate_service;

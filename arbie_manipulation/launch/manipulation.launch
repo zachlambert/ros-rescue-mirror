@@ -11,6 +11,5 @@
         name="manipulation"
         pkg="arbie_manipulation"
         type="manipulation"
-        output="screen"
     />
 </launch>

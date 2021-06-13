@@ -53,15 +53,14 @@ int main(int argc, char **argv)
             );
 
             if (joystick_listener.query_button_state(JoyButton::A) == JoyButtonState::PRESSED) {
-                command_publisher.send_gripper_command("named_target", "home");
+                command_publisher.send_manipulation_command("named_target", "home");
             }
             if (joystick_listener.query_button_state(JoyButton::X) == JoyButtonState::PRESSED) {
-                command_publisher.send_gripper_command("named_target", "ready");
+                command_publisher.send_manipulation_command("named_target", "ready");
             }
-
-            if (joystick_listener.query_button_state(JoyButton::START) == JoyButtonState::PRESSED) {
-                command_publisher.calibrate();
-            }
+        }
+        if (joystick_listener.query_button_state(JoyButton::START) == JoyButtonState::PRESSED) {
+            command_publisher.calibrate();
         }
 
         command_publisher.publish_all();

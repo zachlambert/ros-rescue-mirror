@@ -35,6 +35,7 @@
         <arg name="approx_rgbd_sync" value="false"/>
         <arg name="visual_odometry" value="false"/>
         <arg name="rtabmapviz" value="$(arg rtabmapviz)"/>
+        <arg name="output" value="log"/>
     </include>
 
     <!-- Sets the odom->base_link transform, from the /t265/odom/sample topic -->
