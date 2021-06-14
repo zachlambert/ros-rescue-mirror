@@ -57,7 +57,7 @@ def flippers_front_calibrate(req):
     if flippers.is_connected():
         return flippers.calibrate_axis0()
     else:
-        return TriggerResponse(False)
+        return TriggerResponse(False, "Flippers not connected")
 
 # Service callbacks for flippers_rear_...
 
@@ -78,7 +78,7 @@ def flippers_rear_calibrate(req):
     if flippers.is_connected():
         return flippers.calibrate_axis1()
     else:
-        return TriggerResponse(False)
+        return TriggerResponse(False, "Flippers not connected")
 
 # Service callbacks for tracks_left_...
 
@@ -98,9 +98,9 @@ def tracks_left_write(req):
 
 def tracks_left_calibrate(req):
     if tracks.is_connected():
-        return flippers.calibrate_axis0()
+        return tracks.calibrate_axis0()
     else:
-        return TriggerResponse(False)
+        return TriggerResponse(False, "Tracks not connected")
 
 # Service callbacks for tracks_left_...
 
@@ -120,9 +120,9 @@ def tracks_right_write(req):
 
 def tracks_right_calibrate(req):
     if tracks.is_connected():
-        return flippers.calibrate_axis1()
+        return tracks.calibrate_axis1()
     else:
-        return TriggerResponse(False)
+        return TriggerResponse(False, "Tracks not connected")
 
 # Topic callback from the topics which monitor the flipper angles
 
