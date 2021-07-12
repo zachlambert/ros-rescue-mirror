@@ -230,6 +230,12 @@
         loader : ROS3D.COLLADA_LOADER
     });
 
+    var mapClient = new ROS3D.OccupancyGridClient({
+        ros : ros,
+        tfClient : global_tf_client,
+        topic: '/rtabmap/grid_map',
+        rootObject : viewer.scene,
+    });
 
     var goalClient = new ROS3D.Point({
         ros : ros,
