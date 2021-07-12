@@ -9,20 +9,72 @@
     var robot_coord = {
         x:0,
         y:0,
-        z:0
+        z:0,
+        w:0
     };
     var goal_coord = {
         x:0,
         y:0,
-        z:0
+        z:0,
+        w:0
     };
 
     var goal_reached_Topic = new ROSLIB.Topic({
       ros : ros,
       name : '/goal_reached',
-      messageType : 'std_msgs/Int16'
+      messageType : 'std_msgs/Bool'
     });
 
+
+    ROS3D.Pose = function(options) {
+      THREE.Object3D.call(this);
+      this.options = options || {};
+      this.ros = options.ros;
+      this.topicName = options.topic || '/pose';
+      this.tfClient = options.tfClient;
+      this.color = options.color || 0xcc00ff;
+      this.rootObject = options.rootObject || new THREE.Object3D();
+      this.sn = null;
+      this.rosTopic = undefined;
+      this.subscribe();
+    };
+    ROS3D.Pose.prototype.__proto__ = THREE.Object3D.prototype;
+    ROS3D.Pose.prototype.unsubscribe = function(){
+      if(this.rosTopic){
+        this.rosTopic.unsubscribe();
+      }
+    };
+    ROS3D.Pose.prototype.subscribe = function(){
+      this.unsubscribe();
+      // subscribe to the topic
+      this.rosTopic = new ROSLIB.Topic({
+          ros : this.ros,
+          name : this.topicName,
+          queue_length : 1,
+          messageType : 'geometry_msgs/PoseStamped'
+      });
+      this.rosTopic.subscribe(this.processMessage.bind(this));
+    };
+    ROS3D.Pose.prototype.processMessage = function(message){
+      if(this.sn!==null){
+          this.sn.unsubscribeTf();
+          this.rootObject.remove(this.sn);
+      }
+      this.options.origin = new THREE.Vector3( message.pose.position.x, message.pose.position.y,
+                                               message.pose.position.z);
+      var rot = new THREE.Quaternion(message.pose.orientation.x, message.pose.orientation.y,
+                                     message.pose.orientation.z, message.pose.orientation.w);
+      this.options.direction = new THREE.Vector3(1,0,0);
+      this.options.direction.applyQuaternion(rot);
+      this.options.material = new THREE.MeshBasicMaterial({color: this.color});
+      var arrow = new ROS3D.Arrow(this.options);
+      this.sn = new ROS3D.SceneNode({
+          frameID : message.header.frame_id,
+          tfClient : this.tfClient,
+          object : arrow
+      });
+      this.rootObject.add(this.sn);
+    };
 
     //redefine class: Point
     ROS3D.Point = function(options) {
@@ -65,7 +117,7 @@
           var sphereMaterial = new THREE.MeshBasicMaterial( {color: this.color} );
           var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
           sphere.position.set(message.pose.position.x, message.pose.position.y, message.pose.position.z);
-          goal_coord = {x:message.pose.position.x, y:message.pose.position.y, z:message.pose.position.z};
+          goal_coord = {x:message.pose.position.x, y:message.pose.position.y, z:message.pose.position.z, w:message.pose.orientation.w};
 
           this.sn = new ROS3D.SceneNode({
               frameID : message.header.frame_id,
@@ -102,7 +154,7 @@
         }
       };
       ROS3D.OccupancyGridClient.prototype.subscribe = function(){
-        this.unsubscribe();
+
         // subscribe to the topic
         this.rosTopic = new ROSLIB.Topic({
           ros : this.ros,
@@ -186,15 +238,15 @@
         topic : '/move_base_simple/goal',
         rootObject : viewer.scene
     });
-    /*
-    var robotClient = new ROS3D.Odometry({
-        ros: ros,
-        fixedFrame : 'map',
-        tfClient : global_tf_client,
-        topic : '/t265/odom/sample',
-        rootObject : viewer.scene
-    })
-    */
+
+    var navClient = new ROS3D.Pose({
+      ros : ros,
+      fixedFrame : 'map',
+      tfClient : global_tf_client,
+      topic : '/navigation/goal',
+      rootObject : viewer.scene
+  });
+
 
     ROS3D.SceneNode = function(options) {
       THREE.Object3D.call(this);
@@ -230,17 +282,23 @@
      * @param pose - the pose to update with
      */
     ROS3D.SceneNode.prototype.updatePose = function(pose) {
-      robot_coord = {x:pose.position.x, y:pose.position.y, z:pose.position.z};
+      robot_coord = {x:pose.position.x, y:pose.position.y, z:pose.position.z, w:pose.orientation.w};
 
       if(goal_coord.x != 0 && goal_coord.y != 0){
-        console.log([Math.abs(goal_coord.x-robot_coord.x),Math.abs(goal_coord.y-robot_coord.y),Math.abs(goal_coord.z-robot_coord.z)])
-        if(Math.abs(goal_coord.x-robot_coord.x)<0.2&&Math.abs(goal_coord.y-robot_coord.y)<0.2&&Math.abs(goal_coord.z-robot_coord.z)<1){
+
+        if(Math.abs(goal_coord.x-robot_coord.x)<0.2&&Math.abs(goal_coord.y-robot_coord.y)<0.2&&Math.abs(goal_coord.z-robot_coord.z)<1&&Math.abs(goal_coord.w-robot_coord.w)<1){
           var goal_reached_Message = new ROSLIB.Message({
-            data : 1
+            data : true
           });
+        }
+        else{
+          var goal_reached_Message = new ROSLIB.Message({
+            data : false
+        });
+        }
           goal_reached_Topic.publish(goal_reached_Message);
           console.log("Goal Reached");
-        }
+        
       }
 
 

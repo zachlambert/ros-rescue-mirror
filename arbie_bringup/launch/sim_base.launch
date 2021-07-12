@@ -4,6 +4,7 @@
     <!-- Webui and teleop for interpreting joystick input -->
     <include file="$(find arbie_webgui)/launch/webgui.launch"/>
     <include file="$(find arbie_teleop)/launch/teleop.launch"/>
+    <include file="$(find arbie_navigation)/launch/navigation.launch"/>
 
     <!-- Start slam -->
     <include file="$(find arbie_slam)/launch/slam.launch"/>

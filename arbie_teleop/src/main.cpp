@@ -17,21 +17,20 @@ int main(int argc, char **argv)
     command_publisher.set_flippers_command(1.5, 0);
 
     bool arm_mode = false;
+    bool navigation_mode = false;
 
     ros::Rate loop_rate(50);
     while (ros::ok()) {
         if (joystick_listener.query_button_state(JoyButton::Y) == JoyButtonState::PRESSED) {
             arm_mode = !arm_mode;
         }
-<<<<<<< HEAD
-        if (!arm_mode) {
-=======
-	if (joystick_listener.query_button_state(JoyButton::B) == JoyButtonState::PRESSED) {
+
+	    if (joystick_listener.query_button_state(JoyButton::B) == JoyButtonState::PRESSED) {
             navigation_mode = !navigation_mode;
 	    command_publisher.navigation_command(navigation_mode);
         }
         if (!arm_mode && !navigation_mode) {
->>>>>>> parent of 211b2e5... navigation package
+
             double linear_vel = -0.5*joystick_listener.query_axis(JoyAxis::LEFT_VERTICAL);
             double angular_vel = -3*joystick_listener.query_axis(JoyAxis::LEFT_HORIZONTAL);
             command_publisher.set_tracks_command(linear_vel, angular_vel);

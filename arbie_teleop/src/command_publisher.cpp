@@ -33,6 +33,10 @@ CommandPublisher::CommandPublisher(ros::NodeHandle &n)
     flippers_rear_command_pub = n.advertise<std_msgs::Float64>(
         "flippers_rear_controller/command", 1000
     );
+    // Navigation command
+    nav_pub = n.advertise<std_msgs::Bool>(
+        "navigation_command", 1000
+    );
 
     // Gripper command service
     gripper_command_service = n.serviceClient<arbie_msgs::ManipulationCommand>(
@@ -63,12 +67,18 @@ void CommandPublisher::set_flippers_command(double flippers_rear, double flipper
     flippers_rear_msg.data = flippers_rear;
 }
 
+void CommandPublisher::navigation_command(bool navigation_mode)
+{
+    nav_pub_msg.data = navigation_mode;
+}
+
 void CommandPublisher::publish_all()
 {
     gripper_velocity_pub.publish(gripper_velocity_msg);
     tracks_command_pub.publish(tracks_command_msg);
     flippers_front_command_pub.publish(flippers_front_msg);
     flippers_rear_command_pub.publish(flippers_rear_msg);
+    nav_pub.publish(nav_pub_msg);
 }
 
 bool CommandPublisher::send_gripper_command(
