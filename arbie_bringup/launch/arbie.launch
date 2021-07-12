@@ -3,7 +3,7 @@
 
     <!-- Load urdf, start hardware interface -->
     <include file="$(find arbie_hardware)/launch/hardware.launch">
-        <param name="fake" value="$(arg fake)"/>
+        <arg name="fake" value="$(arg fake)"/>
     </include>
 
     <!-- Start main pcb -->

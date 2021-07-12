@@ -37,6 +37,9 @@ flippers_front_offset = 373
 flippers_rear_offset =  605
 flippers_scale = 2 * pi/1024.0
 
+# TODO: Set these as parameters
+odrives_cpr = 8192.0
+tracks_gear_ratio = 32.0
 
 # Service callbacks for flippers_front_...
 
@@ -57,7 +60,7 @@ def flippers_front_calibrate(req):
     if flippers.is_connected():
         return flippers.calibrate_axis0()
     else:
-        return TriggerResponse(False)
+        return TriggerResponse(False, "Flippers not connected")
 
 # Service callbacks for flippers_rear_...
 
@@ -78,7 +81,7 @@ def flippers_rear_calibrate(req):
     if flippers.is_connected():
         return flippers.calibrate_axis1()
     else:
-        return TriggerResponse(False)
+        return TriggerResponse(False, "Flippers not connected")
 
 # Service callbacks for tracks_left_...
 
@@ -89,7 +92,8 @@ def tracks_left_read(req):
 def tracks_left_write(req):
     if tracks.is_connected():
         # WRITE AXIS0
-        tracks.write_velocity_axis0(req.cmd.data)
+        vel_cmd = -(req.cmd.data/(2*pi))*odrives_cpr*tracks_gear_ratio
+        tracks.write_velocity_axis0(vel_cmd);
         tracks_left_res.vel.data = req.cmd.data
         return WriteHardwareResponse(True)
     else:
@@ -98,9 +102,9 @@ def tracks_left_write(req):
 
 def tracks_left_calibrate(req):
     if tracks.is_connected():
-        return flippers.calibrate_axis0()
+        return tracks.calibrate_axis0()
     else:
-        return TriggerResponse(False)
+        return TriggerResponse(False, "Tracks not connected")
 
 # Service callbacks for tracks_left_...
 
@@ -111,7 +115,8 @@ def tracks_right_read(req):
 def tracks_right_write(req):
     if tracks.is_connected():
         # WRITE AXIS1
-        tracks.write_velocity_axis1(req.cmd.data)
+        vel_cmd = (req.cmd.data/(2*pi))*odrives_cpr*tracks_gear_ratio
+        tracks.write_velocity_axis1(vel_cmd)
         tracks_right_res.vel.data = req.cmd.data
         return WriteHardwareResponse(True)
     else:
@@ -120,9 +125,9 @@ def tracks_right_write(req):
 
 def tracks_right_calibrate(req):
     if tracks.is_connected():
-        return flippers.calibrate_axis1()
+        return tracks.calibrate_axis1()
     else:
-        return TriggerResponse(False)
+        return TriggerResponse(False, "Tracks not connected")
 
 # Topic callback from the topics which monitor the flipper angles
 

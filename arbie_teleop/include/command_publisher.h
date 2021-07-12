@@ -4,6 +4,7 @@
 #include "ros/ros.h"
 #include "std_msgs/Float64.h"
 #include "std_msgs/Float64MultiArray.h"
+#include "std_srvs/Trigger.h"
 #include "geometry_msgs/Twist.h"
 #include "arbie_msgs/ManipulationCommand.h"
 
@@ -20,7 +21,10 @@ public:
     void navigation_command(bool navigation_mode);
     void publish_all();
 
-    bool send_gripper_command(const std::string &command, const std::string &argument);
+    bool send_manipulation_command(const std::string &command, const std::string &argument);
+
+    bool calibrate();
+
 private:
     // Tracks
     ros::Publisher tracks_command_pub;
@@ -38,9 +42,13 @@ private:
     ros::Publisher gripper_velocity_pub;
     std_msgs::Float64MultiArray gripper_velocity_msg;
 
-    // Gripper commands (move to named pose)
-    ros::ServiceClient gripper_command_service;
-    arbie_msgs::ManipulationCommand gripper_command_msg;
+    // Manipulation commands (move to named pose)
+    ros::ServiceClient manipulation_command_service;
+    arbie_msgs::ManipulationCommand manipulation_command_msg;
+
+    // Calibrate arm
+    ros::ServiceClient calibrate_service;
+    std_srvs::Trigger calibrate_msg;
 };
 
 #endif

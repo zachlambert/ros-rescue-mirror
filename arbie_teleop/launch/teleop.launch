@@ -2,7 +2,8 @@
     <node
         name="gamepad"
         pkg="arbie_teleop"
-        type="gamepad">
+        type="gamepad"
+        output="screen">
         <!--<remap from="joy" to="gamepad/values"/>-->
     </node>
 </launch>

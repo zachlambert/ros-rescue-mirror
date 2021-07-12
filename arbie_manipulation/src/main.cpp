@@ -76,8 +76,6 @@ public:
         load_trajectory_msg.request.stop_controllers.push_back("gripper_position_controller");
         load_trajectory_msg.request.strictness = 2;
 
-        switch_controllers_client.call(load_position_msg);
-
         // Initialise service server for receiving commands
 
         manipulation_command_service = n.advertiseService(
@@ -135,6 +133,7 @@ public:
         arbie_msgs::ManipulationCommand::Request &req,
         arbie_msgs::ManipulationCommand::Response &res)
     {
+        ROS_INFO("RECEIVED MANIPULATION COMMAND");
         if (req.command == "named_target") {
             move_group.setNamedTarget(req.argument);
             res.success = plan_and_execute_trajectory();
@@ -152,6 +151,7 @@ public:
 
 private:
     bool plan_and_execute_trajectory() {
+        ROS_INFO("Planning and executing trajectory");
         bool success = false;
         moveit::planning_interface::MoveGroupInterface::Plan plan;
 
@@ -165,7 +165,9 @@ private:
             switch_controllers_client.call(load_trajectory_msg);
             if (load_trajectory_msg.response.ok) {
                 // Execute trajectory (BLOCKS CURRENT THREAD)
+                ROS_INFO("Start moving");
                 move_group.move();
+                ROS_INFO("Finished moving");
                 success = true;
             }
 

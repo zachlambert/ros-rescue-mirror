@@ -39,8 +39,13 @@ CommandPublisher::CommandPublisher(ros::NodeHandle &n)
     );
 
     // Gripper command service
-    gripper_command_service = n.serviceClient<arbie_msgs::ManipulationCommand>(
-        "gripper_command"
+    manipulation_command_service = n.serviceClient<arbie_msgs::ManipulationCommand>(
+        "manipulation_command"
+    );
+
+    // Calibration service
+    calibrate_service = n.serviceClient<std_srvs::Trigger>(
+        "calibrate"
     );
 }
 
@@ -81,15 +86,25 @@ void CommandPublisher::publish_all()
     nav_pub.publish(nav_pub_msg);
 }
 
-bool CommandPublisher::send_gripper_command(
+bool CommandPublisher::send_manipulation_command(
     const std::string &command, const std::string &argument)
 {
-    gripper_command_msg.request.command = command;
-    gripper_command_msg.request.argument = argument;
-    if (gripper_command_service.call(gripper_command_msg)) {
-        ROS_INFO("Gripper command status: %d", gripper_command_msg.response.success);
-        return gripper_command_msg.response.success;
+    manipulation_command_msg.request.command = command;
+    manipulation_command_msg.request.argument = argument;
+    if (manipulation_command_service.call(manipulation_command_msg)) {
+        ROS_INFO("Gripper command status: %d", manipulation_command_msg.response.success);
+        return manipulation_command_msg.response.success;
     }
     ROS_INFO("Gripper command failed");
+    return false;
+}
+
+bool CommandPublisher::calibrate()
+{
+    if (calibrate_service.call(calibrate_msg)) {
+        ROS_INFO("Calibrate status: %d", calibrate_msg.response.success);
+        return calibrate_msg.response.success;
+    }
+    ROS_INFO("Calibrate command failed");
     return false;
 }

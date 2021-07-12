@@ -1,5 +1,5 @@
-gazebo_ros_control:
-    pid_gains:
+# gazebo_ros_control:
+#     pid_gains:
         # Used by gazebo to simulate controller dynamics.
         # If omitted, joint is set without dynamics, so snaps to desired
         # position or velocity.
@@ -14,13 +14,13 @@ gazebo_ros_control:
         # flippers_front_joint: {p: 400, i: 200, d: 0}
         # flippers_rear_joint: {p: 400, i: 200, d: 0}
 
-        arm_1_joint: {p: 200.0, i: 0, d: 10}
-        arm_2_joint: {p: 200.0, i: 0, d: 10}
-        arm_3_joint: {p: 200.0, i: 0, d: 10}
+        # arm_1_joint: {p: 200.0, i: 0, d: 10}
+        # arm_2_joint: {p: 200.0, i: 0, d: 10}
+        # arm_3_joint: {p: 200.0, i: 0, d: 10}
 
-        wrist_pitch_joint: {p: 40, i: 0, d: 0.5}
-        wrist_yaw_joint: {p: 40, i: 0, d: 0.5}
-        wrist_roll_joint: {p: 40, i: 0, d: 0.5}
+        # wrist_pitch_joint: {p: 40, i: 0, d: 0.5}
+        # wrist_yaw_joint: {p: 40, i: 0, d: 0.5}
+        # wrist_roll_joint: {p: 40, i: 0, d: 0.5}
 
         # gripper_right_joint: {p: 0.5, i: 0, d: 0.01}
         # gripper_left_joint: {p: 0.5, i: 0, d: 0.01}

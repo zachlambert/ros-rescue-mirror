@@ -187,6 +187,15 @@ public:
     }
 
     bool calibrate() {
+        ROS_INFO("Finished calibrating arm");
+
+        std_srvs::Trigger calibrate_msg;
+        flippers_front_calibrate_client.call(calibrate_msg);
+        flippers_rear_calibrate_client.call(calibrate_msg);
+        tracks_left_calibrate_client.call(calibrate_msg);
+        tracks_right_calibrate_client.call(calibrate_msg);
+
+        ROS_INFO("Finished calibrating odrives");
         if (!arm_2_handle->is_connected()) return false;
         if (!arm_3_handle->is_connected()) return false;
         if (!wrist_pitch_handle->is_connected()) return false;
@@ -220,16 +229,6 @@ public:
         wrist_pitch_handle->move(0.5, 0.4);
         wrist_pitch_handle->write(0);
         ros::Duration(1).sleep();
-
-        ROS_INFO("Finished calibrating arm");
-
-        std_srvs::Trigger calibrate_msg;
-        flippers_front_calibrate_client.call(calibrate_msg);
-        flippers_rear_calibrate_client.call(calibrate_msg);
-        tracks_left_calibrate_client.call(calibrate_msg);
-        tracks_right_calibrate_client.call(calibrate_msg);
-
-        ROS_INFO("Finished calibrating odrives");
 
         calibrated = true;
         hardware_mutex.unlock();
