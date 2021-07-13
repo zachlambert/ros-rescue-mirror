@@ -18,6 +18,7 @@ public:
     void set_tracks_command(double track_left, double track_right);
     void set_flippers_command(double flippers_rear, double flippers_front);
     void set_base_pose(double x, double y, double theta);
+    void navigation_command(bool navigation_mode);
     void publish_all();
 
     bool send_manipulation_command(const std::string &command, const std::string &argument);
@@ -29,6 +30,10 @@ private:
     ros::Publisher tracks_command_pub;
     geometry_msgs::Twist tracks_command_msg;
 
+    // Navigation mode
+    ros::Publisher nav_pub;
+    std_msgs::Bool nav_pub_msg;
+	
     // Flippers
     ros::Publisher flippers_front_command_pub, flippers_rear_command_pub;
     std_msgs::Float64 flippers_front_msg, flippers_rear_msg;
