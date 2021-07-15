@@ -10,9 +10,10 @@ function co2_init(id)
         document.getElementById("ppm").innerHTML = message.data;
         if(message.data<420)
             document.getElementById("ppm").style.color = "blue";
-	else
-		if(450<=message.data)
-		    document.getElementById("ppm").style.color = "brown";
+	    else
+		    if(450<=message.data)
+                document.getElementById("ppm").style.color = "brown";
 	   });
 
 }
+

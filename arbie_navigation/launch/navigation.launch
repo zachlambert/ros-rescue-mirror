@@ -1,0 +1,8 @@
+<launch>
+    <node
+        name="navigation"
+        pkg="arbie_navigation"
+        type="navigation">
+        <!--<remap from="joy" to="gamepad/values"/>-->
+    </node>
+</launch>

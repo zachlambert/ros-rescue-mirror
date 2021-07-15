@@ -1,7 +1,13 @@
-h1 {
-    color: blue;
-}
+meter {
+  --background: #dadada;
+  --optimum: forestgreen;
+  --sub-optimum: gold;
+  --sub-sub-optimum: crimson;
 
-p {
-    color: blue;
+  /* The gray background in Firefox */
+  background: var(--background);
+  display: block;
+  margin-bottom: 1em;
+  width: 20%;
+
 }
