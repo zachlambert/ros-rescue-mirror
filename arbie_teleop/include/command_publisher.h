@@ -2,6 +2,7 @@
 #define RESCUE_CONTROL_CONTROL_ARM_PUBLISHER_H
 
 #include "ros/ros.h"
+#include "std_msgs/Bool.h"
 #include "std_msgs/Float64.h"
 #include "std_msgs/Float64MultiArray.h"
 #include "std_srvs/Trigger.h"

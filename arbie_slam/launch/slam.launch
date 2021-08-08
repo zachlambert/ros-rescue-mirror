@@ -1,6 +1,6 @@
 <launch>
     <!-- If true, start rtabmapviz to visualise the slam process -->
-    <arg name="rtabmapviz" default="false"/>
+    <arg name="rtabmapviz" default="true"/>
 
     <!-- Start rtabmap_ros
     Builds a 3d map from the d435 camera point cloud.

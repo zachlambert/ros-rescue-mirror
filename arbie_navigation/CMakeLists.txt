@@ -19,8 +19,8 @@ include_directories(
     ${catkin_INCLUDE_DIRS}
 )
 add_executable(navigation
-    src/setgoal.cpp
-    src/command_publisher.cpp
+    src/set_goal.cpp
+    src/command_processor.cpp
     src/joystick_listener.cpp
 )
 target_link_libraries(navigation
