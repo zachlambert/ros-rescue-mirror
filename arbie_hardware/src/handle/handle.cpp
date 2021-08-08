@@ -30,39 +30,4 @@ Handle::Handle(const std::string &name, Interfaces &interface, Type type):
     }
 }
 
-
-// ===== Service =====
-
-Service::Service(
-        const std::string &name,
-        Interfaces &interface,
-        Type handle_type,
-        const std::string &service_name,
-        ros::NodeHandle &n):
-    Handle(name, interface, handle_type)
-{
-    std::stringstream write_name;
-    write_name << service_name << "/write";
-    write_client = n.serviceClient<arbie_msgs::WriteHardware>(write_name.str());
-
-    std::stringstream read_name;
-    read_name << service_name << "/read";
-    read_client = n.serviceClient<arbie_msgs::ReadHardware>(read_name.str());
-}
-
-void Service::write(double cmd)
-{
-    write_msg.request.cmd.data = cmd;
-    write_client.call(write_msg);
-}
-
-void Service::read(double &pos, double &vel, double &eff)
-{
-    if(read_client.call(read_msg) && read_msg.response.success) {
-        pos = read_msg.response.pos.data;
-        vel = read_msg.response.vel.data;
-        eff = read_msg.response.eff.data;
-    }
-}
-
 } // namespace handle

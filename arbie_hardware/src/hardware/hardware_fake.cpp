@@ -56,23 +56,6 @@ public:
             "gripper_joint", interfaces, 2*dxl_write_delay, 2*dxl_read_delay
         ));
 
-        handles.push_back(std::make_unique<handle::VelDummy>(
-            "flippers_front_joint", interfaces
-        ));
-        handles.push_back(std::make_unique<handle::VelDummy>(
-            "flippers_rear_joint", interfaces
-        ));
-        handles.push_back(std::make_unique<handle::VelDummy>(
-            "tracks_left_joint", interfaces
-        ));
-        handles.push_back(std::make_unique<handle::VelDummy>(
-            "tracks_right_joint", interfaces
-        ));
-
-        handles.push_back(std::make_unique<handle::PosDummy>(
-            "camera_tilt_joint", interfaces
-        ));
-
         registerInterface(&interfaces.state);
         registerInterface(&interfaces.pos);
         registerInterface(&interfaces.vel);

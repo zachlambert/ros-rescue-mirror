@@ -16,14 +16,6 @@ public:
     Hardware(ros::NodeHandle &n, const std::string &dxl_port):
         commHandler(dxl_port), calibrated(false)
     {
-        flippers_front_calibrate_client =
-            n.serviceClient<std_srvs::Trigger>("flippers/front/calibrate");
-        flippers_rear_calibrate_client =
-            n.serviceClient<std_srvs::Trigger>("flippers/rear/calibrate");
-        tracks_left_calibrate_client =
-            n.serviceClient<std_srvs::Trigger>("tracks/left/calibrate");
-        tracks_right_calibrate_client =
-            n.serviceClient<std_srvs::Trigger>("tracks/right/calibrate");
     }
 
     bool initialise(ros::NodeHandle &n)
@@ -45,6 +37,7 @@ public:
             ROS_ERROR("Failed to open serial port for dynamixels.");
             return false;
         }
+
         // Arm
 
         handle::xl430::Position::Config arm_1_config;
@@ -135,47 +128,6 @@ public:
             gripper_config
         ));
 
-        // Odrives
-        // Assume the odrives node has been started, with the services:
-
-        handles.push_back(std::make_unique<handle::Service>(
-            "flippers_front_joint",
-            interfaces,
-            handle::Type::VEL,
-            "flippers/front",
-            n
-        ));
-
-        handles.push_back(std::make_unique<handle::Service>(
-            "flippers_rear_joint",
-            interfaces,
-            handle::Type::VEL,
-            "flippers/rear",
-            n
-        ));
-
-        handles.push_back(std::make_unique<handle::Service>(
-            "tracks_left_joint",
-            interfaces,
-            handle::Type::VEL,
-            "tracks/left",
-            n
-        ));
-
-        handles.push_back(std::make_unique<handle::Service>(
-            "tracks_right_joint",
-            interfaces,
-            handle::Type::VEL,
-            "tracks/right",
-            n
-        ));
-
-        // Camera (for now, placeholder handle)
-
-        handles.push_back(std::make_unique<handle::PosDummy>(
-            "camera_tilt_joint", interfaces
-        ));
-
         registerInterface(&interfaces.state);
         registerInterface(&interfaces.pos);
         registerInterface(&interfaces.vel);
@@ -223,14 +175,6 @@ public:
 
         ROS_INFO("Finished calibrating arm");
 
-        std_srvs::Trigger calibrate_msg;
-        flippers_front_calibrate_client.call(calibrate_msg);
-        flippers_rear_calibrate_client.call(calibrate_msg);
-        tracks_left_calibrate_client.call(calibrate_msg);
-        tracks_right_calibrate_client.call(calibrate_msg);
-
-        ROS_INFO("Finished calibrating odrives");
-
         calibrated = true;
         hardware_mutex.unlock();
         return true;
@@ -265,11 +209,6 @@ private:
     // For calibration - have no ownership
     handle::xl430::Position *arm_1_handle, *arm_2_handle, *arm_3_handle;
     handle::ax12a::PositionPair *wrist_pitch_handle;
-
-    ros::ServiceClient flippers_rear_calibrate_client;
-    ros::ServiceClient flippers_front_calibrate_client;
-    ros::ServiceClient tracks_left_calibrate_client;
-    ros::ServiceClient tracks_right_calibrate_client;
 };
 
 

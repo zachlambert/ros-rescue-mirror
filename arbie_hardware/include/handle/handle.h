@@ -53,25 +53,6 @@ private:
 };
 
 
-class Service: public Handle {
-public:
-    Service(
-        const std::string &name,
-        Interfaces &interface,
-        Type handle_type,
-        const std::string &service_name,
-        ros::NodeHandle &n);
-    void write(double cmd);
-    void read(double &pos, double &vel, double &eff);
-
-private:
-    ros::ServiceClient write_client;
-    arbie_msgs::WriteHardware write_msg;
-    ros::ServiceClient read_client;
-    arbie_msgs::ReadHardware read_msg;
-};
-
-
 class PosDummy: public Handle {
 public:
     PosDummy(
@@ -83,7 +64,7 @@ public:
             fake_pos(0)
     {}
 
-    void write(double cmd) { 
+    void write(double cmd) {
         fake_pos = cmd;
         ros::Duration(write_delay_ms/1000).sleep();
     }
@@ -98,40 +79,6 @@ private:
     double write_delay_ms, read_delay_ms;
     double fake_pos;
 };
-
-class VelDummy: public Handle {
-public:
-    VelDummy(
-        const std::string &name,
-        Interfaces &interface,
-        double write_delay_ms=0, double read_delay_ms=0):
-            Handle(name, interface, Type::VEL),
-            write_delay_ms(write_delay_ms), read_delay_ms(read_delay_ms),
-            fake_pos(0), fake_vel(0)
-    {
-        write_time = ros::Time::now();
-    }
-
-    void write(double cmd) { 
-        fake_vel = cmd;
-        fake_pos += fake_vel*(ros::Time::now() - write_time).toSec();
-        write_time = ros::Time::now();
-        ros::Duration(write_delay_ms/1000).sleep();
-    }
-    void read(double &pos, double &vel, double &eff) {
-        pos = fake_pos;
-        vel = fake_vel;
-        eff = 0;
-        ros::Duration(read_delay_ms/1000).sleep();
-    }
-
-private:
-    double write_delay_ms, read_delay_ms;
-    double fake_vel, fake_pos;
-    ros::Time write_time;
-};
-
-
 
 } // namespace handle
 
