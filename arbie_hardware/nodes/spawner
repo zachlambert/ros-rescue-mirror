@@ -10,10 +10,6 @@ load_controller = rospy.ServiceProxy("controller_manager/load_controller", LoadC
 
 start_controllers = [
     "joint_state_controller",
-    "base_controller",
-    "flippers_front_controller",
-    "flippers_rear_controller",
-    "camera_tilt_controller",
     "arm_position_controller",
     "gripper_position_controller"
 ]
