@@ -17,6 +17,6 @@
     <include file="$(find arbie_manipulation)/launch/manipulation.launch"/>
 
     <!-- Start realsense cameras and slam -->
-    <include file="$(find arbie_slam)/launch/cameras.launch"/>
-    <include file="$(find arbie_slam)/launch/slam.launch"/>
+    <!--include file="$(find arbie_slam)/launch/cameras.launch"/>
+    <include file="$(find arbie_slam)/launch/slam.launch"/>-->
 </launch>
